@@ -1,0 +1,275 @@
+{
+  "projectType": "framework",
+  "projectName": "Vuetify",
+  "projectDescription": "A Vue Material Design component framework with beautifully handcrafted UI components",
+  "theme": "willow",
+  "primaryColor": "#1976D2",
+  "lightColor": "#2196F3",
+  "darkColor": "#0D47A1",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart",
+              "browser-support"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/framework-architecture",
+              "concepts/theme-system",
+              "concepts/responsive-layout",
+              "concepts/icons",
+              "concepts/internationalization"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "customization/sass-variables",
+              "customization/theme-configuration",
+              "customization/blueprints",
+              "customization/presets"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/treeshaking",
+              "advanced/ssr",
+              "advanced/date-adapters",
+              "advanced/accessibility"
+            ]
+          },
+          {
+            "group": "Migration",
+            "pages": [
+              "migration/upgrading-to-v4",
+              "migration/long-term-support"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Components",
+        "groups": [
+          {
+            "group": "Layout",
+            "pages": [
+              "components/app",
+              "components/app-bar",
+              "components/bottom-navigation",
+              "components/footer",
+              "components/grid",
+              "components/navigation-drawer",
+              "components/toolbar"
+            ]
+          },
+          {
+            "group": "Form Inputs",
+            "pages": [
+              "components/autocomplete",
+              "components/checkbox",
+              "components/combobox",
+              "components/file-input",
+              "components/forms",
+              "components/radio",
+              "components/select",
+              "components/slider",
+              "components/switch",
+              "components/textarea",
+              "components/text-field"
+            ]
+          },
+          {
+            "group": "Buttons & Controls",
+            "pages": [
+              "components/btn",
+              "components/btn-group",
+              "components/btn-toggle",
+              "components/fab",
+              "components/icon",
+              "components/speed-dial"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/avatar",
+              "components/badge",
+              "components/banner",
+              "components/card",
+              "components/chip",
+              "components/data-table",
+              "components/divider",
+              "components/list",
+              "components/tooltip",
+              "components/timeline"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/breadcrumbs",
+              "components/menu",
+              "components/pagination",
+              "components/stepper",
+              "components/tabs"
+            ]
+          },
+          {
+            "group": "Feedback",
+            "pages": [
+              "components/alert",
+              "components/dialog",
+              "components/overlay",
+              "components/progress-circular",
+              "components/progress-linear",
+              "components/snackbar",
+              "components/skeleton-loader"
+            ]
+          },
+          {
+            "group": "Pickers",
+            "pages": [
+              "components/calendar",
+              "components/color-picker",
+              "components/date-picker",
+              "components/time-picker"
+            ]
+          },
+          {
+            "group": "Media",
+            "pages": [
+              "components/carousel",
+              "components/image",
+              "components/parallax"
+            ]
+          },
+          {
+            "group": "Labs (Experimental)",
+            "pages": [
+              "components/labs-overview",
+              "components/avatar-group",
+              "components/color-input",
+              "components/command-palette",
+              "components/date-input",
+              "components/file-upload",
+              "components/icon-btn",
+              "components/mask-input"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Composables",
+            "pages": [
+              "api/composables/theme",
+              "api/composables/display",
+              "api/composables/locale",
+              "api/composables/icons",
+              "api/composables/defaults",
+              "api/composables/date",
+              "api/composables/goto"
+            ]
+          },
+          {
+            "group": "Directives",
+            "pages": [
+              "api/directives/click-outside",
+              "api/directives/intersect",
+              "api/directives/resize",
+              "api/directives/ripple",
+              "api/directives/scroll",
+              "api/directives/tooltip",
+              "api/directives/touch"
+            ]
+          },
+          {
+            "group": "Utilities",
+            "pages": [
+              "api/utilities/colors",
+              "api/utilities/transitions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Community",
+            "pages": [
+              "resources/contributing",
+              "resources/support",
+              "resources/ecosystem",
+              "resources/sponsorship"
+            ]
+          },
+          {
+            "group": "Releases",
+            "pages": [
+              "resources/changelog",
+              "resources/roadmap"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "98+ Material Design components",
+    "Powerful theme system with SASS customization",
+    "Responsive layout utilities",
+    "Automatic tree-shaking with Vite",
+    "42+ language translations",
+    "Blueprint and preset system",
+    "TypeScript support",
+    "Long-term support for major releases"
+  ],
+  "publicApiSurface": [
+    "createVuetify()",
+    "VApp",
+    "VBtn",
+    "VCard",
+    "VTextField",
+    "VDataTable",
+    "VDialog",
+    "VMenu",
+    "VNavigationDrawer",
+    "VAppBar",
+    "VAlert",
+    "VAutocomplete",
+    "VSelect",
+    "VCheckbox",
+    "VRadio",
+    "VSwitch",
+    "VSlider",
+    "VDatePicker",
+    "VCalendar",
+    "VAvatar",
+    "VBadge",
+    "VChip",
+    "VList",
+    "VToolbar",
+    "VTabs",
+    "VStepper",
+    "VCarousel",
+    "v-ripple directive",
+    "v-tooltip directive",
+    "useTheme()",
+    "useDisplay()",
+    "useLocale()",
+    "useDate()"
+  ]
+}
