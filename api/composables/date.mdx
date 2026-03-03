@@ -1,0 +1,381 @@
+---
+title: useDate()
+description: Composable for accessing date adapter functionality
+---
+
+## Overview
+
+The `useDate()` composable provides access to Vuetify's date adapter, enabling locale-aware date manipulation, formatting, and parsing operations.
+
+## Import
+
+```typescript
+import { useDate } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useDate(): DateInstance
+```
+
+## Return Value
+
+Returns a `DateInstance` object with date manipulation methods. The exact interface depends on the configured adapter.
+
+### Common Methods
+
+<ResponseField name="date" type="(value?: any) => any">
+  Create a date object from various inputs
+</ResponseField>
+
+<ResponseField name="format" type="(date: any, formatString: string) => string">
+  Format a date according to a format string
+</ResponseField>
+
+<ResponseField name="toISO" type="(date: any) => string">
+  Convert date to ISO 8601 string
+</ResponseField>
+
+<ResponseField name="parseISO" type="(date: string) => any">
+  Parse ISO 8601 date string
+</ResponseField>
+
+<ResponseField name="addDays" type="(date: any, count: number) => any">
+  Add days to a date
+</ResponseField>
+
+<ResponseField name="addMonths" type="(date: any, count: number) => any">
+  Add months to a date
+</ResponseField>
+
+<ResponseField name="getYear" type="(date: any) => number">
+  Get year from date
+</ResponseField>
+
+<ResponseField name="getMonth" type="(date: any) => number">
+  Get month from date (0-11)
+</ResponseField>
+
+<ResponseField name="getDate" type="(date: any) => number">
+  Get day of month from date
+</ResponseField>
+
+<ResponseField name="getDay" type="(date: any) => number">
+  Get day of week from date (0-6)
+</ResponseField>
+
+<ResponseField name="getHours" type="(date: any) => number">
+  Get hours from date
+</ResponseField>
+
+<ResponseField name="getMinutes" type="(date: any) => number">
+  Get minutes from date
+</ResponseField>
+
+<ResponseField name="startOfDay" type="(date: any) => any">
+  Get start of day (00:00:00)
+</ResponseField>
+
+<ResponseField name="endOfDay" type="(date: any) => any">
+  Get end of day (23:59:59)
+</ResponseField>
+
+<ResponseField name="startOfMonth" type="(date: any) => any">
+  Get first day of month
+</ResponseField>
+
+<ResponseField name="endOfMonth" type="(date: any) => any">
+  Get last day of month
+</ResponseField>
+
+<ResponseField name="isSameDay" type="(date: any, comparing: any) => boolean">
+  Check if two dates are on the same day
+</ResponseField>
+
+<ResponseField name="isSameMonth" type="(date: any, comparing: any) => boolean">
+  Check if two dates are in the same month
+</ResponseField>
+
+<ResponseField name="isAfter" type="(date: any, comparing: any) => boolean">
+  Check if date is after comparing date
+</ResponseField>
+
+<ResponseField name="isBefore" type="(date: any, comparing: any) => boolean">
+  Check if date is before comparing date
+</ResponseField>
+
+<ResponseField name="isWithinRange" type="(date: any, range: [any, any]) => boolean">
+  Check if date falls within a range
+</ResponseField>
+
+<ResponseField name="getDiff" type="(date: any, comparing: any, unit?: string) => number">
+  Get difference between two dates in specified unit
+</ResponseField>
+
+<ResponseField name="locale" type="string">
+  Current locale setting
+</ResponseField>
+
+## Date Adapters
+
+Vuetify includes a built-in date adapter and supports custom adapters:
+
+### VuetifyDateAdapter (Default)
+
+Built-in adapter using native JavaScript Date objects.
+
+### Custom Adapters
+
+- **date-fns** - Lightweight modern date utility library
+- **Day.js** - Minimalist JavaScript library
+- **Luxon** - Modern, immutable date/time library
+- **Moment.js** - Classic date manipulation library
+
+## Usage Examples
+
+### Basic Date Operations
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref } from 'vue'
+
+const adapter = useDate()
+const today = ref(adapter.date())
+const tomorrow = ref(adapter.addDays(today.value, 1))
+</script>
+
+<template>
+  <div>
+    <p>Today: {{ adapter.format(today, 'keyboardDate') }}</p>
+    <p>Tomorrow: {{ adapter.format(tomorrow, 'keyboardDate') }}</p>
+  </div>
+</template>
+```
+
+### Date Formatting
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref } from 'vue'
+
+const adapter = useDate()
+const date = ref(adapter.date('2024-03-15'))
+</script>
+
+<template>
+  <div>
+    <p>Full: {{ adapter.format(date, 'fullDate') }}</p>
+    <p>Short: {{ adapter.format(date, 'shortDate') }}</p>
+    <p>Month Year: {{ adapter.format(date, 'monthAndYear') }}</p>
+    <p>ISO: {{ adapter.toISO(date) }}</p>
+  </div>
+</template>
+```
+
+### Date Comparisons
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref, computed } from 'vue'
+
+const adapter = useDate()
+const eventDate = ref(adapter.date('2024-12-25'))
+const today = adapter.date()
+
+const daysUntil = computed(() => 
+  adapter.getDiff(eventDate.value, today, 'days')
+)
+
+const isPast = computed(() => 
+  adapter.isBefore(eventDate.value, today)
+)
+</script>
+
+<template>
+  <div>
+    <p v-if="isPast">Event has passed</p>
+    <p v-else>{{ daysUntil }} days until event</p>
+  </div>
+</template>
+```
+
+### Date Range
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref, computed } from 'vue'
+
+const adapter = useDate()
+const startDate = ref(adapter.date('2024-01-01'))
+const endDate = ref(adapter.date('2024-12-31'))
+const checkDate = ref(adapter.date('2024-06-15'))
+
+const isInRange = computed(() => 
+  adapter.isWithinRange(checkDate.value, [startDate.value, endDate.value])
+)
+</script>
+
+<template>
+  <div>
+    <p>Date {{ isInRange ? 'is' : 'is not' }} within range</p>
+  </div>
+</template>
+```
+
+### Calendar Month Data
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref, computed } from 'vue'
+
+const adapter = useDate()
+const currentMonth = ref(adapter.date())
+
+const monthStart = computed(() => 
+  adapter.startOfMonth(currentMonth.value)
+)
+
+const monthEnd = computed(() => 
+  adapter.endOfMonth(currentMonth.value)
+)
+
+const monthName = computed(() => 
+  adapter.format(currentMonth.value, 'monthAndYear')
+)
+
+function nextMonth() {
+  currentMonth.value = adapter.addMonths(currentMonth.value, 1)
+}
+
+function prevMonth() {
+  currentMonth.value = adapter.addMonths(currentMonth.value, -1)
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="prevMonth">Previous</v-btn>
+    <span>{{ monthName }}</span>
+    <v-btn @click="nextMonth">Next</v-btn>
+  </div>
+</template>
+```
+
+### Working with Time
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { ref } from 'vue'
+
+const adapter = useDate()
+const now = ref(adapter.date())
+
+const hours = adapter.getHours(now.value)
+const minutes = adapter.getMinutes(now.value)
+const dayStart = adapter.startOfDay(now.value)
+const dayEnd = adapter.endOfDay(now.value)
+</script>
+
+<template>
+  <div>
+    <p>Current time: {{ hours }}:{{ minutes }}</p>
+  </div>
+</template>
+```
+
+### Locale-Aware Formatting
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+import { useLocale } from 'vuetify'
+import { watch } from 'vue'
+
+const adapter = useDate()
+const { current } = useLocale()
+
+// Date adapter automatically updates when locale changes
+watch(current, (newLocale) => {
+  console.log('Date adapter now using locale:', adapter.locale)
+})
+
+const date = adapter.date()
+</script>
+
+<template>
+  <div>
+    <p>{{ adapter.format(date, 'fullDate') }}</p>
+  </div>
+</template>
+```
+
+## Configuration
+
+### Using a Custom Adapter
+
+```typescript
+// vuetify.config.ts
+import { createVuetify } from 'vuetify'
+import { VuetifyDateAdapter } from 'vuetify/date/adapters/vuetify'
+
+export default createVuetify({
+  date: {
+    adapter: VuetifyDateAdapter,
+    locale: {
+      en: 'en-US',
+      fr: 'fr-FR',
+      es: 'es-ES'
+    }
+  }
+})
+```
+
+### With date-fns
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { DateFnsAdapter } from '@date-io/date-fns'
+import enUS from 'date-fns/locale/en-US'
+
+export default createVuetify({
+  date: {
+    adapter: DateFnsAdapter,
+    locale: enUS
+  }
+})
+```
+
+## Format Strings
+
+Common format strings (exact formats depend on adapter):
+
+- `fullDate` - Full date representation
+- `keyboardDate` - Date format for keyboard input
+- `shortDate` - Short date format
+- `monthAndYear` - Month and year
+- `dayOfMonth` - Day number
+- `monthShort` - Abbreviated month name
+- `monthAndDate` - Month name and day
+- `weekday` - Day of week name
+- `weekdayShort` - Abbreviated day of week
+
+## Notes
+
+- Must be called within a component setup function or composable
+- Throws an error if the Vuetify date options are not configured
+- Date adapter is reactive to locale changes
+- Methods and return types vary based on the configured adapter
+- All date objects are immutable (operations return new instances)
+
+## See Also
+
+- [Date Configuration](/features/date-adapters)
+- [VDatePicker](/api/components/v-date-picker)
+- [VCalendar](/api/components/v-calendar)

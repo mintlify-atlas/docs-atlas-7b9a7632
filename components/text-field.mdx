@@ -1,0 +1,429 @@
+---
+title: VTextField
+description: Text field component for single-line text input
+---
+
+# VTextField
+
+The `VTextField` component provides a single-line text input field with support for various input types, validation, prefix/suffix text, and more.
+
+## Basic Usage
+
+```vue
+<template>
+  <VTextField
+    v-model="name"
+    label="Name"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const name = ref('')
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string | number">
+  The value of the text field.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text for the text field.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text.
+</ParamField>
+
+<ParamField path="type" type="string" default="text">
+  HTML input type (text, password, email, number, tel, url, search, etc.).
+</ParamField>
+
+<ParamField path="prefix" type="string">
+  Text to prepend inside the input.
+</ParamField>
+
+<ParamField path="suffix" type="string">
+  Text to append inside the input.
+</ParamField>
+
+<ParamField path="counter" type="boolean | number | string">
+  Display a character counter. Pass a number to set max length.
+</ParamField>
+
+<ParamField path="counterValue" type="number | ((value: any) => number)">
+  Function or number to compute the counter value.
+</ParamField>
+
+<ParamField path="persistentCounter" type="boolean" default="false">
+  Always show the counter instead of only when focused.
+</ParamField>
+
+<ParamField path="persistentPlaceholder" type="boolean" default="false">
+  Always show the placeholder.
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default="false">
+  Add a clear icon to remove the text.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the text field.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make the text field readonly.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="false">
+  Automatically focus the field when mounted.
+</ParamField>
+
+<ParamField path="role" type="string">
+  ARIA role attribute.
+</ParamField>
+
+## Input Types
+
+```vue
+<template>
+  <div>
+    <VTextField
+      v-model="text"
+      label="Text"
+      type="text"
+    />
+    
+    <VTextField
+      v-model="password"
+      label="Password"
+      type="password"
+    />
+    
+    <VTextField
+      v-model="email"
+      label="Email"
+      type="email"
+    />
+    
+    <VTextField
+      v-model="number"
+      label="Number"
+      type="number"
+    />
+    
+    <VTextField
+      v-model="tel"
+      label="Phone"
+      type="tel"
+    />
+    
+    <VTextField
+      v-model="url"
+      label="Website"
+      type="url"
+    />
+    
+    <VTextField
+      v-model="search"
+      label="Search"
+      type="search"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const text = ref('')
+const password = ref('')
+const email = ref('')
+const number = ref('')
+const tel = ref('')
+const url = ref('')
+const search = ref('')
+</script>
+```
+
+## Prefix and Suffix
+
+```vue
+<template>
+  <div>
+    <VTextField
+      v-model="price"
+      label="Price"
+      prefix="$"
+      type="number"
+    />
+    
+    <VTextField
+      v-model="weight"
+      label="Weight"
+      suffix="kg"
+      type="number"
+    />
+    
+    <VTextField
+      v-model="domain"
+      label="Domain"
+      prefix="https://"
+      suffix=".com"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const price = ref('')
+const weight = ref('')
+const domain = ref('')
+</script>
+```
+
+## Character Counter
+
+```vue
+<template>
+  <div>
+    <!-- Simple counter -->
+    <VTextField
+      v-model="username"
+      label="Username"
+      counter
+    />
+    
+    <!-- Counter with max length -->
+    <VTextField
+      v-model="bio"
+      label="Bio"
+      :counter="100"
+      :rules="[v => v.length <= 100 || 'Max 100 characters']"
+    />
+    
+    <!-- Always visible counter -->
+    <VTextField
+      v-model="title"
+      label="Title"
+      counter
+      persistent-counter
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const username = ref('')
+const bio = ref('')
+const title = ref('')
+</script>
+```
+
+## Clearable
+
+```vue
+<template>
+  <VTextField
+    v-model="search"
+    label="Search"
+    clearable
+    type="search"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const search = ref('')
+</script>
+```
+
+## Validation
+
+```vue
+<template>
+  <VForm>
+    <VTextField
+      v-model="email"
+      label="Email"
+      type="email"
+      :rules="[
+        v => !!v || 'Email is required',
+        v => /.+@.+\..+/.test(v) || 'Email must be valid'
+      ]"
+    />
+    
+    <VTextField
+      v-model="username"
+      label="Username"
+      :counter="20"
+      :rules="[
+        v => !!v || 'Username is required',
+        v => (v && v.length >= 3) || 'Min 3 characters',
+        v => (v && v.length <= 20) || 'Max 20 characters',
+        v => /^[a-zA-Z0-9_]+$/.test(v) || 'Only letters, numbers, and underscores'
+      ]"
+    />
+    
+    <VTextField
+      v-model="age"
+      label="Age"
+      type="number"
+      :rules="[
+        v => !!v || 'Age is required',
+        v => v > 0 || 'Age must be positive',
+        v => v < 150 || 'Age must be realistic'
+      ]"
+    />
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const email = ref('')
+const username = ref('')
+const age = ref('')
+</script>
+```
+
+## Icons
+
+```vue
+<template>
+  <div>
+    <VTextField
+      v-model="email"
+      label="Email"
+      prepend-icon="mdi-email"
+    />
+    
+    <VTextField
+      v-model="password"
+      label="Password"
+      type="password"
+      prepend-inner-icon="mdi-lock"
+      append-inner-icon="mdi-eye"
+    />
+    
+    <VTextField
+      v-model="search"
+      label="Search"
+      prepend-inner-icon="mdi-magnify"
+      clearable
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const email = ref('')
+const password = ref('')
+const search = ref('')
+</script>
+```
+
+## Password Toggle
+
+```vue
+<template>
+  <VTextField
+    v-model="password"
+    label="Password"
+    :type="showPassword ? 'text' : 'password'"
+    :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+    @click:append-inner="showPassword = !showPassword"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const password = ref('')
+const showPassword = ref(false)
+</script>
+```
+
+## Disabled and Readonly
+
+```vue
+<template>
+  <div>
+    <VTextField
+      v-model="disabled"
+      label="Disabled"
+      disabled
+    />
+    
+    <VTextField
+      v-model="readonly"
+      label="Readonly"
+      readonly
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const disabled = ref('Cannot edit')
+const readonly = ref('Cannot edit but can copy')
+</script>
+```
+
+## Model Modifiers
+
+```vue
+<template>
+  <VTextField
+    v-model.trim="username"
+    label="Username (auto-trimmed)"
+    hint="Whitespace will be automatically trimmed"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const username = ref('')
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: string) => void">
+  Emitted when the text field value changes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+<ParamField path="click:control" type="(e: MouseEvent) => void">
+  Emitted when the control area is clicked.
+</ParamField>
+
+<ParamField path="mousedown:control" type="(e: MouseEvent) => void">
+  Emitted when mousedown occurs on the control area.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ id }">
+  Default slot - can be used for custom input content.
+</ParamField>
+
+<ParamField path="counter" type="{}">
+  Customize the counter display.
+</ParamField>
+
+<ParamField path="details" type="{}">
+  Customize the details area (below the input).
+</ParamField>

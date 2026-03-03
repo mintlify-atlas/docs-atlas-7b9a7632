@@ -1,0 +1,358 @@
+---
+title: Timeline
+description: The VTimeline component displays a series of events in chronological order with customizable alignment and styling.
+---
+
+# Timeline
+
+The `VTimeline` component is used to display a sequence of events in chronological order. It's perfect for showing progress, history, or any time-based information.
+
+## Usage
+
+```vue
+<template>
+  <v-timeline>
+    <v-timeline-item>Event 1</v-timeline-item>
+    <v-timeline-item>Event 2</v-timeline-item>
+    <v-timeline-item>Event 3</v-timeline-item>
+  </v-timeline>
+</template>
+```
+
+## Props
+
+<ParamField path="direction" type="string" default="vertical">
+  Direction of the timeline. Options: `vertical`, `horizontal`
+</ParamField>
+
+<ParamField path="side" type="string">
+  Which side to display timeline items. Options: `start`, `end`
+</ParamField>
+
+<ParamField path="align" type="string" default="center">
+  Alignment of timeline items. Options: `center`, `start`
+</ParamField>
+
+<ParamField path="justify" type="string" default="auto">
+  Justification of timeline content. Options: `auto`, `center`
+</ParamField>
+
+<ParamField path="lineThickness" type="string | number" default="2">
+  Thickness of the connecting line between items
+</ParamField>
+
+<ParamField path="lineColor" type="string">
+  Color of the connecting line
+</ParamField>
+
+<ParamField path="lineInset" type="string | number" default="0">
+  Inset of the timeline line from the dots
+</ParamField>
+
+<ParamField path="truncateLine" type="string">
+  Truncate the timeline line. Options: `start`, `end`, `both`
+</ParamField>
+
+<ParamField path="dotColor" type="string">
+  Default color for timeline item dots
+</ParamField>
+
+<ParamField path="fillDot" type="boolean">
+  Fills the timeline dots with color
+</ParamField>
+
+<ParamField path="hideOpposite" type="boolean">
+  Hides the opposite content slot for all items
+</ParamField>
+
+<ParamField path="iconColor" type="string">
+  Color for icons in timeline dots
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Size of the timeline item dots
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts vertical spacing. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Default slot for timeline items
+</ParamField>
+
+## Examples
+
+### Basic Timeline
+
+```vue
+<template>
+  <v-timeline>
+    <v-timeline-item
+      v-for="event in events"
+      :key="event.id"
+      :dot-color="event.color"
+    >
+      <template v-slot:opposite>
+        {{ event.time }}
+      </template>
+      <div>
+        <h3>{{ event.title }}</h3>
+        <p>{{ event.description }}</p>
+      </div>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+
+<script setup>
+const events = [
+  {
+    id: 1,
+    time: '9:00 AM',
+    title: 'Project Started',
+    description: 'Initial planning and setup',
+    color: 'primary'
+  },
+  {
+    id: 2,
+    time: '11:00 AM',
+    title: 'Development Phase',
+    description: 'Building core features',
+    color: 'secondary'
+  },
+  {
+    id: 3,
+    time: '3:00 PM',
+    title: 'Testing',
+    description: 'Quality assurance and bug fixes',
+    color: 'success'
+  },
+]
+</script>
+```
+
+### Timeline with Icons
+
+```vue
+<template>
+  <v-timeline side="end">
+    <v-timeline-item
+      dot-color="success"
+      icon="mdi-check"
+      fill-dot
+    >
+      <div>
+        <div class="text-h6">Order Placed</div>
+        <div class="text-caption">Your order has been confirmed</div>
+      </div>
+    </v-timeline-item>
+    
+    <v-timeline-item
+      dot-color="info"
+      icon="mdi-package-variant"
+      fill-dot
+    >
+      <div>
+        <div class="text-h6">Processing</div>
+        <div class="text-caption">Preparing your items</div>
+      </div>
+    </v-timeline-item>
+    
+    <v-timeline-item
+      dot-color="warning"
+      icon="mdi-truck"
+    >
+      <div>
+        <div class="text-h6">Shipped</div>
+        <div class="text-caption">On the way to you</div>
+      </div>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+```
+
+### Horizontal Timeline
+
+```vue
+<template>
+  <v-timeline direction="horizontal" align="start">
+    <v-timeline-item
+      v-for="step in steps"
+      :key="step.id"
+      :dot-color="step.color"
+      :icon="step.icon"
+      fill-dot
+    >
+      <div class="text-center">
+        <div class="font-weight-bold">{{ step.title }}</div>
+        <div class="text-caption">{{ step.subtitle }}</div>
+      </div>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+
+<script setup>
+const steps = [
+  { id: 1, title: 'Step 1', subtitle: 'Register', icon: 'mdi-account-plus', color: 'primary' },
+  { id: 2, title: 'Step 2', subtitle: 'Verify', icon: 'mdi-email-check', color: 'secondary' },
+  { id: 3, title: 'Step 3', subtitle: 'Complete', icon: 'mdi-check-circle', color: 'success' },
+]
+</script>
+```
+
+### Timeline with Custom Colors
+
+```vue
+<template>
+  <v-timeline line-color="primary" line-thickness="3">
+    <v-timeline-item
+      v-for="item in milestones"
+      :key="item.id"
+      :dot-color="item.status === 'completed' ? 'success' : 'grey'"
+      :icon="item.status === 'completed' ? 'mdi-check' : 'mdi-clock'"
+      fill-dot
+    >
+      <v-card>
+        <v-card-title>{{ item.title }}</v-card-title>
+        <v-card-text>{{ item.description }}</v-card-text>
+        <v-card-subtitle>{{ item.date }}</v-card-subtitle>
+      </v-card>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+
+<script setup>
+const milestones = [
+  {
+    id: 1,
+    title: 'Project Kickoff',
+    description: 'Initial meeting with stakeholders',
+    date: 'Jan 15, 2024',
+    status: 'completed'
+  },
+  {
+    id: 2,
+    title: 'Design Phase',
+    description: 'UI/UX design and prototyping',
+    date: 'Feb 1, 2024',
+    status: 'completed'
+  },
+  {
+    id: 3,
+    title: 'Development',
+    description: 'Building the application',
+    date: 'Mar 1, 2024',
+    status: 'pending'
+  },
+]
+</script>
+```
+
+### Dense Timeline
+
+```vue
+<template>
+  <v-timeline density="compact" side="end">
+    <v-timeline-item
+      v-for="activity in activities"
+      :key="activity.id"
+      dot-color="primary"
+      size="small"
+    >
+      <div class="d-flex justify-space-between">
+        <div>{{ activity.action }}</div>
+        <div class="text-caption text-grey">{{ activity.time }}</div>
+      </div>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+
+<script setup>
+const activities = [
+  { id: 1, action: 'User logged in', time: '2 min ago' },
+  { id: 2, action: 'Document uploaded', time: '5 min ago' },
+  { id: 3, action: 'Settings updated', time: '12 min ago' },
+  { id: 4, action: 'New comment posted', time: '1 hour ago' },
+]
+</script>
+```
+
+### Timeline with Truncated Lines
+
+```vue
+<template>
+  <v-timeline truncate-line="both">
+    <v-timeline-item dot-color="success" icon="mdi-flag">
+      <h3>Start</h3>
+      <p>Beginning of the journey</p>
+    </v-timeline-item>
+    
+    <v-timeline-item dot-color="info">
+      <h3>Middle</h3>
+      <p>Ongoing progress</p>
+    </v-timeline-item>
+    
+    <v-timeline-item dot-color="success" icon="mdi-flag-checkered">
+      <h3>End</h3>
+      <p>Goal achieved</p>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+```
+
+### Timeline with Cards
+
+```vue
+<template>
+  <v-timeline align="start">
+    <v-timeline-item
+      v-for="notification in notifications"
+      :key="notification.id"
+      :dot-color="notification.type"
+      size="small"
+    >
+      <template v-slot:opposite>
+        <div class="text-caption">{{ notification.timestamp }}</div>
+      </template>
+      
+      <v-card>
+        <v-card-title class="text-h6">
+          {{ notification.title }}
+        </v-card-title>
+        <v-card-text>
+          {{ notification.message }}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn size="small" variant="text">View</v-btn>
+          <v-btn size="small" variant="text">Dismiss</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-timeline-item>
+  </v-timeline>
+</template>
+
+<script setup>
+const notifications = [
+  {
+    id: 1,
+    title: 'New Message',
+    message: 'You received a message from John',
+    timestamp: '2 hours ago',
+    type: 'primary'
+  },
+  {
+    id: 2,
+    title: 'System Update',
+    message: 'New features available',
+    timestamp: 'Yesterday',
+    type: 'info'
+  },
+]
+</script>
+```

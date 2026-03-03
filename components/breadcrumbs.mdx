@@ -1,0 +1,203 @@
+---
+title: VBreadcrumbs
+description: Navigation component that shows the current page's location in a hierarchy.
+---
+
+# VBreadcrumbs
+
+The `VBreadcrumbs` component displays a navigational breadcrumb trail showing the user's location within an application's hierarchy. It supports both string and object items with full router integration.
+
+## Basic Usage
+
+```vue
+<template>
+  <v-breadcrumbs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  'Dashboard',
+  'Projects',
+  'My Project'
+]
+</script>
+```
+
+## Props
+
+<ParamField path="items" type="BreadcrumbItem[]" default="[]">
+  Array of breadcrumb items. Each item can be a string or an object with title, href, to, disabled properties.
+</ParamField>
+
+<ParamField path="divider" type="string" default="'/'">
+  Character or string used to separate breadcrumb items.
+</ParamField>
+
+<ParamField path="activeClass" type="string">
+  CSS class applied to the active breadcrumb item.
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color applied to the active breadcrumb item.
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the breadcrumbs container.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Text color applied to all breadcrumb items.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all breadcrumb item interactions.
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon displayed before the breadcrumb items.
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing of the component.
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Applies border-radius to the component.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'ul'">
+  HTML tag used for the root element.
+</ParamField>
+
+## Item Object Structure
+
+When using objects in the `items` array, the following properties are supported:
+
+```typescript
+type BreadcrumbItem = {
+  title: string
+  disabled?: boolean
+  href?: string
+  to?: string | object
+  exact?: boolean
+}
+```
+
+## Slots
+
+<ParamField path="prepend">
+  Slot for content before all breadcrumb items. Receives VIcon defaults when icon prop is set.
+</ParamField>
+
+<ParamField path="item" type="{ item: InternalBreadcrumbItem, index: number }">
+  Slot to customize the entire breadcrumb item rendering.
+</ParamField>
+
+<ParamField path="title" type="{ item: InternalBreadcrumbItem, index: number }">
+  Slot to customize the title content of each breadcrumb item.
+</ParamField>
+
+<ParamField path="divider" type="{ item: BreadcrumbItem, index: number }">
+  Slot to customize the divider between breadcrumb items.
+</ParamField>
+
+<ParamField path="default">
+  Default slot for additional content after all breadcrumb items.
+</ParamField>
+
+## Navigation Patterns
+
+### With Router Links
+
+```vue
+<template>
+  <v-breadcrumbs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { title: 'Dashboard', to: '/' },
+  { title: 'Users', to: '/users' },
+  { title: 'John Doe', disabled: true }
+]
+</script>
+```
+
+### Custom Divider
+
+```vue
+<template>
+  <v-breadcrumbs 
+    :items="items" 
+    divider=">"
+  />
+</template>
+```
+
+### With Icon
+
+```vue
+<template>
+  <v-breadcrumbs 
+    :items="items" 
+    icon="mdi-home"
+  />
+</template>
+```
+
+### Custom Styling
+
+```vue
+<template>
+  <v-breadcrumbs 
+    :items="items"
+    active-color="primary"
+    color="grey"
+    bg-color="surface"
+    rounded
+  />
+</template>
+```
+
+## Examples
+
+### Disabled Items
+
+The last breadcrumb item is automatically disabled by default:
+
+```vue
+<template>
+  <v-breadcrumbs :items="items" />
+</template>
+
+<script setup>
+const items = [
+  { title: 'Home', to: '/' },
+  { title: 'Current Page' } // Automatically disabled
+]
+</script>
+```
+
+### Custom Item Rendering
+
+```vue
+<template>
+  <v-breadcrumbs :items="items">
+    <template #title="{ item }">
+      <strong>{{ item.title }}</strong>
+    </template>
+  </v-breadcrumbs>
+</template>
+```
+
+### Custom Dividers
+
+```vue
+<template>
+  <v-breadcrumbs :items="items">
+    <template #divider>
+      <v-icon>mdi-chevron-right</v-icon>
+    </template>
+  </v-breadcrumbs>
+</template>
+```

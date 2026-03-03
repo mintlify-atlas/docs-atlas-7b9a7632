@@ -1,0 +1,415 @@
+---
+title: VTabs
+description: Navigation component for switching between grouped content.
+---
+
+# VTabs
+
+The `VTabs` component provides a tabbed interface for organizing content into separate views. It features smooth transitions, responsive behavior, and integrates with `VTabsWindow` for content panels.
+
+## Basic Usage
+
+```vue
+<template>
+  <v-tabs v-model="tab">
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+    <v-tab value="three">Tab 3</v-tab>
+  </v-tabs>
+  
+  <v-tabs-window v-model="tab">
+    <v-tabs-window-item value="one">
+      Content for Tab 1
+    </v-tabs-window-item>
+    <v-tabs-window-item value="two">
+      Content for Tab 2
+    </v-tabs-window-item>
+    <v-tabs-window-item value="three">
+      Content for Tab 3
+    </v-tabs-window-item>
+  </v-tabs-window>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('one')
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue">
+  Currently selected tab value. Use with v-model.
+</ParamField>
+
+<ParamField path="items" type="TabItem[]" default="[]">
+  Array of tab items. Each item can be a string, number, or object with text and value properties.
+</ParamField>
+
+<ParamField path="alignTabs" type="'start' | 'title' | 'center' | 'end'" default="'start'">
+  Alignment of tabs within the container.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to the active tab and slider.
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the tabs bar.
+</ParamField>
+
+<ParamField path="sliderColor" type="string">
+  Color of the selection slider indicator.
+</ParamField>
+
+<ParamField path="hideSlider" type="boolean" default="false">
+  Hides the slider indicator under the active tab.
+</ParamField>
+
+<ParamField path="fixedTabs" type="boolean" default="false">
+  Makes tabs have equal width with a maximum of 300px each.
+</ParamField>
+
+<ParamField path="grow" type="boolean" default="false">
+  Makes tabs expand to fill available horizontal space.
+</ParamField>
+
+<ParamField path="stacked" type="boolean" default="false">
+  Stacks tab icon and text vertically.
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Applies inset styling to the slider.
+</ParamField>
+
+<ParamField path="insetPadding" type="string | number">
+  Padding for inset slider.
+</ParamField>
+
+<ParamField path="insetRadius" type="string | number">
+  Border radius for inset slider.
+</ParamField>
+
+<ParamField path="height" type="number | string">
+  Height of the tabs bar.
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="'horizontal'">
+  Orientation of the tabs.
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing of tabs.
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="'v-tab-item--selected'">
+  CSS class applied to the selected tab.
+</ParamField>
+
+<ParamField path="sliderTransition" type="'shift' | 'grow' | 'fade'">
+  Animation style for the slider when changing tabs.
+</ParamField>
+
+<ParamField path="sliderTransitionDuration" type="string | number">
+  Duration of the slider transition animation in milliseconds.
+</ParamField>
+
+<ParamField path="spaced" type="boolean">
+  Adds spacing between tabs.
+</ParamField>
+
+<ParamField path="showArrows" type="boolean | 'mobile'">
+  Shows navigation arrows when tabs overflow.
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="'force'">
+  Forces at least one tab to be selected.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'div'">
+  HTML tag for the root element.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the selected tab changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Content for the tabs. Usually contains VTab components.
+</ParamField>
+
+<ParamField path="tab" type="{ item: TabItem }">
+  Slot to customize tab rendering when using items prop.
+</ParamField>
+
+<ParamField path="item" type="{ item: TabItem }">
+  Slot to customize window item content when using items prop.
+</ParamField>
+
+<ParamField path="window">
+  Additional content in the tabs window.
+</ParamField>
+
+<ParamField path="prev">
+  Slot to customize the previous navigation arrow.
+</ParamField>
+
+<ParamField path="next">
+  Slot to customize the next navigation arrow.
+</ParamField>
+
+<ParamField path="tab.{value}" type="{ item: TabItem }">
+  Named slot for specific tab content.
+</ParamField>
+
+<ParamField path="item.{value}" type="{ item: TabItem }">
+  Named slot for specific window item content.
+</ParamField>
+
+## VTab Props
+
+<ParamField path="value" type="any">
+  Value used when tab is selected.
+</ParamField>
+
+<ParamField path="text" type="string">
+  Text content of the tab.
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon displayed in the tab.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the tab.
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Router link destination.
+</ParamField>
+
+<ParamField path="href" type="string">
+  Anchor link destination.
+</ParamField>
+
+## Navigation Patterns
+
+### Items-based Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab" :items="items">
+    <template #item.tab1="{ item }">
+      <div>Content for {{ item.text }}</div>
+    </template>
+    <template #item.tab2="{ item }">
+      <div>Content for {{ item.text }}</div>
+    </template>
+  </v-tabs>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('tab1')
+const items = [
+  { text: 'Tab 1', value: 'tab1' },
+  { text: 'Tab 2', value: 'tab2' }
+]
+</script>
+```
+
+### Centered Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab" align-tabs="center">
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Fixed Width Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab" fixed-tabs>
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+    <v-tab value="three">Tab 3</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Growing Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab" grow>
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Vertical Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab" direction="vertical">
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Stacked Tabs with Icons
+
+```vue
+<template>
+  <v-tabs v-model="tab" stacked>
+    <v-tab value="one" icon="mdi-home">Home</v-tab>
+    <v-tab value="two" icon="mdi-account">Profile</v-tab>
+    <v-tab value="three" icon="mdi-cog">Settings</v-tab>
+  </v-tabs>
+</template>
+```
+
+## Examples
+
+### Custom Slider Color
+
+```vue
+<template>
+  <v-tabs 
+    v-model="tab"
+    color="primary"
+    slider-color="yellow"
+  >
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Inset Slider
+
+```vue
+<template>
+  <v-tabs 
+    v-model="tab"
+    inset
+    slider-color="primary"
+    bg-color="grey-lighten-3"
+  >
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Router Integration
+
+```vue
+<template>
+  <v-tabs v-model="tab">
+    <v-tab value="home" to="/">Home</v-tab>
+    <v-tab value="about" to="/about">About</v-tab>
+    <v-tab value="contact" to="/contact">Contact</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Disabled Tab
+
+```vue
+<template>
+  <v-tabs v-model="tab">
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two" disabled>Tab 2</v-tab>
+    <v-tab value="three">Tab 3</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Custom Transition
+
+```vue
+<template>
+  <v-tabs 
+    v-model="tab"
+    slider-transition="grow"
+    :slider-transition-duration="400"
+  >
+    <v-tab value="one">Tab 1</v-tab>
+    <v-tab value="two">Tab 2</v-tab>
+  </v-tabs>
+</template>
+```
+
+### Dynamic Tabs
+
+```vue
+<template>
+  <v-tabs v-model="tab">
+    <v-tab 
+      v-for="item in tabs" 
+      :key="item.value"
+      :value="item.value"
+    >
+      {{ item.text }}
+    </v-tab>
+  </v-tabs>
+  
+  <v-tabs-window v-model="tab">
+    <v-tabs-window-item
+      v-for="item in tabs"
+      :key="item.value"
+      :value="item.value"
+    >
+      {{ item.content }}
+    </v-tabs-window-item>
+  </v-tabs-window>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('tab1')
+const tabs = [
+  { text: 'Tab 1', value: 'tab1', content: 'Content 1' },
+  { text: 'Tab 2', value: 'tab2', content: 'Content 2' },
+  { text: 'Tab 3', value: 'tab3', content: 'Content 3' }
+]
+</script>
+```
+
+## Accessibility
+
+- Uses `role="tablist"` on the tabs container
+- Uses `role="tab"` on individual tabs
+- Sets `aria-selected` on the active tab
+- Manages `tabindex` for keyboard navigation
+- Tab content panels should use `role="tabpanel"`
+
+## Slider Transitions
+
+### Shift (Default)
+The slider smoothly shifts from the previous tab to the new tab, scaling dynamically.
+
+### Grow
+The slider scales from 0 to full size at the new tab position.
+
+### Fade
+The slider fades in at the new tab position.
+
+Transition durations:
+- Shift: 225ms (default)
+- Grow: 350ms (default)
+- Fade: 400ms (default)

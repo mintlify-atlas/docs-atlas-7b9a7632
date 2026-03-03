@@ -1,0 +1,310 @@
+---
+title: useIcon()
+description: Composable for resolving and rendering icons from different icon sets
+---
+
+## Overview
+
+The `useIcon()` composable provides icon resolution functionality, supporting multiple icon sets, SVG paths, icon aliases, and component-based icons.
+
+## Import
+
+```typescript
+import { useIcon } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useIcon(
+  props: MaybeRefOrGetter<IconValue | undefined>
+): { iconData: ComputedRef<IconInstance> }
+
+type IconValue =
+  | string
+  | (string | [path: string, opacity: number])[]
+  | JSXComponent
+```
+
+## Parameters
+
+<ParamField path="props" type="MaybeRefOrGetter<IconValue | undefined>">
+  Icon value to resolve. Can be:
+  - String: icon name, alias, or class
+  - Array: SVG path data
+  - Component: icon component
+  - Ref/Getter: reactive icon value
+</ParamField>
+
+## Return Value
+
+<ResponseField name="iconData" type="ComputedRef<IconInstance>">
+  Computed icon instance containing:
+  
+  ```typescript
+  interface IconInstance {
+    component: IconComponent
+    icon?: IconValue
+  }
+  ```
+  
+  - `component` - The appropriate icon component to render (VComponentIcon, VSvgIcon, VLigatureIcon, or VClassIcon)
+  - `icon` - The resolved icon value
+</ResponseField>
+
+## Icon Types
+
+### String Icons
+
+```typescript
+// Icon alias (starts with $)
+'$vuetify'
+
+// Icon set with name
+'mdi:home'
+'fa:user'
+
+// Class-based icon
+'mdi-home'
+'fas fa-user'
+
+// Ligature icon
+'home'
+```
+
+### SVG Path Icons
+
+```typescript
+// Single path
+['M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z']
+
+// Multiple paths
+[
+  'M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z',
+  'M12,2L2,12h3v8h6v-6h2v6h6v-8h3L12,2z'
+]
+
+// Path with opacity
+[
+  ['M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z', 0.5]
+]
+```
+
+### Component Icons
+
+```typescript
+import CustomIcon from './CustomIcon.vue'
+
+const icon = CustomIcon
+```
+
+## Icon Aliases
+
+Vuetify provides built-in icon aliases:
+
+```typescript
+interface IconAliases {
+  collapse: IconValue
+  complete: IconValue
+  cancel: IconValue
+  close: IconValue
+  delete: IconValue
+  clear: IconValue
+  success: IconValue
+  info: IconValue
+  warning: IconValue
+  error: IconValue
+  prev: IconValue
+  next: IconValue
+  checkboxOn: IconValue
+  checkboxOff: IconValue
+  checkboxIndeterminate: IconValue
+  delimiter: IconValue
+  sortAsc: IconValue
+  sortDesc: IconValue
+  expand: IconValue
+  menu: IconValue
+  subgroup: IconValue
+  dropdown: IconValue
+  radioOn: IconValue
+  radioOff: IconValue
+  edit: IconValue
+  ratingEmpty: IconValue
+  ratingFull: IconValue
+  ratingHalf: IconValue
+  loading: IconValue
+  first: IconValue
+  last: IconValue
+  unfold: IconValue
+  file: IconValue
+  plus: IconValue
+  minus: IconValue
+  calendar: IconValue
+  // ... and more
+}
+```
+
+## Usage Examples
+
+### Basic Icon Resolution
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+import { ref } from 'vue'
+
+const iconName = ref('mdi-home')
+const { iconData } = useIcon(() => iconName.value)
+</script>
+
+<template>
+  <component :is="iconData.component" :icon="iconData.icon" />
+</template>
+```
+
+### Using Icon Aliases
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+
+// Reference built-in aliases with $
+const closeIcon = useIcon(() => '$close')
+const successIcon = useIcon(() => '$success')
+const warningIcon = useIcon(() => '$warning')
+</script>
+
+<template>
+  <div>
+    <component :is="closeIcon.iconData.component" :icon="closeIcon.iconData.icon" />
+    <component :is="successIcon.iconData.component" :icon="successIcon.iconData.icon" />
+    <component :is="warningIcon.iconData.component" :icon="warningIcon.iconData.icon" />
+  </div>
+</template>
+```
+
+### SVG Path Icons
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+
+const svgPath = ['M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z']
+const { iconData } = useIcon(() => svgPath)
+</script>
+
+<template>
+  <component :is="iconData.component" :icon="iconData.icon" />
+</template>
+```
+
+### Multiple Icon Sets
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+import { ref } from 'vue'
+
+const icons = ref([
+  'mdi:home',      // Material Design Icons
+  'fa:user',       // Font Awesome
+  'custom:logo',   // Custom icon set
+])
+</script>
+
+<template>
+  <div v-for="icon in icons" :key="icon">
+    <component 
+      :is="useIcon(() => icon).iconData.value.component" 
+      :icon="useIcon(() => icon).iconData.value.icon" 
+    />
+  </div>
+</template>
+```
+
+### Component-Based Icons
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+import MyCustomIcon from './MyCustomIcon.vue'
+
+const { iconData } = useIcon(() => MyCustomIcon)
+</script>
+
+<template>
+  <component :is="iconData.component" :icon="iconData.icon" />
+</template>
+```
+
+### Dynamic Icons
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+import { ref, computed } from 'vue'
+
+const isExpanded = ref(false)
+const iconName = computed(() => isExpanded.value ? '$expand' : '$collapse')
+const { iconData } = useIcon(iconName)
+
+function toggle() {
+  isExpanded.value = !isExpanded.value
+}
+</script>
+
+<template>
+  <v-btn @click="toggle">
+    <component :is="iconData.component" :icon="iconData.icon" />
+  </v-btn>
+</template>
+```
+
+### Icon with Opacity
+
+```vue
+<script setup>
+import { useIcon } from 'vuetify'
+
+// SVG path with 50% opacity
+const iconWithOpacity = [
+  ['M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z', 0.5]
+]
+
+const { iconData } = useIcon(() => iconWithOpacity)
+</script>
+
+<template>
+  <component :is="iconData.component" :icon="iconData.icon" />
+</template>
+```
+
+## Icon Components
+
+The composable automatically selects the appropriate component:
+
+### VComponentIcon
+Used for JSX/component-based icons
+
+### VSvgIcon
+Used for SVG path arrays
+
+### VLigatureIcon
+Used for ligature-based icon fonts (Material Icons)
+
+### VClassIcon
+Used for class-based icon fonts (Font Awesome, MDI)
+
+## Notes
+
+- Must be called within a component setup function or composable
+- Throws an error if the Vuetify icons provider is not found
+- Icon resolution is reactive and updates when the icon value changes
+- Aliases are defined at the application level via Vuetify configuration
+- Icon sets can be configured globally via the `icons` option
+
+## See Also
+
+- [Icons Guide](/features/icons)
+- [Icon Sets](/features/icon-sets)
+- [VIcon Component](/api/components/v-icon)

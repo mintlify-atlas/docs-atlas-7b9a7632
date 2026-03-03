@@ -1,0 +1,230 @@
+---
+title: Mask Input
+description: The VMaskInput component provides formatted text input with customizable masking patterns for phone numbers, dates, and more.
+---
+
+# Mask Input
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VMaskInput`.
+</Warning>
+
+The VMaskInput component creates text fields with input masking, automatically formatting user input according to a specified pattern.
+
+## Usage
+
+```vue
+<template>
+  <v-mask-input
+    v-model="phone"
+    label="Phone Number"
+    mask="(###) ###-####"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const phone = ref('')
+</script>
+```
+
+## API
+
+### Props
+
+Inherits all VTextField props, plus:
+
+<ParamField path="mask" type="string">
+  The input mask pattern. Use `#` for numbers, `A` for letters, `*` for alphanumeric.
+</ParamField>
+
+<ParamField path="returnMaskedValue" type="boolean" default="false">
+  Returns the masked value instead of the unmasked value.
+</ParamField>
+
+### Mask Characters
+
+- `#` - Number (0-9)
+- `A` - Letter (a-z, A-Z)
+- `*` - Alphanumeric (0-9, a-z, A-Z)
+- Any other character - Literal delimiter
+
+## Examples
+
+### Phone Number
+
+```vue
+<template>
+  <v-mask-input
+    v-model="phone"
+    label="Phone Number"
+    mask="(###) ###-####"
+    placeholder="(555) 123-4567"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const phone = ref('')
+</script>
+```
+
+### Credit Card
+
+```vue
+<template>
+  <v-mask-input
+    v-model="card"
+    label="Credit Card"
+    mask="#### #### #### ####"
+    placeholder="1234 5678 9012 3456"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const card = ref('')
+</script>
+```
+
+### Date
+
+```vue
+<template>
+  <v-mask-input
+    v-model="date"
+    label="Date"
+    mask="##/##/####"
+    placeholder="MM/DD/YYYY"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const date = ref('')
+</script>
+```
+
+### Social Security Number
+
+```vue
+<template>
+  <v-mask-input
+    v-model="ssn"
+    label="SSN"
+    mask="###-##-####"
+    placeholder="123-45-6789"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const ssn = ref('')
+</script>
+```
+
+### Letter Mask
+
+```vue
+<template>
+  <v-mask-input
+    v-model="code"
+    label="Product Code"
+    mask="AAA-###"
+    placeholder="ABC-123"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const code = ref('')
+</script>
+```
+
+### Return Masked Value
+
+```vue
+<template>
+  <div>
+    <v-mask-input
+      v-model="phone"
+      label="Phone Number"
+      mask="(###) ###-####"
+      return-masked-value
+    />
+    <div class="mt-2">Value: {{ phone }}</div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const phone = ref('')
+</script>
+```
+
+### With Validation
+
+```vue
+<template>
+  <v-mask-input
+    v-model="phone"
+    label="Phone Number"
+    mask="(###) ###-####"
+    :rules="[rules.required, rules.complete]"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const phone = ref('')
+
+const rules = {
+  required: value => !!value || 'Phone number is required',
+  complete: value => value?.length === 10 || 'Phone number must be complete'
+}
+</script>
+```
+
+### Alphanumeric
+
+```vue
+<template>
+  <v-mask-input
+    v-model="serial"
+    label="Serial Number"
+    mask="****-****-****"
+    placeholder="AB12-CD34-EF56"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VMaskInput } from 'vuetify/labs/VMaskInput'
+
+const serial = ref('')
+</script>
+```
+
+## Notes
+
+- The mask automatically inserts delimiter characters as the user types
+- Pasting content is supported and will be formatted
+- Backspace removes characters and respects delimiters
+- The unmasked value (without delimiters) is returned by default
+- Use `returnMaskedValue` to get the formatted value with delimiters

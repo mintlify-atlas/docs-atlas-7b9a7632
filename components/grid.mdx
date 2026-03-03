@@ -1,0 +1,529 @@
+---
+title: Grid System
+description: Vuetify's grid system uses a 12-point system for layout with VContainer, VRow, and VCol components built on flexbox.
+---
+
+# Grid System
+
+Vuetify's grid system is built using flexbox and consists of three main components: **VContainer**, **VRow**, and **VCol**. It uses a 12-point grid system that scales to any screen size.
+
+## Components
+
+- **VContainer** - Provides a centered, responsive container for your content
+- **VRow** - Creates a horizontal row of columns
+- **VCol** - Individual column within a row
+
+## Usage
+
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12" md="6">
+        Column 1
+      </v-col>
+      <v-col cols="12" md="6">
+        Column 2
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+## VContainer
+
+The VContainer component provides a centered, responsive container for your content.
+
+### Props
+
+<ParamField path="fluid" type="boolean" default="false">
+Removes viewport maximum-width size breakpoints, making the container full-width.
+
+```vue
+<v-container fluid>
+  <!-- Full-width container -->
+</v-container>
+```
+</ParamField>
+
+<ParamField path="tag" type="string" default="'div'">
+Specifies the custom tag to use for the root element.
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+Sets the maximum width of the container.
+
+```vue
+<v-container max-width="1200">
+  <!-- Content -->
+</v-container>
+```
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+Sets the minimum width of the container.
+</ParamField>
+
+<ParamField path="width" type="string | number">
+Sets the width of the container.
+</ParamField>
+
+<ParamField path="height" type="string | number">
+Sets the height of the container.
+</ParamField>
+
+### Example
+
+```vue
+<template>
+  <!-- Responsive container -->
+  <v-container>
+    <v-row>
+      <v-col>
+        Content
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <!-- Fluid container -->
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        Full-width content
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+## VRow
+
+The VRow component creates a horizontal flexbox row for columns.
+
+### Props
+
+<ParamField path="align" type="'start' | 'end' | 'center' | 'baseline' | 'stretch'">
+Aligns items along the cross axis.
+
+```vue
+<v-row align="center">
+  <!-- Vertically centered columns -->
+</v-row>
+```
+
+<Note>
+This prop is deprecated. Use `align-*` classes instead for better performance.
+</Note>
+</ParamField>
+
+<ParamField path="justify" type="'start' | 'end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'">
+Aligns items along the main axis.
+
+```vue
+<v-row justify="center">
+  <!-- Horizontally centered columns -->
+</v-row>
+```
+
+<Note>
+This prop is deprecated. Use `justify-*` classes instead for better performance.
+</Note>
+</ParamField>
+
+<ParamField path="alignContent" type="'start' | 'end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | 'stretch'">
+Aligns content when there are multiple rows.
+
+<Note>
+This prop is deprecated. Use `align-content-*` classes instead.
+</Note>
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'" default="'default'">
+Adjusts the spacing between columns.
+
+```vue
+<!-- No gutters -->
+<v-row density="compact">
+  <!-- Columns -->
+</v-row>
+
+<!-- Reduced gutters -->
+<v-row density="comfortable">
+  <!-- Columns -->
+</v-row>
+```
+</ParamField>
+
+<ParamField path="noGutters" type="boolean" default="false">
+Removes the gutter spacing between columns.
+
+```vue
+<v-row no-gutters>
+  <!-- Columns with no spacing -->
+</v-row>
+```
+
+<Note>
+This prop is deprecated. Use `density="compact"` instead.
+</Note>
+</ParamField>
+
+<ParamField path="gap" type="number | string | array">
+Sets custom gap spacing between columns. Can be a single value or array of [horizontal, vertical].
+
+```vue
+<!-- Same gap for horizontal and vertical -->
+<v-row :gap="16">
+  <!-- Columns -->
+</v-row>
+
+<!-- Different horizontal and vertical gaps -->
+<v-row :gap="[16, 8]">
+  <!-- Columns -->
+</v-row>
+```
+</ParamField>
+
+<ParamField path="size" type="number | string">
+Sets the number of columns in the row (overrides default 12).
+
+```vue
+<v-row :size="24">
+  <!-- 24-column grid -->
+</v-row>
+```
+</ParamField>
+
+<ParamField path="tag" type="string" default="'div'">
+Specifies the custom tag to use for the root element.
+</ParamField>
+
+### Responsive Alignment Props
+
+All alignment props support responsive breakpoint variants:
+
+- `align-sm`, `align-md`, `align-lg`, `align-xl`, `align-xxl`
+- `justify-sm`, `justify-md`, `justify-lg`, `justify-xl`, `justify-xxl`
+- `align-content-sm`, `align-content-md`, `align-content-lg`, `align-content-xl`, `align-content-xxl`
+
+<Note>
+These props are deprecated. Use responsive classes instead.
+</Note>
+
+### Example
+
+```vue
+<template>
+  <v-row justify="center" align="center">
+    <v-col cols="12" md="6">
+      Centered column
+    </v-col>
+  </v-row>
+
+  <v-row :gap="[16, 8]">
+    <v-col>Column with custom gap</v-col>
+    <v-col>Column with custom gap</v-col>
+  </v-row>
+</template>
+```
+
+## VCol
+
+The VCol component creates individual columns within a row.
+
+### Props
+
+<ParamField path="cols" type="boolean | string | number" default="false">
+Sets the default number of columns the component extends. Available: 1-12 or 'auto'.
+
+```vue
+<v-col cols="12">
+  <!-- Full width -->
+</v-col>
+
+<v-col cols="6">
+  <!-- Half width -->
+</v-col>
+
+<v-col cols="auto">
+  <!-- Auto width based on content -->
+</v-col>
+```
+</ParamField>
+
+<ParamField path="offset" type="string | number">
+Sets the number of columns to offset the component.
+
+```vue
+<v-col cols="6" offset="3">
+  <!-- 6 columns wide, offset by 3 -->
+</v-col>
+```
+</ParamField>
+
+<ParamField path="order" type="string | number">
+Sets the order of the column.
+
+```vue
+<v-col order="2">
+  <!-- Appears second -->
+</v-col>
+<v-col order="1">
+  <!-- Appears first -->
+</v-col>
+```
+
+<Note>
+This prop is deprecated. Use `order-*` classes instead.
+</Note>
+</ParamField>
+
+<ParamField path="alignSelf" type="'auto' | 'start' | 'end' | 'center' | 'baseline' | 'stretch'">
+Sets the align-self property for the column.
+
+```vue
+<v-col align-self="center">
+  <!-- Vertically centered -->
+</v-col>
+```
+
+<Note>
+This prop is deprecated. Use `align-self-*` classes instead.
+</Note>
+</ParamField>
+
+<ParamField path="tag" type="string" default="'div'">
+Specifies the custom tag to use for the root element.
+</ParamField>
+
+### Responsive Breakpoint Props
+
+All column props support responsive breakpoint variants:
+
+**Breakpoint columns:**
+- `sm`, `md`, `lg`, `xl`, `xxl`
+
+**Breakpoint offsets:**
+- `offset-sm`, `offset-md`, `offset-lg`, `offset-xl`, `offset-xxl`
+
+**Breakpoint order:**
+- `order-sm`, `order-md`, `order-lg`, `order-xl`, `order-xxl`
+
+**Breakpoint alignment:**
+- `align-self-sm`, `align-self-md`, `align-self-lg`, `align-self-xl`, `align-self-xxl`
+
+```vue
+<v-col 
+  cols="12" 
+  sm="6" 
+  md="4" 
+  lg="3"
+>
+  <!-- Responsive column -->
+</v-col>
+```
+
+### Fractional Columns
+
+You can use fractional values for custom column divisions:
+
+```vue
+<v-col cols="6/10">
+  <!-- 6 columns out of 10 total -->
+</v-col>
+```
+
+### Example
+
+```vue
+<template>
+  <v-row>
+    <v-col cols="12" sm="6" md="4">
+      Responsive column
+    </v-col>
+    <v-col cols="12" sm="6" md="4">
+      Responsive column
+    </v-col>
+    <v-col cols="12" md="4">
+      Responsive column
+    </v-col>
+  </v-row>
+
+  <v-row>
+    <v-col cols="6" offset="3">
+      Offset column
+    </v-col>
+  </v-row>
+</template>
+```
+
+## Examples
+
+### Basic Grid
+
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <v-col
+        v-for="n in 12"
+        :key="n"
+        cols="1"
+      >
+        <v-sheet class="pa-2 ma-2">{{ n }}</v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+### Responsive Layout
+
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card>
+          <v-card-title>Card 1</v-card-title>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card>
+          <v-card-title>Card 2</v-card-title>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card>
+          <v-card-title>Card 3</v-card-title>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card>
+          <v-card-title>Card 4</v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+### Offset
+
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="4">
+        <v-sheet class="pa-2">4 columns</v-sheet>
+      </v-col>
+      <v-col cols="4" offset="4">
+        <v-sheet class="pa-2">4 columns, offset 4</v-sheet>
+      </v-col>
+    </v-row>
+    
+    <v-row>
+      <v-col cols="3" offset="3">
+        <v-sheet class="pa-2">3 columns, offset 3</v-sheet>
+      </v-col>
+      <v-col cols="3" offset="3">
+        <v-sheet class="pa-2">3 columns, offset 3</v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+### Alignment
+
+```vue
+<template>
+  <v-container>
+    <!-- Vertical alignment -->
+    <v-row align="center" style="height: 200px;">
+      <v-col>
+        <v-sheet class="pa-2">Centered</v-sheet>
+      </v-col>
+    </v-row>
+
+    <!-- Horizontal alignment -->
+    <v-row justify="center">
+      <v-col cols="4">
+        <v-sheet class="pa-2">Centered</v-sheet>
+      </v-col>
+    </v-row>
+
+    <!-- Space between -->
+    <v-row justify="space-between">
+      <v-col cols="4">
+        <v-sheet class="pa-2">Left</v-sheet>
+      </v-col>
+      <v-col cols="4">
+        <v-sheet class="pa-2">Right</v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+### Custom Gaps
+
+```vue
+<template>
+  <v-container>
+    <!-- Custom horizontal and vertical gap -->
+    <v-row :gap="[24, 16]">
+      <v-col cols="4">
+        <v-sheet class="pa-2">Column</v-sheet>
+      </v-col>
+      <v-col cols="4">
+        <v-sheet class="pa-2">Column</v-sheet>
+      </v-col>
+      <v-col cols="4">
+        <v-sheet class="pa-2">Column</v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+## Breakpoints
+
+Vuetify uses the following breakpoints:
+
+- **xs**: < 600px (extra small)
+- **sm**: 600px - 959px (small)
+- **md**: 960px - 1279px (medium)
+- **lg**: 1280px - 1919px (large)
+- **xl**: 1920px - 2559px (extra large)
+- **xxl**: ≥ 2560px (extra extra large)
+
+## Best Practices
+
+<Note>
+- Always wrap VRow components in a VContainer
+- Use responsive breakpoint props for mobile-first design
+- Prefer utility classes over deprecated props for alignment
+- Use `fluid` prop on VContainer for full-width layouts
+- Use `density="compact"` instead of deprecated `no-gutters`
+</Note>

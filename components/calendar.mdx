@@ -1,0 +1,170 @@
+---
+title: Calendar
+description: The VCalendar component displays events in a calendar format with multiple view modes including month, week, day, and category views.
+---
+
+# Calendar
+
+The VCalendar component is a flexible calendar display that supports multiple view types, event handling, and customizable time ranges.
+
+## Usage
+
+```vue
+<template>
+  <v-calendar
+    v-model="date"
+    :events="events"
+    type="month"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const date = ref(new Date())
+const events = ref([
+  {
+    title: 'Team Meeting',
+    start: '2024-03-15 10:00',
+    end: '2024-03-15 11:00',
+    color: 'primary'
+  }
+])
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="string | number | Date">
+  The currently selected date. Can be a date string, timestamp, or Date object.
+</ParamField>
+
+<ParamField path="type" type="string" default="month">
+  Calendar display type. Options: `month`, `week`, `day`, `4day`, `category`, `custom-weekly`, `custom-daily`.
+</ParamField>
+
+<ParamField path="events" type="CalendarEvent[]">
+  Array of events to display on the calendar.
+</ParamField>
+
+<ParamField path="categories" type="CalendarCategory[] | string">
+  Categories for category view mode.
+</ParamField>
+
+<ParamField path="categoryDays" type="number | string" default="1">
+  Number of days to show in category view.
+</ParamField>
+
+<ParamField path="maxDays" type="number" default="7">
+  Maximum number of days to display.
+</ParamField>
+
+<ParamField path="categoryHideDynamic" type="boolean" default="false">
+  Hide dynamically created categories.
+</ParamField>
+
+<ParamField path="categoryShowAll" type="boolean" default="false">
+  Show all categories even if they have no events.
+</ParamField>
+
+<ParamField path="categoryForInvalid" type="string" default="''">
+  Category name for events with invalid categories.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(date: string) => void">
+  Emitted when the selected date changes.
+</ParamField>
+
+<ParamField path="change" type="(range: { start: CalendarTimestamp, end: CalendarTimestamp }) => void">
+  Emitted when the visible date range changes.
+</ParamField>
+
+<ParamField path="moved" type="(date: CalendarTimestamp) => void">
+  Emitted when navigating to a different time period.
+</ParamField>
+
+### Slots
+
+<ParamField path="day" type="{ date, outside, index, week }">
+  Customize individual day cells.
+</ParamField>
+
+<ParamField path="day-body" type="CalendarDayBodySlotScope">
+  Customize the body content of day cells.
+</ParamField>
+
+<ParamField path="day-header" type="CalendarDayHeaderSlotScope">
+  Customize the header of day cells.
+</ParamField>
+
+<ParamField path="event" type="EventSlotScope">
+  Customize individual event display.
+</ParamField>
+
+<ParamField path="category" type="CalendarDayCategorySlotScope">
+  Customize category rows in category view.
+</ParamField>
+
+## Examples
+
+### Week View
+
+```vue
+<template>
+  <v-calendar
+    v-model="date"
+    type="week"
+    :events="events"
+  />
+</template>
+```
+
+### Category View
+
+```vue
+<template>
+  <v-calendar
+    v-model="date"
+    type="category"
+    :categories="['Work', 'Personal', 'Other']"
+    :events="events"
+  />
+</template>
+```
+
+### Custom Event Display
+
+```vue
+<template>
+  <v-calendar v-model="date" :events="events">
+    <template #event="{ event }">
+      <div class="custom-event">
+        <strong>{{ event.title }}</strong>
+        <div>{{ event.time }}</div>
+      </div>
+    </template>
+  </v-calendar>
+</template>
+```
+
+## Methods
+
+The component exposes several methods through template refs:
+
+- `next(amount?: number)` - Navigate forward in time
+- `prev(amount?: number)` - Navigate backward in time
+- `move(amount: number)` - Move by a specific amount
+
+```vue
+<script setup>
+const calendarRef = ref()
+
+function goToNextMonth() {
+  calendarRef.value.next()
+}
+</script>
+```

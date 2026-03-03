@@ -1,0 +1,227 @@
+---
+title: Avatar Group
+description: The VAvatarGroup component displays multiple avatars in a group with overflow handling and customization options.
+---
+
+# Avatar Group
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VAvatarGroup`.
+</Warning>
+
+The VAvatarGroup component arranges multiple avatars in a compact group display with overflow counting.
+
+## Usage
+
+```vue
+<template>
+  <v-avatar-group :items="users">
+  </v-avatar-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VAvatarGroup } from 'vuetify/labs/VAvatarGroup'
+
+const users = ref([
+  { image: 'https://i.pravatar.cc/150?img=1' },
+  { image: 'https://i.pravatar.cc/150?img=2' },
+  { image: 'https://i.pravatar.cc/150?img=3' },
+  { image: 'https://i.pravatar.cc/150?img=4' }
+])
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="items" type="AvatarGroupItem[]" default="[]">
+  Array of avatar items. Can be strings (image URLs) or objects with avatar props.
+</ParamField>
+
+<ParamField path="itemProps" type="boolean | string | Function" default="null">
+  How to extract props from items. Set to `true` to use item as props directly.
+</ParamField>
+
+<ParamField path="limit" type="number">
+  Maximum number of avatars to display before showing overflow.
+</ParamField>
+
+<ParamField path="size" type="number | string">
+  Size applied to all avatars in the group.
+</ParamField>
+
+<ParamField path="border" type="boolean | number | string">
+  Border applied to avatars for better visual separation.
+</ParamField>
+
+<ParamField path="gap" type="number | string">
+  Gap between avatars. Negative values create overlap.
+</ParamField>
+
+<ParamField path="hoverable" type="boolean" default="false">
+  Enables hover effect to expand avatars on hover.
+</ParamField>
+
+<ParamField path="reverse" type="boolean" default="false">
+  Reverses the order of avatars.
+</ParamField>
+
+<ParamField path="vertical" type="boolean" default="false">
+  Displays avatars vertically instead of horizontally.
+</ParamField>
+
+<ParamField path="overflowText" type="string">
+  Custom text for the overflow counter. Defaults to "+{count}".
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Default slot for manual avatar placement.
+</ParamField>
+
+<ParamField path="prepend">
+  Content displayed before the avatar group.
+</ParamField>
+
+<ParamField path="append">
+  Content displayed after the avatar group.
+</ParamField>
+
+<ParamField path="item" type="{ props, index }">
+  Customize individual avatar display.
+</ParamField>
+
+<ParamField path="overflow" type="{ overflow }">
+  Customize the overflow counter display.
+</ParamField>
+
+## Examples
+
+### With Limit and Overflow
+
+```vue
+<template>
+  <v-avatar-group :items="users" :limit="3">
+  </v-avatar-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VAvatarGroup } from 'vuetify/labs/VAvatarGroup'
+
+const users = ref([
+  { image: 'https://i.pravatar.cc/150?img=1' },
+  { image: 'https://i.pravatar.cc/150?img=2' },
+  { image: 'https://i.pravatar.cc/150?img=3' },
+  { image: 'https://i.pravatar.cc/150?img=4' },
+  { image: 'https://i.pravatar.cc/150?img=5' }
+])
+</script>
+```
+
+### Hoverable with Border
+
+```vue
+<template>
+  <v-avatar-group
+    :items="users"
+    hoverable
+    border="2"
+    size="48"
+  />
+</template>
+```
+
+### Custom Item Props
+
+```vue
+<template>
+  <v-avatar-group
+    :items="users"
+    :item-props="getItemProps"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VAvatarGroup } from 'vuetify/labs/VAvatarGroup'
+
+const users = ref([
+  { name: 'John Doe', avatar: 'https://i.pravatar.cc/150?img=1', color: 'primary' },
+  { name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=2', color: 'secondary' }
+])
+
+function getItemProps(item) {
+  return {
+    image: item.avatar,
+    color: item.color
+  }
+}
+</script>
+```
+
+### Vertical Layout
+
+```vue
+<template>
+  <v-avatar-group
+    :items="users"
+    vertical
+    size="40"
+  />
+</template>
+```
+
+### Custom Overflow
+
+```vue
+<template>
+  <v-avatar-group :items="users" :limit="3">
+    <template #overflow="{ overflow }">
+      <v-avatar color="primary">
+        <span>{{ overflow }} more</span>
+      </v-avatar>
+    </template>
+  </v-avatar-group>
+</template>
+```
+
+### With Text Avatars
+
+```vue
+<template>
+  <v-avatar-group :items="users" size="48" border="2" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VAvatarGroup } from 'vuetify/labs/VAvatarGroup'
+
+const users = ref([
+  { text: 'JD', color: 'primary' },
+  { text: 'JS', color: 'secondary' },
+  { text: 'AB', color: 'accent' }
+])
+</script>
+```
+
+### Manual Avatars
+
+```vue
+<template>
+  <v-avatar-group size="48" border="2">
+    <v-avatar color="primary">
+      <v-icon>mdi-account</v-icon>
+    </v-avatar>
+    <v-avatar color="secondary">
+      <v-icon>mdi-account</v-icon>
+    </v-avatar>
+    <v-avatar color="accent">
+      <v-icon>mdi-account</v-icon>
+    </v-avatar>
+  </v-avatar-group>
+</template>
+```

@@ -1,0 +1,468 @@
+---
+title: Theme System
+description: Deep dive into Vuetify's powerful theme system, custom themes, and dynamic theming
+---
+
+# Theme System
+
+Vuetify's theme system provides a comprehensive solution for managing colors, dark mode, and custom themes across your application. Built on CSS custom properties and Vue reactivity, it enables dynamic theme switching without page reloads.
+
+## Theme Configuration
+
+The theme system is initialized through the `createTheme` function in `composables/theme.ts:347`:
+
+```typescript
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#1867C0',
+          secondary: '#48A9A6',
+          error: '#B00020',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FB8C00',
+        },
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: '#2196F3',
+          secondary: '#54B6B2',
+        },
+      },
+    },
+  },
+})
+```
+
+### ThemeOptions Interface
+
+The theme configuration accepts the following options (`composables/theme.ts:39-47`):
+
+```typescript
+type ThemeOptions = false | {
+  cspNonce?: string
+  defaultTheme?: 'light' | 'dark' | 'system' | string
+  variations?: false | VariationsOptions
+  themes?: Record<string, ThemeDefinition>
+  stylesheetId?: string
+  scope?: string
+  utilities?: boolean
+}
+```
+
+<Note>
+Setting `theme: false` disables the theme system entirely, which can improve performance if you're not using Vuetify's theming features.
+</Note>
+
+## Default Themes
+
+Vuetify includes comprehensive light and dark themes out of the box (`composables/theme.ts:130-225`):
+
+### Light Theme
+
+```typescript
+light: {
+  dark: false,
+  colors: {
+    background: '#FFFFFF',
+    surface: '#FFFFFF',
+    'surface-bright': '#FFFFFF',
+    'surface-light': '#EEEEEE',
+    'surface-variant': '#424242',
+    'on-surface-variant': '#EEEEEE',
+    primary: '#1867C0',
+    'primary-darken-1': '#1F5592',
+    secondary: '#48A9A6',
+    'secondary-darken-1': '#018786',
+    error: '#B00020',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+  },
+  variables: {
+    'border-color': '#000000',
+    'border-opacity': 0.12,
+    'high-emphasis-opacity': 0.87,
+    'medium-emphasis-opacity': 0.60,
+    'disabled-opacity': 0.38,
+  },
+}
+```
+
+### Dark Theme
+
+```typescript
+dark: {
+  dark: true,
+  colors: {
+    background: '#121212',
+    surface: '#212121',
+    'surface-bright': '#ccbfd6',
+    'surface-light': '#424242',
+    primary: '#2196F3',
+    'primary-darken-1': '#277CC1',
+    secondary: '#54B6B2',
+    error: '#CF6679',
+  },
+  variables: {
+    'border-color': '#FFFFFF',
+    'border-opacity': 0.12,
+    'high-emphasis-opacity': 1,
+    'medium-emphasis-opacity': 0.70,
+    'disabled-opacity': 0.50,
+  },
+}
+```
+
+## Color System
+
+Vuetify's color system follows Material Design 3 principles with semantic color naming:
+
+### Base Colors
+
+Every theme must define these base colors (`composables/theme.ts:79-88`):
+
+- `background` - Main background color
+- `surface` - Surface/card background color
+- `primary` - Primary brand color
+- `secondary` - Secondary brand color
+- `success` - Success state color
+- `warning` - Warning state color
+- `error` - Error state color
+- `info` - Informational color
+
+### On-Colors
+
+Vuetify automatically generates "on-colors" for text that appears on colored backgrounds (`composables/theme.ts:295-310`):
+
+```typescript
+// Automatically generated based on luminance
+colors: {
+  'on-background': '#000000',  // Dark text on light background
+  'on-surface': '#000000',
+  'on-primary': '#FFFFFF',     // Light text on dark primary
+  'on-secondary': '#000000',
+  'on-success': '#FFFFFF',
+  'on-warning': '#000000',
+  'on-error': '#FFFFFF',
+  'on-info': '#FFFFFF',
+}
+```
+
+<Note>
+The on-color generation uses the `hasLightForeground` utility to determine whether light or dark text provides better contrast.
+</Note>
+
+## Custom Themes
+
+Create custom themes by extending the base configuration:
+
+```typescript
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'customTheme',
+    themes: {
+      customTheme: {
+        dark: false,
+        colors: {
+          primary: '#6200EE',
+          secondary: '#03DAC6',
+          accent: '#FF4081',
+          error: '#B00020',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FB8C00',
+          // Custom colors
+          background: '#F5F5F5',
+          surface: '#FFFFFF',
+          'custom-blue': '#0000FF',
+          'custom-green': '#00FF00',
+        },
+        variables: {
+          'border-color': '#000000',
+          'border-opacity': 0.12,
+          'border-radius-root': '8px',
+        },
+      },
+    },
+  },
+})
+```
+
+## Color Variations
+
+Vuetify can automatically generate color variations (lighten/darken) for your theme colors (`composables/theme.ts:265-276`):
+
+```typescript
+theme: {
+  variations: {
+    colors: ['primary', 'secondary'],
+    lighten: 5,
+    darken: 5,
+  },
+}
+```
+
+This generates variations like:
+- `primary-lighten-1` through `primary-lighten-5`
+- `primary-darken-1` through `primary-darken-5`
+- `secondary-lighten-1` through `secondary-lighten-5`
+- `secondary-darken-1` through `secondary-darken-5`
+
+<Warning>
+Generating many variations increases CSS bundle size. Only generate variations for colors you actually use.
+</Warning>
+
+## System Theme
+
+Vuetify supports automatic theme switching based on the user's OS preferences (`composables/theme.ts:447-463`):
+
+```typescript
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'system', // Follows OS preference
+  },
+})
+```
+
+The system theme:
+- Listens to `prefers-color-scheme` media query
+- Automatically updates when OS theme changes
+- Falls back to 'light' or 'dark' based on user's system settings
+
+```typescript
+if (SUPPORTS_MATCH_MEDIA) {
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  
+  function updateSystemName() {
+    systemName.value = media.matches ? 'dark' : 'light'
+  }
+  
+  media.addEventListener('change', updateSystemName, { passive: true })
+}
+```
+
+## Dynamic Theme Switching
+
+Use the `useTheme` composable to control themes programmatically:
+
+<Tabs>
+  <Tab title="Change Theme">
+    ```vue
+    <script setup>
+    import { useTheme } from 'vuetify'
+
+    const theme = useTheme()
+
+    function toggleTheme() {
+      theme.change(theme.current.value.dark ? 'light' : 'dark')
+    }
+    </script>
+
+    <template>
+      <v-btn @click="toggleTheme">Toggle Theme</v-btn>
+    </template>
+    ```
+  </Tab>
+
+  <Tab title="Cycle Themes">
+    ```vue
+    <script setup>
+    import { useTheme } from 'vuetify'
+
+    const theme = useTheme()
+
+    // Cycle through all available themes
+    function cycleTheme() {
+      theme.cycle()
+    }
+
+    // Cycle through specific themes
+    function toggleLightDark() {
+      theme.toggle(['light', 'dark'])
+    }
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="Access Colors">
+    ```vue
+    <script setup>
+    import { useTheme } from 'vuetify'
+
+    const theme = useTheme()
+
+    // Access current theme colors
+    const primaryColor = computed(() => 
+      theme.current.value.colors.primary
+    )
+
+    // Check if dark theme
+    const isDark = computed(() => 
+      theme.current.value.dark
+    )
+    </script>
+    ```
+  </Tab>
+</Tabs>
+
+### ThemeInstance API
+
+The theme instance provides the following interface (`composables/theme.ts:101-122`):
+
+```typescript
+interface ThemeInstance {
+  change: (themeName: string) => void
+  cycle: (themeArray?: string[]) => void
+  toggle: (themeArray?: [string, string]) => void
+
+  readonly isDisabled: boolean
+  readonly isSystem: Readonly<Ref<boolean>>
+  readonly themes: Ref<Record<string, InternalThemeDefinition>>
+  readonly name: Readonly<Ref<string>>
+  readonly current: DeepReadonly<Ref<InternalThemeDefinition>>
+  readonly computedThemes: DeepReadonly<Ref<Record<string, InternalThemeDefinition>>>
+  readonly prefix: string
+  readonly themeClasses: Readonly<Ref<string | undefined>>
+  readonly styles: Readonly<Ref<string>>
+}
+```
+
+## CSS Custom Properties
+
+Vuetify generates CSS custom properties for all theme colors (`composables/theme.ts:243-263`):
+
+```css
+:root {
+  --v-theme-primary: 24, 103, 192;
+  --v-theme-secondary: 72, 169, 166;
+  --v-theme-error: 176, 0, 32;
+  --v-theme-background: 255, 255, 255;
+  --v-theme-surface: 255, 255, 255;
+  --v-border-opacity: 0.12;
+  --v-high-emphasis-opacity: 0.87;
+}
+```
+
+Use these in your custom CSS:
+
+```css
+.my-component {
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+```
+
+## Utility Classes
+
+When `utilities: true` (default), Vuetify generates utility classes for all theme colors (`composables/theme.ts:412-439`):
+
+### Background Utilities
+
+```html
+<div class="bg-primary">Primary background with on-primary text</div>
+<div class="bg-secondary">Secondary background</div>
+<div class="bg-error">Error background</div>
+```
+
+### Text Utilities
+
+```html
+<p class="text-primary">Primary colored text</p>
+<p class="text-secondary">Secondary colored text</p>
+<p class="text-error">Error colored text</p>
+```
+
+### Border Utilities
+
+```html
+<div class="border-primary">Primary border color</div>
+<div class="border-secondary">Secondary border color</div>
+```
+
+<Warning>
+Utility classes increase CSS bundle size. Set `utilities: false` if you don't use them.
+</Warning>
+
+## Theme Variables
+
+Beyond colors, themes can define custom variables:
+
+```typescript
+theme: {
+  themes: {
+    light: {
+      variables: {
+        'border-color': '#000000',
+        'border-opacity': 0.12,
+        'shadow-color': '#000000',
+        'high-emphasis-opacity': 0.87,
+        'medium-emphasis-opacity': 0.60,
+        'disabled-opacity': 0.38,
+        'theme-kbd': '#EEEEEE',
+        'theme-code': '#F5F5F5',
+        'elevation-overlay-color': 'black',
+        'elevation-overlay-opacity-step': '2%',
+      },
+    },
+  },
+}
+```
+
+## Scoped Themes
+
+Apply different themes to specific parts of your application:
+
+```vue
+<template>
+  <v-app>
+    <v-main>
+      <div class="v-theme--light">
+        <!-- This section always uses light theme -->
+      </div>
+      
+      <div class="v-theme--dark">
+        <!-- This section always uses dark theme -->
+      </div>
+    </v-main>
+  </v-app>
+</template>
+```
+
+## CSP Support
+
+For Content Security Policy compliance, provide a nonce:
+
+```typescript
+const vuetify = createVuetify({
+  theme: {
+    cspNonce: 'your-nonce-value',
+  },
+})
+```
+
+The nonce is applied to the dynamically generated style element (`composables/theme.ts:338`).
+
+## Performance Considerations
+
+1. **Computed styles** - Theme CSS is only regenerated when themes change
+2. **CSS layers** - Styles use `@layer` for proper cascade management
+3. **Lazy evaluation** - Colors and variations computed on-demand
+4. **Shallow refs** - Non-reactive data uses shallowRef
+
+## Best Practices
+
+1. **Define semantic colors** - Use `primary`, `secondary`, etc. instead of specific color names
+2. **Test both themes** - Always verify your app works in light and dark modes
+3. **Use system theme** - Respect user's OS preference when possible
+4. **Minimize variations** - Only generate color variations you actually use
+5. **Leverage CSS variables** - Use theme variables in custom styles for consistency
+6. **Disable utilities if unused** - Set `utilities: false` to reduce bundle size

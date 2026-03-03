@@ -1,0 +1,243 @@
+---
+title: Date Input
+description: The VDateInput component combines a text field with a date picker for convenient date selection and manual input.
+---
+
+# Date Input
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VDateInput`.
+</Warning>
+
+The VDateInput component provides a text field with an integrated date picker, supporting both keyboard input and visual date selection.
+
+## Usage
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Select Date"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+const date = ref(new Date())
+</script>
+```
+
+## API
+
+### Props
+
+Inherits all VTextField and VDatePicker props, plus:
+
+<ParamField path="modelValue" type="any">
+  The selected date value.
+</ParamField>
+
+<ParamField path="multiple" type="boolean | 'range' | number" default="false">
+  Enables multiple date selection. Use `'range'` for date ranges.
+</ParamField>
+
+<ParamField path="displayFormat" type="string | Function">
+  Format for displaying the date in the text field.
+</ParamField>
+
+<ParamField path="location" type="string" default="bottom start">
+  Position of the date picker menu.
+</ParamField>
+
+<ParamField path="menu" type="boolean">
+  Controls the visibility of the date picker menu.
+</ParamField>
+
+<ParamField path="menuProps" type="object">
+  Props passed to the internal VMenu component.
+</ParamField>
+
+<ParamField path="pickerProps" type="object">
+  Props passed to the internal VDatePicker component.
+</ParamField>
+
+<ParamField path="updateOn" type="Array" default="['blur', 'enter']">
+  Events that trigger model update. Options: `blur`, `enter`.
+</ParamField>
+
+<ParamField path="hideActions" type="boolean" default="true">
+  Hides the save/cancel action buttons.
+</ParamField>
+
+<ParamField path="prependIcon" type="string" default="$calendar">
+  Icon displayed at the start of the input.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the date value changes.
+</ParamField>
+
+<ParamField path="save" type="(value: any) => void">
+  Emitted when the save action is triggered.
+</ParamField>
+
+<ParamField path="cancel" type="() => void">
+  Emitted when the cancel action is triggered.
+</ParamField>
+
+### Slots
+
+Inherits all VTextField and VDatePicker slots, plus:
+
+<ParamField path="actions" type="{ save, cancel, isPristine }">
+  Customize the action buttons in the date picker.
+</ParamField>
+
+## Examples
+
+### Range Selection
+
+```vue
+<template>
+  <v-date-input
+    v-model="dateRange"
+    multiple="range"
+    label="Select Date Range"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+const dateRange = ref([])
+</script>
+```
+
+### Custom Display Format
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Birth Date"
+    display-format="MMMM dd, yyyy"
+  />
+</template>
+```
+
+### With Min/Max Dates
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Appointment Date"
+    :min="minDate"
+    :max="maxDate"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+const date = ref(new Date())
+const minDate = new Date()
+const maxDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+</script>
+```
+
+### With Actions
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Event Date"
+    :hide-actions="false"
+  >
+    <template #actions="{ save, cancel }">
+      <v-btn @click="cancel" variant="text">Clear</v-btn>
+      <v-btn @click="save" color="primary">Select</v-btn>
+    </template>
+  </v-date-input>
+</template>
+```
+
+### Multiple Dates
+
+```vue
+<template>
+  <v-date-input
+    v-model="dates"
+    :multiple="true"
+    label="Select Multiple Dates"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+const dates = ref([])
+</script>
+```
+
+### With Validation
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Required Date"
+    :rules="[rules.required, rules.future]"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
+const date = ref(null)
+
+const rules = {
+  required: value => !!value || 'Date is required',
+  future: value => {
+    if (!value) return true
+    return new Date(value) > new Date() || 'Date must be in the future'
+  }
+}
+</script>
+```
+
+### Custom Picker Props
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Date"
+    :picker-props="{
+      showAdjacentMonths: true,
+      showWeek: true
+    }"
+  />
+</template>
+```
+
+### Update on Enter Only
+
+```vue
+<template>
+  <v-date-input
+    v-model="date"
+    label="Date"
+    :update-on="['enter']"
+  />
+</template>
+```

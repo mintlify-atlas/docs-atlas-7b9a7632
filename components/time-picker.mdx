@@ -1,0 +1,208 @@
+---
+title: Time Picker
+description: The VTimePicker component provides an interactive clock interface for selecting time values with support for both 12-hour and 24-hour formats.
+---
+
+# Time Picker
+
+The VTimePicker component allows users to select time using either a visual clock dial or input fields.
+
+## Usage
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    format="ampm"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const time = ref('10:30')
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="string | Date">
+  The selected time value. Can be a time string (HH:mm or HH:mm:ss) or Date object.
+</ParamField>
+
+<ParamField path="format" type="string" default="ampm">
+  Time format. Options: `ampm` (12-hour), `24hr` (24-hour).
+</ParamField>
+
+<ParamField path="viewMode" type="string" default="hour">
+  Current view mode. Options: `hour`, `minute`, `second`.
+</ParamField>
+
+<ParamField path="period" type="string" default="am">
+  AM/PM period for 12-hour format. Options: `am`, `pm`.
+</ParamField>
+
+<ParamField path="variant" type="string" default="dial">
+  Display variant. Options: `dial`, `input`.
+</ParamField>
+
+<ParamField path="useSeconds" type="boolean" default="false">
+  Enables second selection.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the time picker.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the time picker read-only.
+</ParamField>
+
+<ParamField path="scrollable" type="boolean" default="false">
+  Allows scrolling to select time values.
+</ParamField>
+
+<ParamField path="title" type="string" default="$vuetify.timePicker.title">
+  Title displayed in the picker.
+</ParamField>
+
+<ParamField path="min" type="string">
+  Minimum selectable time.
+</ParamField>
+
+<ParamField path="max" type="string">
+  Maximum selectable time.
+</ParamField>
+
+<ParamField path="allowedHours" type="Function | Array">
+  Function or array to determine which hours are selectable.
+</ParamField>
+
+<ParamField path="allowedMinutes" type="Function | Array">
+  Function or array to determine which minutes are selectable.
+</ParamField>
+
+<ParamField path="allowedSeconds" type="Function | Array">
+  Function or array to determine which seconds are selectable.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(time: string | null) => void">
+  Emitted when the time value changes.
+</ParamField>
+
+<ParamField path="update:hour" type="(hour: number) => void">
+  Emitted when the hour value changes.
+</ParamField>
+
+<ParamField path="update:minute" type="(minute: number) => void">
+  Emitted when the minute value changes.
+</ParamField>
+
+<ParamField path="update:second" type="(second: number) => void">
+  Emitted when the second value changes.
+</ParamField>
+
+<ParamField path="update:period" type="(period: 'am' | 'pm') => void">
+  Emitted when the AM/PM period changes.
+</ParamField>
+
+<ParamField path="update:viewMode" type="(mode: string) => void">
+  Emitted when the view mode changes.
+</ParamField>
+
+### Slots
+
+<ParamField path="title">
+  Customize the title section.
+</ParamField>
+
+<ParamField path="actions">
+  Add custom action buttons.
+</ParamField>
+
+## Examples
+
+### 24-Hour Format
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    format="24hr"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const time = ref('14:30')
+</script>
+```
+
+### With Seconds
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    use-seconds
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const time = ref('10:30:45')
+</script>
+```
+
+### Input Variant
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    variant="input"
+  />
+</template>
+```
+
+### Allowed Times
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    :allowed-hours="allowedHours"
+    :allowed-minutes="allowedMinutes"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const time = ref('09:00')
+
+// Only allow business hours (9 AM - 5 PM)
+const allowedHours = [9, 10, 11, 12, 13, 14, 15, 16, 17]
+
+// Only allow 15-minute intervals
+const allowedMinutes = [0, 15, 30, 45]
+</script>
+```
+
+### Min/Max Time
+
+```vue
+<template>
+  <v-time-picker
+    v-model="time"
+    min="09:00"
+    max="17:00"
+  />
+</template>
+```

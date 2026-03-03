@@ -1,0 +1,440 @@
+---
+title: Color Utilities
+description: Utility functions and constants for color manipulation and conversion
+---
+
+## Overview
+
+Vuetify provides comprehensive color utilities for parsing, converting, manipulating, and analyzing colors across different formats (RGB, HSV, HSL, Hex).
+
+## Import
+
+```typescript
+import {
+  parseColor,
+  RGBtoHex,
+  HexToRGB,
+  HSVtoRGB,
+  RGBtoHSV,
+  lighten,
+  darken,
+  getLuma,
+  getContrast
+} from 'vuetify/util'
+
+// Color palette
+import colors from 'vuetify/util/colors'
+```
+
+## Color Types
+
+```typescript
+type RGB = { r: number, g: number, b: number, a?: number }
+type HSV = { h: number, s: number, v: number, a?: number }
+type HSL = { h: number, s: number, l: number, a?: number }
+type Hex = string
+type Color = string | number | HSV | RGB | HSL
+```
+
+## Color Parsing
+
+### parseColor()
+
+Parse any color format into RGB.
+
+```typescript
+function parseColor(color: Color): RGB
+```
+
+**Examples:**
+
+```typescript
+import { parseColor } from 'vuetify/util'
+
+// Hex strings
+parseColor('#FF0000')        // { r: 255, g: 0, b: 0 }
+parseColor('#F00')           // { r: 255, g: 0, b: 0 }
+parseColor('#FF0000FF')      // { r: 255, g: 0, b: 0, a: 1 }
+
+// RGB strings
+parseColor('rgb(255, 0, 0)')           // { r: 255, g: 0, b: 0 }
+parseColor('rgba(255, 0, 0, 0.5)')     // { r: 255, g: 0, b: 0, a: 0.5 }
+
+// HSL strings
+parseColor('hsl(0, 100%, 50%)')        // RGB equivalent
+parseColor('hsla(0, 100%, 50%, 0.5)')  // RGB equivalent with alpha
+
+// Number
+parseColor(0xFF0000)         // { r: 255, g: 0, b: 0 }
+
+// Objects
+parseColor({ r: 255, g: 0, b: 0 })     // { r: 255, g: 0, b: 0 }
+parseColor({ h: 0, s: 1, v: 1 })       // RGB equivalent
+parseColor({ h: 0, s: 1, l: 0.5 })     // RGB equivalent
+```
+
+## Color Conversion
+
+### RGBtoHex()
+
+Convert RGB to hexadecimal string.
+
+```typescript
+function RGBtoHex(rgb: RGB): Hex
+```
+
+**Example:**
+
+```typescript
+import { RGBtoHex } from 'vuetify/util'
+
+RGBtoHex({ r: 255, g: 0, b: 0 })           // '#FF0000'
+RGBtoHex({ r: 255, g: 0, b: 0, a: 0.5 })   // '#FF000080'
+```
+
+### HexToRGB()
+
+Convert hexadecimal string to RGB.
+
+```typescript
+function HexToRGB(hex: Hex): RGB
+```
+
+**Example:**
+
+```typescript
+import { HexToRGB } from 'vuetify/util'
+
+HexToRGB('#FF0000')      // { r: 255, g: 0, b: 0 }
+HexToRGB('#F00')         // { r: 255, g: 0, b: 0 }
+HexToRGB('#FF0000FF')    // { r: 255, g: 0, b: 0, a: 1 }
+```
+
+### HSVtoRGB()
+
+Convert HSV to RGB.
+
+```typescript
+function HSVtoRGB(hsv: HSV): RGB
+```
+
+**Example:**
+
+```typescript
+import { HSVtoRGB } from 'vuetify/util'
+
+HSVtoRGB({ h: 0, s: 1, v: 1 })     // { r: 255, g: 0, b: 0 }
+HSVtoRGB({ h: 120, s: 1, v: 1 })   // { r: 0, g: 255, b: 0 }
+```
+
+### RGBtoHSV()
+
+Convert RGB to HSV.
+
+```typescript
+function RGBtoHSV(rgb: RGB): HSV
+```
+
+**Example:**
+
+```typescript
+import { RGBtoHSV } from 'vuetify/util'
+
+RGBtoHSV({ r: 255, g: 0, b: 0 })   // { h: 0, s: 1, v: 1 }
+RGBtoHSV({ r: 0, g: 255, b: 0 })   // { h: 120, s: 1, v: 1 }
+```
+
+### HSLtoRGB()
+
+Convert HSL to RGB.
+
+```typescript
+function HSLtoRGB(hsl: HSL): RGB
+```
+
+### HSVtoHSL()
+
+Convert HSV to HSL.
+
+```typescript
+function HSVtoHSL(hsv: HSV): HSL
+```
+
+### HSLtoHSV()
+
+Convert HSL to HSV.
+
+```typescript
+function HSLtoHSV(hsl: HSL): HSV
+```
+
+## Color Manipulation
+
+### lighten()
+
+Lighten a color by specified amount.
+
+```typescript
+function lighten(color: RGB, amount: number): RGB
+```
+
+**Parameters:**
+- `color` - RGB color to lighten
+- `amount` - Amount to lighten (0-10, affects CIELAB L* by amount * 10)
+
+**Example:**
+
+```typescript
+import { lighten, parseColor, RGBtoHex } from 'vuetify/util'
+
+const color = parseColor('#1976D2')
+const lighter = lighten(color, 1)
+RGBtoHex(lighter)  // Lighter shade
+```
+
+### darken()
+
+Darken a color by specified amount.
+
+```typescript
+function darken(color: RGB, amount: number): RGB
+```
+
+**Parameters:**
+- `color` - RGB color to darken
+- `amount` - Amount to darken (0-10, affects CIELAB L* by amount * 10)
+
+**Example:**
+
+```typescript
+import { darken, parseColor, RGBtoHex } from 'vuetify/util'
+
+const color = parseColor('#1976D2')
+const darker = darken(color, 1)
+RGBtoHex(darker)  // Darker shade
+```
+
+## Color Analysis
+
+### getLuma()
+
+Calculate relative luminance of a color (0-1).
+
+```typescript
+function getLuma(color: Color): number
+```
+
+**Example:**
+
+```typescript
+import { getLuma } from 'vuetify/util'
+
+getLuma('#FFFFFF')  // ~1 (white)
+getLuma('#000000')  // ~0 (black)
+getLuma('#808080')  // ~0.21 (gray)
+```
+
+### getContrast()
+
+Calculate contrast ratio between two colors (1-21).
+
+```typescript
+function getContrast(first: Color, second: Color): number
+```
+
+**Example:**
+
+```typescript
+import { getContrast } from 'vuetify/util'
+
+getContrast('#FFFFFF', '#000000')  // 21 (maximum)
+getContrast('#FFFFFF', '#FFFFFF')  // 1 (minimum)
+getContrast('#1976D2', '#FFFFFF')  // ~4.56
+```
+
+### hasLightForeground()
+
+Determine if a color should use light or dark text.
+
+```typescript
+function hasLightForeground(color: Color): boolean
+```
+
+**Example:**
+
+```typescript
+import { hasLightForeground } from 'vuetify/util'
+
+hasLightForeground('#1976D2')  // true (use white text)
+hasLightForeground('#FFEB3B')  // false (use black text)
+```
+
+## Color Palette
+
+### Material Design Colors
+
+```typescript
+import colors from 'vuetify/util/colors'
+
+// Access color shades
+colors.red.base          // '#f44336'
+colors.red.lighten5      // '#ffebee'
+colors.red.lighten1      // '#ef5350'
+colors.red.darken1       // '#e53935'
+colors.red.darken4       // '#b71c1c'
+colors.red.accent1       // '#ff8a80'
+colors.red.accent4       // '#d50000'
+```
+
+### Available Colors
+
+- `red`
+- `pink`
+- `purple`
+- `deepPurple`
+- `indigo`
+- `blue`
+- `lightBlue`
+- `cyan`
+- `teal`
+- `green`
+- `lightGreen`
+- `lime`
+- `yellow`
+- `amber`
+- `orange`
+- `deepOrange`
+- `brown`
+- `blueGrey`
+- `grey`
+- `shades` (black, white, transparent)
+
+### Shades
+
+Each color (except brown, grey, shades) has:
+- `base` - Base color
+- `lighten5` to `lighten1` - Lighter shades
+- `darken1` to `darken4` - Darker shades
+- `accent1` to `accent4` - Accent shades
+
+## Usage Examples
+
+### Theme Color Generation
+
+```typescript
+import { parseColor, lighten, darken, RGBtoHex } from 'vuetify/util'
+
+const primary = parseColor('#1976D2')
+
+const theme = {
+  primary: RGBtoHex(primary),
+  'primary-lighten-1': RGBtoHex(lighten(primary, 1)),
+  'primary-lighten-2': RGBtoHex(lighten(primary, 2)),
+  'primary-darken-1': RGBtoHex(darken(primary, 1)),
+  'primary-darken-2': RGBtoHex(darken(primary, 2)),
+}
+```
+
+### Contrast Checker
+
+```typescript
+import { getContrast } from 'vuetify/util'
+
+function hasGoodContrast(fg: string, bg: string): boolean {
+  const contrast = getContrast(fg, bg)
+  return contrast >= 4.5 // WCAG AA standard
+}
+
+hasGoodContrast('#FFFFFF', '#1976D2')  // true
+hasGoodContrast('#E0E0E0', '#F5F5F5')  // false
+```
+
+### Auto Text Color
+
+```typescript
+import { hasLightForeground } from 'vuetify/util'
+
+function getTextColor(backgroundColor: string): string {
+  return hasLightForeground(backgroundColor) ? '#FFFFFF' : '#000000'
+}
+
+getTextColor('#1976D2')  // '#FFFFFF'
+getTextColor('#FFEB3B')  // '#000000'
+```
+
+### Color Palette Component
+
+```vue
+<script setup>
+import colors from 'vuetify/util/colors'
+
+const colorNames = Object.keys(colors).filter(k => k !== 'shades')
+</script>
+
+<template>
+  <v-container>
+    <v-row v-for="colorName in colorNames" :key="colorName">
+      <v-col
+        v-for="(value, shade) in colors[colorName]"
+        :key="shade"
+        :style="{ backgroundColor: value }"
+        class="pa-2 text-center"
+      >
+        {{ shade }}
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+### Dynamic Theme
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+import { parseColor, RGBtoHex, lighten, darken } from 'vuetify/util'
+
+const baseColor = ref('#1976D2')
+
+const palette = computed(() => {
+  const color = parseColor(baseColor.value)
+  return {
+    lighten3: RGBtoHex(lighten(color, 3)),
+    lighten2: RGBtoHex(lighten(color, 2)),
+    lighten1: RGBtoHex(lighten(color, 1)),
+    base: baseColor.value,
+    darken1: RGBtoHex(darken(color, 1)),
+    darken2: RGBtoHex(darken(color, 2)),
+    darken3: RGBtoHex(darken(color, 3)),
+  }
+})
+</script>
+
+<template>
+  <div>
+    <v-color-picker v-model="baseColor" />
+    
+    <div v-for="(color, shade) in palette" :key="shade">
+      <div :style="{ backgroundColor: color, padding: '20px' }">
+        {{ shade }}: {{ color }}
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+## Notes
+
+- All RGB values are 0-255
+- HSV/HSL hue is 0-360 degrees
+- HSV/HSL saturation and value/lightness are 0-1
+- Alpha channel is 0-1
+- Lighten/darken use CIELAB color space for perceptually uniform results
+- Contrast ratio follows WCAG 2.0 guidelines
+- Material Design colors are pre-defined constants
+
+## See Also
+
+- [Theme System](/features/theme)
+- [Color Pickers](/components/color-pickers)
+- [WCAG Contrast Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)

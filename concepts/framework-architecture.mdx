@@ -1,0 +1,298 @@
+---
+title: Framework Architecture
+description: Understanding Vuetify's core architecture, plugin system, and composable-based design
+---
+
+# Framework Architecture
+
+Vuetify's architecture is built around a modular plugin system that leverages Vue 3's Composition API and provide/inject pattern. Understanding this architecture is essential for advanced usage and customization.
+
+## The createVuetify Function
+
+At the heart of Vuetify is the `createVuetify` function located in `framework.ts:46`. This function initializes the entire Vuetify framework and returns a Vue plugin.
+
+```typescript
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  // Configuration options
+  theme: { /* ... */ },
+  icons: { /* ... */ },
+  locale: { /* ... */ },
+  display: { /* ... */ },
+  defaults: { /* ... */ },
+})
+
+app.use(vuetify)
+```
+
+### VuetifyOptions Interface
+
+The configuration object accepts the following options (`framework.ts:29-42`):
+
+```typescript
+interface VuetifyOptions {
+  aliases?: Record<string, any>
+  blueprint?: Blueprint
+  components?: Record<string, any>
+  date?: DateOptions
+  directives?: Record<string, any>
+  defaults?: DefaultsOptions
+  display?: DisplayOptions
+  goTo?: GoToOptions
+  theme?: ThemeOptions
+  icons?: IconOptions
+  locale?: LocaleOptions & RtlOptions
+  ssr?: SSROptions
+}
+```
+
+<Note>
+The `blueprint` option allows you to define a base configuration that will be merged with your custom options using deep merge.
+</Note>
+
+## Plugin System Architecture
+
+Vuetify uses Vue's `effectScope` to manage reactive state and lifecycle (`framework.ts:55-56`):
+
+```typescript
+const scope = effectScope()
+return scope.run(() => {
+  const defaults = createDefaults(options.defaults)
+  const display = createDisplay(options.display, options.ssr)
+  const theme = createTheme(options.theme)
+  const icons = createIcons(options.icons)
+  const locale = createLocale(options.locale)
+  const date = createDate(options.date, locale)
+  const goTo = createGoTo(options.goTo, locale)
+  // ...
+})
+```
+
+Each subsystem is initialized independently and then provided to the application through Vue's dependency injection system.
+
+### Installation Process
+
+When you call `app.use(vuetify)`, the install function (`framework.ts:65-129`) performs the following:
+
+1. **Registers directives** - All custom directives are registered globally
+2. **Registers components** - Components and aliases are registered
+3. **Installs theme** - Theme styles are injected into the document
+4. **Provides services** - All subsystems are provided via injection keys
+
+```typescript
+function install (app: App) {
+  // Register directives
+  for (const key in directives) {
+    app.directive(key, directives[key])
+  }
+
+  // Register components
+  for (const key in components) {
+    app.component(key, components[key])
+  }
+
+  // Provide services
+  app.provide(DefaultsSymbol, defaults)
+  app.provide(DisplaySymbol, display)
+  app.provide(ThemeSymbol, theme)
+  app.provide(IconSymbol, icons)
+  app.provide(LocaleSymbol, locale)
+  app.provide(DateOptionsSymbol, date.options)
+  app.provide(DateAdapterSymbol, date.instance)
+  app.provide(GoToSymbol, goTo)
+}
+```
+
+## Dependency Injection System
+
+Vuetify uses Vue's provide/inject pattern with typed InjectionKey symbols for type safety:
+
+```typescript
+export const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme')
+export const DisplaySymbol: InjectionKey<DisplayInstance> = Symbol.for('vuetify:display')
+export const IconSymbol: InjectionKey<InternalIconOptions> = Symbol.for('vuetify:icons')
+export const LocaleSymbol: InjectionKey<LocaleInstance> = Symbol.for('vuetify:locale')
+```
+
+This approach provides:
+- Type-safe injection across the application
+- Symbol-based keys prevent naming collisions
+- Tree-shakable modules that don't require global state
+
+## Composables Overview
+
+Vuetify's functionality is organized into composables that can be used throughout your application:
+
+### Core Composables
+
+<Tabs>
+  <Tab title="Theme">
+    ```typescript
+    import { useTheme } from 'vuetify'
+
+    const theme = useTheme()
+    theme.name.value = 'dark' // Switch to dark theme
+    console.log(theme.current.value.colors.primary)
+    ```
+
+    The theme composable provides reactive access to the current theme configuration and methods to change themes dynamically.
+  </Tab>
+
+  <Tab title="Display">
+    ```typescript
+    import { useDisplay } from 'vuetify'
+
+    const { xs, sm, md, lg, xl, mobile, width, height } = useDisplay()
+
+    if (mobile.value) {
+      // Mobile-specific logic
+    }
+    ```
+
+    The display composable provides reactive breakpoint information and device detection.
+  </Tab>
+
+  <Tab title="Locale">
+    ```typescript
+    import { useLocale } from 'vuetify'
+
+    const { t, current } = useLocale()
+
+    const message = t('$vuetify.dataTable.sortBy')
+    current.value = 'fr' // Switch to French
+    ```
+
+    The locale composable handles internationalization and provides translation functions.
+  </Tab>
+
+  <Tab title="Icons">
+    ```typescript
+    import { useIcon } from 'vuetify'
+
+    const { iconData } = useIcon(() => 'mdi-home')
+    // Returns the appropriate icon component and data
+    ```
+
+    The icon composable resolves icon aliases and provides the correct icon component.
+  </Tab>
+</Tabs>
+
+## Options API Support
+
+For applications using Vue's Options API, Vuetify provides a `$vuetify` global property (`framework.ts:113-128`):
+
+```javascript
+export default {
+  mounted() {
+    console.log(this.$vuetify.theme.current.value)
+    console.log(this.$vuetify.display.mobile.value)
+    this.$vuetify.theme.name.value = 'dark'
+  }
+}
+```
+
+The `$vuetify` object provides reactive access to:
+- `defaults` - Default component props
+- `display` - Breakpoint and device information
+- `theme` - Theme configuration and controls
+- `icons` - Icon configuration
+- `locale` - Internationalization functions
+- `date` - Date adapter instance
+
+## SSR Support
+
+Vuetify includes built-in SSR support with automatic hydration handling (`framework.ts:97-111`):
+
+```typescript
+if (IN_BROWSER && options.ssr) {
+  if (app.$nuxt) {
+    app.$nuxt.hook('app:suspense:resolve', () => {
+      display.update()
+    })
+  } else {
+    const { mount } = app
+    app.mount = (...args) => {
+      const vm = mount(...args)
+      nextTick(() => display.update())
+      app.mount = mount
+      return vm
+    }
+  }
+}
+```
+
+<Warning>
+When using SSR, ensure you provide the `ssr` option to prevent hydration mismatches caused by viewport-dependent rendering.
+</Warning>
+
+```typescript
+const vuetify = createVuetify({
+  ssr: {
+    clientWidth: 1920,
+    clientHeight: 1080,
+  },
+})
+```
+
+## Lifecycle Management
+
+Vuetify properly manages lifecycle cleanup using Vue's scope system:
+
+```typescript
+function unmount() {
+  scope.stop()
+}
+
+app.onUnmount(() => appScope.stop())
+```
+
+This ensures:
+- All watchers are properly disposed
+- Event listeners are cleaned up
+- Memory leaks are prevented
+
+## Blueprint Pattern
+
+The blueprint pattern allows you to create reusable configuration presets:
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { md3 } from 'vuetify/blueprints'
+
+const vuetify = createVuetify({
+  blueprint: md3,
+  theme: {
+    // Your custom theme overrides
+  },
+})
+```
+
+Blueprints are merged using deep merge (`framework.ts:47-48`), allowing you to extend and customize predefined configurations while maintaining consistency.
+
+## Best Practices
+
+1. **Use composables in setup()** - Always use Vuetify composables within component setup functions for proper reactivity
+2. **Leverage injection keys** - Use the exported symbols for type-safe injection in your own components
+3. **Configure once** - Set up Vuetify configuration at the application root level
+4. **Tree-shake carefully** - Only import and register the components you need
+5. **SSR considerations** - Always configure SSR options when using server-side rendering
+
+## Performance Optimization
+
+Vuetify's architecture enables several performance optimizations:
+
+- **Lazy component registration** - Register only the components you use
+- **Effect scope isolation** - Each instance has its own reactive scope
+- **Computed theme styles** - CSS is generated only when theme changes
+- **Shallow refs** - Non-reactive data uses shallowRef for better performance
+
+```typescript
+const vuetify = createVuetify({
+  components: {
+    VBtn,
+    VCard,
+    // Only include components you need
+  },
+})
+```

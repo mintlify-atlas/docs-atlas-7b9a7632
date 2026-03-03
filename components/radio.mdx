@@ -1,0 +1,259 @@
+---
+title: VRadio & VRadioGroup
+description: Radio button components for single selection from a group of options
+---
+
+# VRadio & VRadioGroup
+
+The `VRadio` component provides a single radio button, while `VRadioGroup` manages a group of radio buttons for mutually exclusive selection.
+
+## Basic Usage
+
+```vue
+<template>
+  <VRadioGroup v-model="selected" label="Select an option">
+    <VRadio label="Option 1" value="1" />
+    <VRadio label="Option 2" value="2" />
+    <VRadio label="Option 3" value="3" />
+  </VRadioGroup>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('1')
+</script>
+```
+
+## VRadioGroup Props
+
+<ParamField path="modelValue" type="any">
+  The selected value from the radio group.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label for the radio group.
+</ParamField>
+
+<ParamField path="column" type="boolean" default="true">
+  Display radios in a column layout.
+</ParamField>
+
+<ParamField path="row" type="boolean" default="false">
+  Display radios in a row layout.
+</ParamField>
+
+<ParamField path="inline" type="boolean" default="false">
+  Display radios inline (wrapping).
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable all radio buttons in the group.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make all radio buttons readonly.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color of the selected radio button.
+</ParamField>
+
+<ParamField path="trueIcon" type="string" default="$radioOn">
+  Icon to display when a radio is selected.
+</ParamField>
+
+<ParamField path="falseIcon" type="string" default="$radioOff">
+  Icon to display when a radio is not selected.
+</ParamField>
+
+<ParamField path="type" type="string" default="radio">
+  HTML input type attribute.
+</ParamField>
+
+## VRadio Props
+
+<ParamField path="label" type="string">
+  Label text for the radio button.
+</ParamField>
+
+<ParamField path="value" type="any">
+  The value that will be set when this radio is selected.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color of the radio button when selected.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable this radio button.
+</ParamField>
+
+<ParamField path="trueIcon" type="string" default="$radioOn">
+  Icon when selected.
+</ParamField>
+
+<ParamField path="falseIcon" type="string" default="$radioOff">
+  Icon when not selected.
+</ParamField>
+
+## Row Layout
+
+```vue
+<template>
+  <VRadioGroup v-model="selected" row>
+    <VRadio label="Option 1" value="1" />
+    <VRadio label="Option 2" value="2" />
+    <VRadio label="Option 3" value="3" />
+  </VRadioGroup>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('1')
+</script>
+```
+
+## With Colors
+
+```vue
+<template>
+  <VRadioGroup v-model="selected">
+    <VRadio label="Red" value="red" color="red" />
+    <VRadio label="Green" value="green" color="green" />
+    <VRadio label="Blue" value="blue" color="blue" />
+  </VRadioGroup>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('red')
+</script>
+```
+
+## Disabled State
+
+```vue
+<template>
+  <div>
+    <!-- Entire group disabled -->
+    <VRadioGroup v-model="selected" disabled>
+      <VRadio label="Option 1" value="1" />
+      <VRadio label="Option 2" value="2" />
+    </VRadioGroup>
+    
+    <!-- Individual radio disabled -->
+    <VRadioGroup v-model="selected2">
+      <VRadio label="Enabled" value="1" />
+      <VRadio label="Disabled" value="2" disabled />
+    </VRadioGroup>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('1')
+const selected2 = ref('1')
+</script>
+```
+
+## With Validation
+
+```vue
+<template>
+  <VForm>
+    <VRadioGroup
+      v-model="selected"
+      label="Required selection"
+      :rules="[v => !!v || 'Selection is required']"
+    >
+      <VRadio label="Option 1" value="1" />
+      <VRadio label="Option 2" value="2" />
+      <VRadio label="Option 3" value="3" />
+    </VRadioGroup>
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+</script>
+```
+
+## Custom Labels
+
+```vue
+<template>
+  <VRadioGroup v-model="selected">
+    <VRadio value="1">
+      <template #label>
+        <div>
+          <div class="font-weight-bold">Premium Plan</div>
+          <div class="text-caption">$99/month</div>
+        </div>
+      </template>
+    </VRadio>
+    
+    <VRadio value="2">
+      <template #label>
+        <div>
+          <div class="font-weight-bold">Basic Plan</div>
+          <div class="text-caption">$29/month</div>
+        </div>
+      </template>
+    </VRadio>
+  </VRadioGroup>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('1')
+</script>
+```
+
+## Dynamic Radios
+
+```vue
+<template>
+  <VRadioGroup v-model="selected" label="Select a plan">
+    <VRadio
+      v-for="plan in plans"
+      :key="plan.id"
+      :label="plan.name"
+      :value="plan.id"
+    />
+  </VRadioGroup>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(1)
+const plans = [
+  { id: 1, name: 'Free' },
+  { id: 2, name: 'Pro' },
+  { id: 3, name: 'Enterprise' },
+]
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the selected radio changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="{ label, props }">
+  Customize the radio label content.
+</ParamField>
+
+<ParamField path="default" type="{}">
+  Default slot for VRadioGroup - place VRadio components here.
+</ParamField>

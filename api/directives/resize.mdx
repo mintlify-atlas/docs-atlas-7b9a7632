@@ -1,0 +1,461 @@
+---
+title: v-resize
+description: Directive for detecting window resize events
+---
+
+## Overview
+
+The `v-resize` directive listens to window resize events and calls a handler function. Useful for responsive layouts, canvas resizing, and dynamic calculations based on viewport size.
+
+## Import
+
+```typescript
+import { Resize } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Resize } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('resize', Resize)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Resize } from 'vuetify/directives'
+
+const vResize = Resize
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Basic usage -->
+<div v-resize="handler"></div>
+
+<!-- With modifiers -->
+<div v-resize.quiet="handler"></div>
+<div v-resize.active="handler"></div>
+```
+
+## Value
+
+<ParamField path="value" type="() => void" required>
+  Handler function called on window resize
+</ParamField>
+
+## Modifiers
+
+<ParamField path="quiet" type="boolean">
+  Don't call handler immediately on mount, only on actual resize events
+</ParamField>
+
+<ParamField path="active" type="boolean">
+  Use active event listener (not passive). Allows `preventDefault()` in handler.
+</ParamField>
+
+## Usage Examples
+
+### Basic Window Resize
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const windowSize = ref({
+  width: window.innerWidth,
+  height: window.innerHeight
+})
+
+function onResize() {
+  windowSize.value = {
+    width: window.innerWidth,
+    height: window.innerHeight
+  }
+}
+</script>
+
+<template>
+  <div v-resize="onResize">
+    <p>Width: {{ windowSize.width }}px</p>
+    <p>Height: {{ windowSize.height }}px</p>
+  </div>
+</template>
+```
+
+### Responsive Canvas
+
+```vue
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const canvas = ref<HTMLCanvasElement | null>(null)
+const ctx = ref<CanvasRenderingContext2D | null>(null)
+
+onMounted(() => {
+  if (canvas.value) {
+    ctx.value = canvas.value.getContext('2d')
+    resizeCanvas()
+  }
+})
+
+function resizeCanvas() {
+  if (canvas.value) {
+    canvas.value.width = window.innerWidth
+    canvas.value.height = window.innerHeight
+    draw()
+  }
+}
+
+function draw() {
+  if (ctx.value && canvas.value) {
+    ctx.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
+    // Drawing logic here
+  }
+}
+</script>
+
+<template>
+  <canvas ref="canvas" v-resize="resizeCanvas" />
+</template>
+```
+
+### Breakpoint Detection
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const breakpoint = ref('desktop')
+
+function updateBreakpoint() {
+  const width = window.innerWidth
+  
+  if (width < 600) {
+    breakpoint.value = 'mobile'
+  } else if (width < 960) {
+    breakpoint.value = 'tablet'
+  } else {
+    breakpoint.value = 'desktop'
+  }
+}
+</script>
+
+<template>
+  <div v-resize="updateBreakpoint">
+    <p>Current breakpoint: {{ breakpoint }}</p>
+    
+    <v-container v-if="breakpoint === 'mobile'">
+      Mobile layout
+    </v-container>
+    <v-container v-else-if="breakpoint === 'tablet'">
+      Tablet layout
+    </v-container>
+    <v-container v-else>
+      Desktop layout
+    </v-container>
+  </div>
+</template>
+```
+
+### Quiet Modifier
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const resizeCount = ref(0)
+
+function onResize() {
+  resizeCount.value++
+}
+</script>
+
+<template>
+  <!-- Handler not called on mount, only on actual resize -->
+  <div v-resize.quiet="onResize">
+    <p>Resize count: {{ resizeCount }}</p>
+    <p>Try resizing the window</p>
+  </div>
+</template>
+```
+
+### Debounced Resize Handler
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const dimensions = ref({ width: 0, height: 0 })
+let resizeTimeout: number | null = null
+
+function onResize() {
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout)
+  }
+  
+  resizeTimeout = setTimeout(() => {
+    dimensions.value = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
+  }, 250) as unknown as number
+}
+</script>
+
+<template>
+  <div v-resize="onResize">
+    <p>Dimensions: {{ dimensions.width }} x {{ dimensions.height }}</p>
+  </div>
+</template>
+```
+
+### Aspect Ratio Calculator
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+
+const width = ref(window.innerWidth)
+const height = ref(window.innerHeight)
+
+const aspectRatio = computed(() => {
+  const gcd = (a: number, b: number): number => 
+    b === 0 ? a : gcd(b, a % b)
+  
+  const divisor = gcd(width.value, height.value)
+  return `${width.value / divisor}:${height.value / divisor}`
+})
+
+function updateDimensions() {
+  width.value = window.innerWidth
+  height.value = window.innerHeight
+}
+</script>
+
+<template>
+  <div v-resize="updateDimensions">
+    <p>{{ width }} x {{ height }}</p>
+    <p>Aspect Ratio: {{ aspectRatio }}</p>
+  </div>
+</template>
+```
+
+### Chart Resize
+
+```vue
+<script setup>
+import { ref, onMounted } from 'vue'
+import type { Chart } from 'chart.js'
+
+const chartRef = ref<HTMLCanvasElement | null>(null)
+const chart = ref<Chart | null>(null)
+
+onMounted(() => {
+  // Initialize chart
+  if (chartRef.value) {
+    // chart.value = new Chart(chartRef.value, config)
+  }
+})
+
+function resizeChart() {
+  if (chart.value) {
+    chart.value.resize()
+  }
+}
+</script>
+
+<template>
+  <div v-resize.quiet="resizeChart">
+    <canvas ref="chartRef" />
+  </div>
+</template>
+```
+
+### Dynamic Grid Columns
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+
+const containerWidth = ref(window.innerWidth)
+const columnWidth = 300
+
+const columns = computed(() => 
+  Math.floor(containerWidth.value / columnWidth)
+)
+
+function updateWidth() {
+  containerWidth.value = window.innerWidth
+}
+
+const items = Array.from({ length: 20 }, (_, i) => i)
+</script>
+
+<template>
+  <div v-resize="updateWidth">
+    <p>Columns: {{ columns }}</p>
+    
+    <v-row>
+      <v-col 
+        v-for="item in items" 
+        :key="item"
+        :cols="12 / columns"
+      >
+        Item {{ item }}
+      </v-col>
+    </v-row>
+  </div>
+</template>
+```
+
+### Orientation Change
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const orientation = ref<'portrait' | 'landscape'>('portrait')
+
+function checkOrientation() {
+  orientation.value = window.innerHeight > window.innerWidth 
+    ? 'portrait' 
+    : 'landscape'
+}
+</script>
+
+<template>
+  <div v-resize="checkOrientation">
+    <v-icon v-if="orientation === 'portrait'">
+      mdi-cellphone
+    </v-icon>
+    <v-icon v-else>
+      mdi-cellphone-rotate
+    </v-icon>
+    <p>{{ orientation }}</p>
+  </div>
+</template>
+```
+
+### Font Size Scaling
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const fontSize = ref(16)
+
+function scaleFontSize() {
+  const width = window.innerWidth
+  // Scale font size based on viewport width
+  fontSize.value = Math.max(12, Math.min(24, width / 50))
+}
+</script>
+
+<template>
+  <div v-resize="scaleFontSize" :style="{ fontSize: `${fontSize}px` }">
+    Responsive text that scales with viewport
+  </div>
+</template>
+```
+
+## Event Listener Options
+
+By default, the directive uses passive event listeners for better performance:
+
+```typescript
+// Default (passive)
+<div v-resize="handler"></div>
+
+// Active listener (can preventDefault)
+<div v-resize.active="handler"></div>
+```
+
+## Performance Considerations
+
+### Throttling
+
+```vue
+<script setup>
+function throttle(func: Function, wait: number) {
+  let timeout: number | null = null
+  let lastRan: number
+  
+  return function(this: any, ...args: any[]) {
+    if (!lastRan) {
+      func.apply(this, args)
+      lastRan = Date.now()
+    } else {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        if (Date.now() - lastRan >= wait) {
+          func.apply(this, args)
+          lastRan = Date.now()
+        }
+      }, wait - (Date.now() - lastRan)) as unknown as number
+    }
+  }
+}
+
+const onResize = throttle(() => {
+  // Expensive operation
+}, 100)
+</script>
+
+<template>
+  <div v-resize="onResize">
+    Content
+  </div>
+</template>
+```
+
+### Debouncing
+
+```vue
+<script setup>
+function debounce(func: Function, wait: number) {
+  let timeout: number | null = null
+  
+  return function(this: any, ...args: any[]) {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func.apply(this, args)
+    }, wait) as unknown as number
+  }
+}
+
+const onResize = debounce(() => {
+  // Expensive operation
+}, 250)
+</script>
+
+<template>
+  <div v-resize="onResize">
+    Content
+  </div>
+</template>
+```
+
+## Notes
+
+- Listens to the global `window` resize event
+- Automatically removes event listener on unmount
+- Handler is called immediately on mount (unless `.quiet`)
+- Uses passive listeners by default for better scroll performance
+- Multiple instances can be used simultaneously
+- Handler does not receive the resize event object
+- Safe to use with conditional rendering (v-if)
+
+## See Also
+
+- [useDisplay()](/api/composables/display)
+- [v-intersect](/api/directives/intersect)
+- [Responsive Design](/features/breakpoints)

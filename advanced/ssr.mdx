@@ -1,0 +1,361 @@
+---
+title: Server-Side Rendering (SSR)
+description: Configure Vuetify for server-side rendering with Nuxt, Vite SSR, and custom SSR setups
+---
+
+# Server-Side Rendering
+
+Vuetify 4 provides comprehensive SSR support with built-in configurations for Nuxt and custom SSR frameworks.
+
+## SSR Options
+
+The `ssr` option in Vuetify's framework configuration controls server-side rendering behavior:
+
+```ts
+export type SSROptions = boolean | {
+  clientWidth: number
+  clientHeight?: number
+}
+```
+
+### Basic Configuration
+
+```ts
+import { createVuetify } from 'vuetify'
+
+export default createVuetify({
+  ssr: true,
+})
+```
+
+### Advanced Configuration
+
+Provide initial viewport dimensions for more accurate SSR rendering:
+
+```ts
+import { createVuetify } from 'vuetify'
+
+export default createVuetify({
+  ssr: {
+    clientWidth: 1920,
+    clientHeight: 1080,
+  },
+})
+```
+
+<Tip>
+Providing initial dimensions helps prevent layout shifts during hydration by rendering components with realistic viewport sizes on the server.
+</Tip>
+
+## Display Composable with SSR
+
+The `createDisplay` function in Vuetify handles SSR-aware viewport detection:
+
+```ts
+// From packages/vuetify/src/composables/display.ts
+export function createDisplay(
+  options?: DisplayOptions,
+  ssr?: SSROptions
+): DisplayInstance {
+  const { thresholds, mobileBreakpoint } = parseDisplayOptions(options)
+  
+  const height = shallowRef(getClientHeight(ssr))
+  const platform = shallowRef(getPlatform(ssr))
+  const width = shallowRef(getClientWidth(ssr))
+  
+  return { ...toRefs(state), update, ssr: !!ssr }
+}
+```
+
+### Client Width Detection
+
+```ts
+function getClientWidth(ssr?: SSROptions) {
+  return IN_BROWSER && !ssr
+    ? window.innerWidth
+    : (typeof ssr === 'object' && ssr.clientWidth) || 0
+}
+
+function getClientHeight(ssr?: SSROptions) {
+  return IN_BROWSER && !ssr
+    ? window.innerHeight
+    : (typeof ssr === 'object' && ssr.clientHeight) || 0
+}
+```
+
+During SSR:
+- If `ssr: true`, dimensions default to 0
+- If `ssr: { clientWidth: 1920 }`, uses provided dimensions
+- On client, uses actual window dimensions
+
+### Platform Detection
+
+```ts
+function getPlatform(ssr?: SSROptions): DisplayPlatform {
+  const userAgent = IN_BROWSER && !ssr
+    ? window.navigator.userAgent
+    : 'ssr'
+  
+  return {
+    android: match(/android/i),
+    ios: match(/iphone|ipad|ipod/i),
+    chrome: match(/chrome/i),
+    // ... other platform checks
+    ssr: userAgent === 'ssr',
+  }
+}
+```
+
+## Nuxt Integration
+
+Vuetify automatically detects Nuxt and integrates with its lifecycle:
+
+```ts
+// From packages/vuetify/src/framework.ts
+if (IN_BROWSER && options.ssr) {
+  if (app.$nuxt) {
+    app.$nuxt.hook('app:suspense:resolve', () => {
+      display.update()
+    })
+  } else {
+    const { mount } = app
+    app.mount = (...args) => {
+      const vm = mount(...args)
+      nextTick(() => display.update())
+      app.mount = mount
+      return vm
+    }
+  }
+}
+```
+
+### Nuxt 3 Setup
+
+Create a Vuetify plugin:
+
+```ts
+// plugins/vuetify.ts
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const vuetify = createVuetify({
+    ssr: true,
+    components,
+    directives,
+  })
+  
+  nuxtApp.vueApp.use(vuetify)
+})
+```
+
+Configure Nuxt:
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  build: {
+    transpile: ['vuetify'],
+  },
+  css: ['vuetify/styles'],
+})
+```
+
+<Warning>
+Make sure to add `vuetify` to the `transpile` array in Nuxt config. This ensures Vuetify's ESM modules are properly processed during SSR.
+</Warning>
+
+## Vite SSR
+
+Vuetify works seamlessly with Vite's SSR mode:
+
+```ts
+// server.ts
+import { createSSRApp } from 'vue'
+import { createVuetify } from 'vuetify'
+
+export function createApp() {
+  const app = createSSRApp(App)
+  
+  const vuetify = createVuetify({
+    ssr: true,
+  })
+  
+  app.use(vuetify)
+  
+  return { app, vuetify }
+}
+```
+
+### Entry Client
+
+```ts
+// entry-client.ts
+import { createApp } from './main'
+
+const { app } = createApp()
+
+app.mount('#app')
+```
+
+### Entry Server
+
+```ts
+// entry-server.ts
+import { renderToString } from 'vue/server-renderer'
+import { createApp } from './main'
+
+export async function render() {
+  const { app } = createApp()
+  const html = await renderToString(app)
+  return html
+}
+```
+
+## Hydration Composable
+
+Vuetify provides a hydration-aware composable:
+
+```ts
+// From packages/vuetify/src/composables/hydration.ts
+export function useHydration() {
+  const { ssr } = useDisplay()
+  
+  if (ssr) {
+    const isMounted = shallowRef(false)
+    onMounted(() => {
+      isMounted.value = true
+    })
+    return { isMounted }
+  }
+  
+  return { isMounted: ref(true) }
+}
+```
+
+Use in components to avoid hydration mismatches:
+
+```vue
+<script setup>
+import { useHydration } from 'vuetify'
+
+const { isMounted } = useHydration()
+</script>
+
+<template>
+  <div>
+    <div v-if="!isMounted">Loading...</div>
+    <div v-else>{{ new Date().toLocaleString() }}</div>
+  </div>
+</template>
+```
+
+## SSR Boot Styles
+
+Vuetify includes a composable for handling styles before hydration:
+
+```ts
+// From packages/vuetify/src/composables/ssrBoot.ts
+export function useSSRBoot() {
+  const isBooted = shallowRef(false)
+  
+  onMounted(() => {
+    window.requestAnimationFrame(() => {
+      isBooted.value = true
+    })
+  })
+  
+  const ssrBootStyles = computed(() => !isBooted.value ? ({
+    transition: 'none !important',
+  }) : undefined)
+  
+  return { ssrBootStyles, isBooted: readonly(isBooted) }
+}
+```
+
+This prevents flash of unstyled content (FOUC) by disabling transitions until hydration completes.
+
+## Responsive Design with SSR
+
+Handle responsive layouts correctly with SSR:
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { mobile, mdAndUp } = useDisplay()
+</script>
+
+<template>
+  <v-container>
+    <v-row v-if="mdAndUp">
+      <!-- Desktop layout -->
+    </v-row>
+    <v-row v-else>
+      <!-- Mobile layout -->
+    </v-row>
+  </v-container>
+</template>
+```
+
+<Tip>
+When using display breakpoints with SSR, consider providing realistic `clientWidth` values to minimize layout shifts during hydration.
+</Tip>
+
+## Common SSR Issues
+
+### Window is not defined
+
+Ensure code accessing browser APIs is wrapped:
+
+```ts
+import { IN_BROWSER } from 'vuetify'
+
+if (IN_BROWSER) {
+  // Browser-only code
+  window.addEventListener('resize', handleResize)
+}
+```
+
+### Hydration Mismatches
+
+Avoid rendering different content on server vs client:
+
+```vue
+<!-- Bad: Will cause hydration mismatch -->
+<div>{{ new Date().toISOString() }}</div>
+
+<!-- Good: Only render after mount -->
+<div v-if="isMounted">{{ new Date().toISOString() }}</div>
+```
+
+### Missing Styles
+
+Ensure styles are included in SSR build:
+
+```ts
+// vite.config.ts
+export default {
+  ssr: {
+    noExternal: ['vuetify'],
+  },
+}
+```
+
+## Performance Optimization
+
+Provide accurate viewport dimensions for better SSR performance:
+
+```ts
+// Server-side detection from request headers
+import { createVuetify } from 'vuetify'
+
+export function createVuetifyInstance(req) {
+  const clientWidth = parseInt(req.headers['viewport-width']) || 1920
+  
+  return createVuetify({
+    ssr: { clientWidth },
+  })
+}
+```

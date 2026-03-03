@@ -1,0 +1,323 @@
+---
+title: useDefaults()
+description: Composable for accessing and applying component default props
+---
+
+## Overview
+
+The `useDefaults()` composable provides access to Vuetify's defaults system, allowing components to inherit default prop values from parent providers or global configuration.
+
+## Import
+
+```typescript
+import { useDefaults } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useDefaults<T extends Record<string, any>>(
+  props: T,
+  name?: string
+): T
+
+function useDefaults(
+  props?: undefined,
+  name?: string
+): Record<string, any>
+```
+
+## Parameters
+
+<ParamField path="props" type="Record<string, any>" default="{}">
+  Component props object to merge with defaults
+</ParamField>
+
+<ParamField path="name" type="string">
+  Component name for looking up defaults. If not provided, will be auto-detected from the component's `name` or `__name` property.
+</ParamField>
+
+## Return Value
+
+<ResponseField name="props" type="T">
+  Proxied props object that merges component props with defaults. Values are resolved in this order:
+  1. Explicitly provided props
+  2. Component-specific defaults
+  3. Global defaults
+  4. Original prop value
+</ResponseField>
+
+## Defaults Hierarchy
+
+Defaults are resolved in the following order (highest priority first):
+
+1. **Explicitly set props** - Props passed directly to the component
+2. **Component defaults** - Defaults set for specific component name
+3. **Global defaults** - Defaults set for all components
+4. **Default prop values** - Component's default prop values
+
+## Usage Examples
+
+### Basic Usage
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({
+  color: String,
+  variant: String,
+  size: String
+})
+
+// Merge props with defaults for this component
+const defaults = useDefaults(props, 'VBtn')
+
+// defaults.color will use global or component-specific default if not provided
+</script>
+```
+
+### With Subcomponent Defaults
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({
+  color: String,
+  density: String
+})
+
+const defaults = useDefaults(props)
+
+// This also provides defaults to child components
+</script>
+
+<template>
+  <!-- Child VBtn will inherit defaults from parent -->
+  <v-card>
+    <v-card-actions>
+      <v-btn>Button inherits defaults</v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+### Auto-detect Component Name
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+// Component name is auto-detected from defineOptions or component name
+defineOptions({ name: 'MyCustomButton' })
+
+const props = defineProps({
+  color: String
+})
+
+// Will look for defaults under 'MyCustomButton'
+const defaults = useDefaults(props)
+</script>
+```
+
+### Accessing Nested Defaults
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({
+  color: String
+})
+
+const defaults = useDefaults(props, 'VCard')
+
+// If defaults include VCardTitle defaults,
+// they'll be available to child components
+</script>
+
+<template>
+  <v-card>
+    <v-card-title>Title inherits defaults</v-card-title>
+  </v-card>
+</template>
+```
+
+### Class and Style Merging
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({
+  class: [String, Array, Object],
+  style: [String, Array, Object],
+  color: String
+})
+
+const defaults = useDefaults(props)
+
+// class and style from defaults are merged (not replaced)
+// with component props
+</script>
+
+<template>
+  <div :class="defaults.class" :style="defaults.style">
+    Content
+  </div>
+</template>
+```
+
+## Configuration Examples
+
+### Global Defaults
+
+```typescript
+// vuetify.config.ts
+import { createVuetify } from 'vuetify'
+
+export default createVuetify({
+  defaults: {
+    global: {
+      ripple: false,
+      density: 'comfortable'
+    },
+    VBtn: {
+      color: 'primary',
+      variant: 'elevated'
+    },
+    VTextField: {
+      variant: 'outlined',
+      density: 'compact'
+    }
+  }
+})
+```
+
+### Scoped Defaults via Provider
+
+```vue
+<template>
+  <v-defaults-provider
+    :defaults="{
+      VBtn: {
+        color: 'secondary',
+        variant: 'text'
+      },
+      VTextField: {
+        variant: 'filled'
+      }
+    }"
+  >
+    <!-- All buttons and text fields here use these defaults -->
+    <v-btn>Secondary Text Button</v-btn>
+    <v-text-field label="Filled TextField" />
+  </v-defaults-provider>
+</template>
+```
+
+### Nested Component Defaults
+
+```typescript
+// vuetify.config.ts
+import { createVuetify } from 'vuetify'
+
+export default createVuetify({
+  defaults: {
+    VCard: {
+      variant: 'elevated',
+      VCardTitle: {
+        class: 'text-h6'
+      },
+      VCardActions: {
+        VBtn: {
+          variant: 'text'
+        }
+      }
+    }
+  }
+})
+```
+
+## Special Props
+
+### `_as` Prop
+
+Use the `_as` prop to apply defaults from a different component:
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({
+  _as: String,
+  color: String
+})
+
+// If _as="VBtn", will use VBtn defaults
+const defaults = useDefaults(props, 'MyComponent')
+</script>
+```
+
+## Advanced Usage
+
+### Conditional Defaults
+
+```vue
+<script setup>
+import { useDefaults } from 'vuetify'
+import { computed } from 'vue'
+
+const props = defineProps({
+  disabled: Boolean,
+  color: String
+})
+
+const defaults = useDefaults(props)
+
+const computedColor = computed(() => 
+  props.disabled ? 'grey' : defaults.color
+)
+</script>
+```
+
+### Custom Default Provider
+
+```vue
+<script setup>
+import { provideDefaults } from 'vuetify'
+import { ref } from 'vue'
+
+const customDefaults = ref({
+  VBtn: {
+    color: 'accent',
+    elevation: 2
+  }
+})
+
+provideDefaults(customDefaults)
+</script>
+
+<template>
+  <div>
+    <!-- Buttons here use custom defaults -->
+    <v-btn>Accent Button</v-btn>
+  </div>
+</template>
+```
+
+## Notes
+
+- Must be called within a component setup function
+- Throws an error if the Vuetify defaults provider is not found
+- Automatically provides subcomponent defaults to child components
+- `class` and `style` props are merged (arrays combined) rather than replaced
+- Component name is auto-detected from Vue component metadata
+- The returned props object is a Proxy that dynamically resolves values
+
+## See Also
+
+- [Defaults Guide](/features/defaults)
+- [VDefaultsProvider](/api/components/v-defaults-provider)
+- [provideDefaults()](/api/composables/provide-defaults)

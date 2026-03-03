@@ -1,0 +1,209 @@
+---
+title: Banner
+description: The VBanner component displays a prominent message and related optional actions.
+---
+
+# Banner
+
+The `VBanner` component is used to display important information to users in a prominent, temporary, and dismissable container. Banners should be displayed at the top of the screen and can contain actions.
+
+## Usage
+
+```vue
+<template>
+  <v-banner text="This is a banner message" />
+</template>
+```
+
+## Props
+
+<ParamField path="text" type="string">
+  The main text content of the banner
+</ParamField>
+
+<ParamField path="avatar" type="string">
+  Image URL for an avatar to display in the prepend area
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon to display in the prepend area
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the component
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Applies specified color to the background
+</ParamField>
+
+<ParamField path="stacked" type="boolean" default="false">
+  Forces actions to stack vertically
+</ParamField>
+
+<ParamField path="sticky" type="boolean" default="false">
+  Makes the banner stick to the top of the screen when scrolling
+</ParamField>
+
+<ParamField path="lines" type="string">
+  Limits the number of text lines. Options: `one`, `two`, `three`
+</ParamField>
+
+<ParamField path="border" type="string | number | boolean">
+  Applies border styles to the component
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts the vertical height. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the component
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the component
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the component
+</ParamField>
+
+<ParamField path="minHeight" type="string | number">
+  Sets the minimum height of the component
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+  Sets the minimum width of the component
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the component
+</ParamField>
+
+<ParamField path="location" type="string">
+  Positions the banner. Options: `top`, `bottom`, `start`, `end`
+</ParamField>
+
+<ParamField path="position" type="string">
+  CSS position property. Options: `static`, `relative`, `fixed`, `absolute`, `sticky`
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the banner
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+<ParamField path="mobile" type="boolean">
+  Forces mobile display breakpoint behavior
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default slot for custom banner content
+</ParamField>
+
+<ParamField path="prepend">
+  Slot for content before the banner text (replaces icon/avatar)
+</ParamField>
+
+<ParamField path="text">
+  Slot for custom text content
+</ParamField>
+
+<ParamField path="actions">
+  Slot for action buttons
+</ParamField>
+
+## Examples
+
+### Basic Banner
+
+```vue
+<template>
+  <v-banner
+    icon="mdi-information"
+    text="This is an informational banner message."
+  >
+    <template v-slot:actions>
+      <v-btn>Dismiss</v-btn>
+    </template>
+  </v-banner>
+</template>
+```
+
+### Banner with Avatar
+
+```vue
+<template>
+  <v-banner
+    avatar="/avatar.jpg"
+    text="John Doe shared a document with you."
+  >
+    <template v-slot:actions>
+      <v-btn color="primary">View</v-btn>
+      <v-btn>Dismiss</v-btn>
+    </template>
+  </v-banner>
+</template>
+```
+
+### Stacked Banner
+
+```vue
+<template>
+  <v-banner
+    stacked
+    icon="mdi-alert"
+    color="warning"
+    text="Your subscription expires in 3 days. Please renew to continue using all features."
+  >
+    <template v-slot:actions>
+      <v-btn color="primary">Renew Now</v-btn>
+      <v-btn variant="text">Remind Me Later</v-btn>
+    </template>
+  </v-banner>
+</template>
+```
+
+### Sticky Banner
+
+```vue
+<template>
+  <v-banner
+    sticky
+    bg-color="info"
+    icon="mdi-update"
+    text="A new version is available. Refresh to update."
+  >
+    <template v-slot:actions>
+      <v-btn @click="refreshPage">Refresh</v-btn>
+      <v-btn variant="text">Later</v-btn>
+    </template>
+  </v-banner>
+</template>
+```
+
+### Multi-line Banner
+
+```vue
+<template>
+  <v-banner
+    lines="two"
+    icon="mdi-cloud-upload"
+    text="Your files are being synced to the cloud. This may take a few minutes depending on your connection speed."
+  >
+    <template v-slot:actions>
+      <v-btn variant="text">View Progress</v-btn>
+    </template>
+  </v-banner>
+</template>
+```

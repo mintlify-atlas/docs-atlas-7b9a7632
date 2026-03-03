@@ -1,0 +1,427 @@
+---
+title: Data Table
+description: The VDataTable component displays tabular data with features like sorting, pagination, selection, and grouping.
+---
+
+# Data Table
+
+The `VDataTable` component is used for displaying tabular data. It includes features such as sorting, searching, pagination, row selection, expandable rows, and grouping.
+
+## Usage
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+  />
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Dessert', key: 'name' },
+  { title: 'Calories', key: 'calories' },
+  { title: 'Fat (g)', key: 'fat' },
+]
+
+const desserts = [
+  { name: 'Frozen Yogurt', calories: 159, fat: 6.0 },
+  { name: 'Ice cream sandwich', calories: 237, fat: 9.0 },
+  { name: 'Eclair', calories: 262, fat: 16.0 },
+]
+</script>
+```
+
+## Props
+
+<ParamField path="headers" type="DataTableHeader[]">
+  Array of header definitions. Each header can have: `title`, `key`, `value`, `sortable`, `align`, `width`, `minWidth`, `maxWidth`, `fixed`, `sort`, `filter`
+</ParamField>
+
+<ParamField path="items" type="any[]">
+  Array of data items to display in the table
+</ParamField>
+
+<ParamField path="itemValue" type="string | function" default="id">
+  Property or function to use as the unique identifier for each item
+</ParamField>
+
+<ParamField path="search" type="string">
+  Text to filter the items
+</ParamField>
+
+<ParamField path="sortBy" type="SortItem[]">
+  Array of sort configurations. Each item has `key` and `order` (`asc` or `desc`)
+</ParamField>
+
+<ParamField path="multiSort" type="boolean" default="false">
+  Allows sorting by multiple columns
+</ParamField>
+
+<ParamField path="mustSort" type="boolean" default="false">
+  Requires at least one sort to be active
+</ParamField>
+
+<ParamField path="page" type="number" default="1">
+  Current page number
+</ParamField>
+
+<ParamField path="itemsPerPage" type="number" default="10">
+  Number of items to display per page. Use `-1` for all items
+</ParamField>
+
+<ParamField path="showSelect" type="boolean" default="false">
+  Shows checkboxes for row selection
+</ParamField>
+
+<ParamField path="selectStrategy" type="string" default="page">
+  Selection strategy. Options: `single`, `page`, `all`
+</ParamField>
+
+<ParamField path="modelValue" type="any[]">
+  Array of selected items (v-model)
+</ParamField>
+
+<ParamField path="showExpand" type="boolean" default="false">
+  Shows expand icon for expandable rows
+</ParamField>
+
+<ParamField path="expanded" type="any[]">
+  Array of expanded items
+</ParamField>
+
+<ParamField path="groupBy" type="GroupByItem[]">
+  Array of grouping configurations. Each item has `key` and `order`
+</ParamField>
+
+<ParamField path="loading" type="boolean | string" default="false">
+  Shows a loading indicator. Can be a boolean or loading text
+</ParamField>
+
+<ParamField path="loadingText" type="string" default="$vuetify.dataIterator.loadingText">
+  Text to display when loading
+</ParamField>
+
+<ParamField path="noDataText" type="string" default="$vuetify.noDataText">
+  Text to display when there are no items
+</ParamField>
+
+<ParamField path="hideNoData" type="boolean" default="false">
+  Hides the no data message
+</ParamField>
+
+<ParamField path="hideDefaultHeader" type="boolean" default="false">
+  Hides the default header
+</ParamField>
+
+<ParamField path="hideDefaultFooter" type="boolean" default="false">
+  Hides the default pagination footer
+</ParamField>
+
+<ParamField path="hideDefaultBody" type="boolean" default="false">
+  Hides the default table body
+</ParamField>
+
+<ParamField path="fixedHeader" type="boolean" default="false">
+  Makes the header fixed while scrolling
+</ParamField>
+
+<ParamField path="fixedFooter" type="boolean" default="false">
+  Makes the footer fixed
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the table (enables scrolling)
+</ParamField>
+
+<ParamField path="hover" type="boolean" default="false">
+  Adds hover effect on table rows
+</ParamField>
+
+<ParamField path="density" type="string" default="default">
+  Adjusts row height. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(items: any[]) => void">
+  Emitted when selected items change
+</ParamField>
+
+<ParamField path="update:page" type="(page: number) => void">
+  Emitted when page changes
+</ParamField>
+
+<ParamField path="update:itemsPerPage" type="(count: number) => void">
+  Emitted when items per page changes
+</ParamField>
+
+<ParamField path="update:sortBy" type="(sortBy: any[]) => void">
+  Emitted when sort configuration changes
+</ParamField>
+
+<ParamField path="update:groupBy" type="(groupBy: any[]) => void">
+  Emitted when grouping changes
+</ParamField>
+
+<ParamField path="update:expanded" type="(expanded: any[]) => void">
+  Emitted when expanded items change
+</ParamField>
+
+## Slots
+
+<ParamField path="top">
+  Slot for content above the table
+</ParamField>
+
+<ParamField path="item.{key}">
+  Slot for customizing individual column cells. Replace `{key}` with the column key
+</ParamField>
+
+<ParamField path="header.{key}">
+  Slot for customizing individual header cells
+</ParamField>
+
+<ParamField path="expanded-row">
+  Slot for content shown when a row is expanded
+</ParamField>
+
+<ParamField path="no-data">
+  Slot for custom no data message
+</ParamField>
+
+<ParamField path="loading">
+  Slot for custom loading indicator
+</ParamField>
+
+<ParamField path="bottom">
+  Slot for content below the table (replaces default footer)
+</ParamField>
+
+## Examples
+
+### Basic Table
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="users"
+    :items-per-page="5"
+  />
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Name', key: 'name', align: 'start' },
+  { title: 'Email', key: 'email' },
+  { title: 'Role', key: 'role' },
+  { title: 'Status', key: 'status' },
+]
+
+const users = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
+  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'Inactive' },
+]
+</script>
+```
+
+### Sortable Table
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="products"
+    :sort-by="[{ key: 'price', order: 'desc' }]"
+    multi-sort
+  />
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Product', key: 'name', sortable: true },
+  { title: 'Price', key: 'price', sortable: true },
+  { title: 'Stock', key: 'stock', sortable: true },
+  { title: 'Category', key: 'category', sortable: false },
+]
+
+const products = [
+  { name: 'Laptop', price: 999, stock: 15, category: 'Electronics' },
+  { name: 'Mouse', price: 25, stock: 100, category: 'Accessories' },
+  { name: 'Keyboard', price: 75, stock: 50, category: 'Accessories' },
+]
+</script>
+```
+
+### Selectable Rows
+
+```vue
+<template>
+  <div>
+    <v-data-table
+      v-model="selected"
+      :headers="headers"
+      :items="items"
+      show-select
+      item-value="id"
+    />
+    <div class="mt-4">
+      Selected: {{ selected.length }} items
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref([])
+
+const headers = [
+  { title: 'Name', key: 'name' },
+  { title: 'Email', key: 'email' },
+]
+
+const items = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+  { id: 3, name: 'Charlie', email: 'charlie@example.com' },
+]
+</script>
+```
+
+### Custom Cell Slots
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="users"
+  >
+    <template v-slot:item.status="{ item }">
+      <v-chip
+        :color="item.status === 'Active' ? 'success' : 'error'"
+        size="small"
+      >
+        {{ item.status }}
+      </v-chip>
+    </template>
+    
+    <template v-slot:item.actions="{ item }">
+      <v-btn
+        icon="mdi-pencil"
+        size="small"
+        variant="text"
+        @click="editItem(item)"
+      />
+      <v-btn
+        icon="mdi-delete"
+        size="small"
+        variant="text"
+        @click="deleteItem(item)"
+      />
+    </template>
+  </v-data-table>
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Name', key: 'name' },
+  { title: 'Status', key: 'status' },
+  { title: 'Actions', key: 'actions', sortable: false },
+]
+
+const users = [
+  { id: 1, name: 'John Doe', status: 'Active' },
+  { id: 2, name: 'Jane Smith', status: 'Inactive' },
+]
+
+function editItem(item) {
+  console.log('Edit', item)
+}
+
+function deleteItem(item) {
+  console.log('Delete', item)
+}
+</script>
+```
+
+### Expandable Rows
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="orders"
+    show-expand
+  >
+    <template v-slot:expanded-row="{ item }">
+      <tr>
+        <td :colspan="headers.length + 1">
+          <div class="pa-4">
+            <strong>Order Details:</strong>
+            <p>Customer: {{ item.customer }}</p>
+            <p>Address: {{ item.address }}</p>
+            <p>Notes: {{ item.notes }}</p>
+          </div>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Order ID', key: 'id' },
+  { title: 'Date', key: 'date' },
+  { title: 'Total', key: 'total' },
+]
+
+const orders = [
+  { 
+    id: '1001', 
+    date: '2024-01-15', 
+    total: '$150.00',
+    customer: 'John Doe',
+    address: '123 Main St',
+    notes: 'Deliver after 5 PM'
+  },
+  { 
+    id: '1002', 
+    date: '2024-01-16', 
+    total: '$89.99',
+    customer: 'Jane Smith',
+    address: '456 Oak Ave',
+    notes: 'Ring doorbell'
+  },
+]
+</script>
+```
+
+### Grouped Table
+
+```vue
+<template>
+  <v-data-table
+    :headers="headers"
+    :items="employees"
+    :group-by="[{ key: 'department', order: 'asc' }]"
+  />
+</template>
+
+<script setup>
+const headers = [
+  { title: 'Name', key: 'name' },
+  { title: 'Position', key: 'position' },
+  { title: 'Department', key: 'department' },
+]
+
+const employees = [
+  { name: 'Alice Johnson', position: 'Developer', department: 'Engineering' },
+  { name: 'Bob Smith', position: 'Designer', department: 'Design' },
+  { name: 'Charlie Brown', position: 'Developer', department: 'Engineering' },
+  { name: 'Diana Prince', position: 'Manager', department: 'Design' },
+]
+</script>
+```

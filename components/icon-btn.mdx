@@ -1,0 +1,253 @@
+---
+title: Icon Button
+description: The VIconBtn component provides an enhanced icon button with toggle states, loading indicators, and size variants.
+---
+
+# Icon Button
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VIconBtn`.
+</Warning>
+
+The VIconBtn component is an improved icon button with additional features like active states, custom variants, and enhanced sizing.
+
+## Usage
+
+```vue
+<template>
+  <v-icon-btn icon="mdi-heart" />
+</template>
+
+<script setup>
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="icon" type="string | Component">
+  The icon to display.
+</ParamField>
+
+<ParamField path="active" type="boolean">
+  Controls the active state for toggle buttons.
+</ParamField>
+
+<ParamField path="activeIcon" type="string | Component">
+  Icon displayed when the button is active.
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color applied when the button is active.
+</ParamField>
+
+<ParamField path="activeVariant" type="string">
+  Variant applied when the button is active.
+</ParamField>
+
+<ParamField path="baseVariant" type="string" default="tonal">
+  Variant applied when the button is not active.
+</ParamField>
+
+<ParamField path="size" type="string | number" default="default">
+  Size of the button. Options: `x-small`, `small`, `default`, `large`, `x-large`, or a number.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the button.
+</ParamField>
+
+<ParamField path="loading" type="boolean | string" default="false">
+  Displays a loading indicator. Pass a color string to customize.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the button read-only.
+</ParamField>
+
+<ParamField path="hideOverlay" type="boolean" default="false">
+  Hides the ripple overlay effect.
+</ParamField>
+
+<ParamField path="iconColor" type="string">
+  Color applied to the icon.
+</ParamField>
+
+<ParamField path="opacity" type="number | string">
+  Opacity of the icon.
+</ParamField>
+
+<ParamField path="rotate" type="number | string">
+  Rotation angle for the icon in degrees.
+</ParamField>
+
+<ParamField path="text" type="string | number | boolean">
+  Text displayed instead of or with the icon.
+</ParamField>
+
+<ParamField path="variant" type="string" default="flat">
+  Button variant. Options: `flat`, `elevated`, `tonal`, `outlined`, `text`, `plain`.
+</ParamField>
+
+### Events
+
+<ParamField path="update:active" type="(value: boolean) => void">
+  Emitted when the active state changes (for toggle buttons).
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Default content displayed in the button.
+</ParamField>
+
+<ParamField path="loader">
+  Customize the loading indicator.
+</ParamField>
+
+## Examples
+
+### Toggle Button
+
+```vue
+<template>
+  <v-icon-btn
+    v-model:active="favorite"
+    icon="mdi-heart-outline"
+    active-icon="mdi-heart"
+    active-color="red"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
+const favorite = ref(false)
+</script>
+```
+
+### Different Sizes
+
+```vue
+<template>
+  <div class="d-flex ga-2">
+    <v-icon-btn icon="mdi-plus" size="x-small" />
+    <v-icon-btn icon="mdi-plus" size="small" />
+    <v-icon-btn icon="mdi-plus" size="default" />
+    <v-icon-btn icon="mdi-plus" size="large" />
+    <v-icon-btn icon="mdi-plus" size="x-large" />
+  </div>
+</template>
+```
+
+### Loading State
+
+```vue
+<template>
+  <v-icon-btn
+    icon="mdi-cloud-upload"
+    loading
+    color="primary"
+  />
+</template>
+```
+
+### Variants
+
+```vue
+<template>
+  <div class="d-flex ga-2">
+    <v-icon-btn icon="mdi-delete" variant="flat" color="error" />
+    <v-icon-btn icon="mdi-delete" variant="elevated" color="error" />
+    <v-icon-btn icon="mdi-delete" variant="tonal" color="error" />
+    <v-icon-btn icon="mdi-delete" variant="outlined" color="error" />
+    <v-icon-btn icon="mdi-delete" variant="text" color="error" />
+  </div>
+</template>
+```
+
+### Rotated Icon
+
+```vue
+<template>
+  <v-icon-btn
+    icon="mdi-refresh"
+    :rotate="rotation"
+    @click="rotation += 90"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
+const rotation = ref(0)
+</script>
+```
+
+### With Text
+
+```vue
+<template>
+  <v-icon-btn icon="mdi-account" text="JD" />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <v-icon-btn
+    icon="mdi-lock"
+    disabled
+  />
+</template>
+```
+
+### Custom Loading Indicator
+
+```vue
+<template>
+  <v-icon-btn icon="mdi-refresh" :loading="loading">
+    <template #loader>
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        size="20"
+      />
+    </template>
+  </v-icon-btn>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
+const loading = ref(true)
+</script>
+```
+
+### Active Variant
+
+```vue
+<template>
+  <v-icon-btn
+    v-model:active="active"
+    icon="mdi-star-outline"
+    active-icon="mdi-star"
+    base-variant="outlined"
+    active-variant="flat"
+    active-color="warning"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VIconBtn } from 'vuetify/labs/VIconBtn'
+
+const active = ref(false)
+</script>
+```

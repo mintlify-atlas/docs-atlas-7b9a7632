@@ -1,0 +1,288 @@
+---
+title: VBtnToggle
+description: Toggle button group with selection state management
+---
+
+# VBtnToggle
+
+The `VBtnToggle` component is a wrapper around `VBtnGroup` that provides selection state management. It allows users to select one or multiple buttons with visual feedback.
+
+## Basic Usage
+
+```vue
+<template>
+  <VBtnToggle v-model="selected">
+    <VBtn>Option 1</VBtn>
+    <VBtn>Option 2</VBtn>
+    <VBtn>Option 3</VBtn>
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(0)
+</script>
+```
+
+## Multiple Selection
+
+```vue
+<template>
+  <VBtnToggle v-model="selected" multiple>
+    <VBtn value="bold">Bold</VBtn>
+    <VBtn value="italic">Italic</VBtn>
+    <VBtn value="underline">Underline</VBtn>
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(['bold'])
+</script>
+```
+
+## Variants
+
+<Tabs>
+  <Tab title="Outlined">
+    ```vue
+    <VBtnToggle v-model="selected" variant="outlined">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnToggle>
+    ```
+  </Tab>
+  
+  <Tab title="Flat">
+    ```vue
+    <VBtnToggle v-model="selected" variant="flat">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnToggle>
+    ```
+  </Tab>
+  
+  <Tab title="Elevated">
+    ```vue
+    <VBtnToggle v-model="selected" variant="elevated">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnToggle>
+    ```
+  </Tab>
+</Tabs>
+
+## Mandatory Selection
+
+```vue
+<template>
+  <VBtnToggle v-model="selected" mandatory>
+    <VBtn>Required 1</VBtn>
+    <VBtn>Required 2</VBtn>
+    <VBtn>Required 3</VBtn>
+  </VBtnToggle>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The currently selected value(s). Array when `multiple` is true
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allow multiple selections
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="false">
+  At least one button must be selected. Use `'force'` to always enforce
+</ParamField>
+
+<ParamField path="max" type="number">
+  Maximum number of selections allowed (when `multiple` is true)
+</ParamField>
+
+<ParamField path="selectedClass" type="string">
+  Custom class applied to selected buttons
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all buttons in the toggle group
+</ParamField>
+
+<ParamField path="variant" type="string">
+  Visual style variant. Options: `elevated`, `flat`, `outlined`, `text`, `tonal`, `plain`
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to all buttons
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color for unselected buttons
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  Layout direction
+</ParamField>
+
+<ParamField path="divided" type="boolean" default="false">
+  Adds dividers between buttons
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts vertical spacing. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius. Options: `0`, `xs`, `sm`, `md`, `lg`, `xl`, `pill`, `circle`, or number
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+  Adds border. Can specify width or side
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  HTML tag to use for root element
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Theme to apply
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when selection changes
+  
+  **Payload:** The new selected value(s)
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Button toggle content. Receives slot props:
+  
+  - `isSelected(value)` - Function to check if value is selected
+  - `select(value)` - Function to select a value
+  - `selected` - Currently selected value(s)
+  - `next()` - Select next button
+  - `prev()` - Select previous button
+</ParamField>
+
+## Examples
+
+### Icon Toggle Group
+
+```vue
+<template>
+  <VBtnToggle v-model="alignment" mandatory>
+    <VBtn value="left" icon="mdi-format-align-left" />
+    <VBtn value="center" icon="mdi-format-align-center" />
+    <VBtn value="right" icon="mdi-format-align-right" />
+    <VBtn value="justify" icon="mdi-format-align-justify" />
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const alignment = ref('left')
+</script>
+```
+
+### Text Formatting
+
+```vue
+<template>
+  <VBtnToggle v-model="format" multiple>
+    <VBtn value="bold">
+      <VIcon>mdi-format-bold</VIcon>
+    </VBtn>
+    <VBtn value="italic">
+      <VIcon>mdi-format-italic</VIcon>
+    </VBtn>
+    <VBtn value="underline">
+      <VIcon>mdi-format-underline</VIcon>
+    </VBtn>
+    <VBtn value="color">
+      <VIcon>mdi-format-color-text</VIcon>
+    </VBtn>
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const format = ref([])
+</script>
+```
+
+### With Custom Selection Class
+
+```vue
+<template>
+  <VBtnToggle 
+    v-model="selected" 
+    selected-class="bg-primary"
+    variant="outlined"
+  >
+    <VBtn value="1">First</VBtn>
+    <VBtn value="2">Second</VBtn>
+    <VBtn value="3">Third</VBtn>
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('1')
+</script>
+```
+
+### Using Slot Props
+
+```vue
+<template>
+  <VBtnToggle v-model="selected">
+    <template #default="{ isSelected, select }">
+      <VBtn 
+        v-for="option in options" 
+        :key="option.value"
+        :value="option.value"
+        :color="isSelected(option.value) ? 'primary' : undefined"
+        @click="select(option.value)"
+      >
+        {{ option.label }}
+      </VBtn>
+    </template>
+  </VBtnToggle>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref('option1')
+const options = [
+  { label: 'Option 1', value: 'option1' },
+  { label: 'Option 2', value: 'option2' },
+  { label: 'Option 3', value: 'option3' },
+]
+</script>
+```
+
+## Notes
+
+- When using `mandatory`, at least one button must always be selected
+- The `multiple` prop allows selecting multiple buttons simultaneously
+- Each button should have a unique `value` prop for proper selection tracking
+- Inherits all styling props from `VBtnGroup`

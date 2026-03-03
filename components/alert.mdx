@@ -1,0 +1,195 @@
+---
+title: VAlert
+description: Alert component for displaying contextual feedback messages
+---
+
+# VAlert
+
+The `VAlert` component is used to convey important information to users through the use of contextual types, icons, and colors.
+
+## Usage
+
+Alerts in their simplest form are a flat sheet of paper that displays a message.
+
+```vue
+<template>
+  <v-alert>This is an alert</v-alert>
+</template>
+```
+
+## Alert Types
+
+The `type` prop provides four default contextual alert styles: `success`, `info`, `warning`, and `error`.
+
+```vue
+<template>
+  <div>
+    <v-alert type="success">Success alert</v-alert>
+    <v-alert type="info">Info alert</v-alert>
+    <v-alert type="warning">Warning alert</v-alert>
+    <v-alert type="error">Error alert</v-alert>
+  </div>
+</template>
+```
+
+<Note>
+When using the `type` prop, the appropriate icon is automatically assigned unless overridden with the `icon` prop.
+</Note>
+
+## Closable Alerts
+
+The `closable` prop adds a close button to the end of the alert component.
+
+```vue
+<template>
+  <v-alert closable>This alert can be closed</v-alert>
+</template>
+```
+
+## Border
+
+The `border` prop adds a simple border to one of the 4 sides of the alert. Accepts `top`, `end`, `bottom`, and `start`.
+
+```vue
+<template>
+  <div>
+    <v-alert border="start" type="warning">
+      I'm an alert with a start border
+    </v-alert>
+    <v-alert border="top" type="error">
+      I'm an alert with a top border
+    </v-alert>
+  </div>
+</template>
+```
+
+## Prominent
+
+The `prominent` prop provides a more pronounced alert by increasing the height and applying a larger icon.
+
+```vue
+<template>
+  <v-alert prominent type="info">
+    I'm a prominent alert
+  </v-alert>
+</template>
+```
+
+## Custom Icon
+
+You can customize the alert icon using the `icon` prop, or disable it entirely by setting `icon` to `false`.
+
+```vue
+<template>
+  <div>
+    <v-alert icon="mdi-home" type="success">
+      Custom icon alert
+    </v-alert>
+    <v-alert :icon="false" type="warning">
+      Alert with no icon
+    </v-alert>
+  </div>
+</template>
+```
+
+## Props
+
+<ParamField path="type" type="'success' | 'info' | 'warning' | 'error'">
+  Specifies a contextual style. Automatically applies a corresponding icon unless overridden.
+</ParamField>
+
+<ParamField path="title" type="string">
+  Specify a title text for the alert.
+</ParamField>
+
+<ParamField path="text" type="string">
+  Specify body text for the alert.
+</ParamField>
+
+<ParamField path="closable" type="boolean" default="false">
+  Adds a close button to the end of the alert.
+</ParamField>
+
+<ParamField path="closeIcon" type="string" default="$close">
+  Change the default icon used for closable alerts.
+</ParamField>
+
+<ParamField path="closeLabel" type="string" default="$vuetify.close">
+  Accessible label for the close button.
+</ParamField>
+
+<ParamField path="icon" type="string | false" default="null">
+  Designates a specific icon. Set to `false` to disable the icon.
+</ParamField>
+
+<ParamField path="modelValue" type="boolean" default="true">
+  Controls whether the alert is visible or hidden.
+</ParamField>
+
+<ParamField path="prominent" type="boolean" default="false">
+  Displays a larger, more prominent alert with a bigger icon.
+</ParamField>
+
+<ParamField path="border" type="boolean | 'top' | 'end' | 'bottom' | 'start'">
+  Puts a border on the alert. Accepts `true` or a string specifying the side.
+</ParamField>
+
+<ParamField path="borderColor" type="string">
+  Specifies the color of the border.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the control.
+</ParamField>
+
+<ParamField path="variant" type="string" default="flat">
+  Applies a distinct style to the component. Options include: `flat`, `elevated`, `tonal`, `outlined`, `text`, `plain`.
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing within the component.
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Designates an elevation applied to the component between 0 and 24.
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default Vue slot for alert content.
+</ParamField>
+
+<ParamField path="prepend">
+  Adds an item to the prepend section of the alert.
+</ParamField>
+
+<ParamField path="title">
+  Slot for the alert title.
+</ParamField>
+
+<ParamField path="text">
+  Slot for the alert text content.
+</ParamField>
+
+<ParamField path="append">
+  Adds an item to the append section of the alert.
+</ParamField>
+
+<ParamField path="close">
+  Slot for customizing the close button.
+</ParamField>
+
+## Events
+
+<ParamField path="click:close" type="(e: MouseEvent) => void">
+  Emitted when the close button is clicked.
+</ParamField>
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the alert visibility changes.
+</ParamField>

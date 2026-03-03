@@ -1,0 +1,235 @@
+---
+title: VCheckbox
+description: Checkbox component for boolean input with indeterminate state support
+---
+
+# VCheckbox
+
+The `VCheckbox` component provides a checkbox input with label, validation, and indeterminate state support. It wraps VCheckboxBtn with VInput for consistent form field styling.
+
+## Basic Usage
+
+```vue
+<template>
+  <VCheckbox
+    v-model="checked"
+    label="I agree to the terms"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const checked = ref(false)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The checkbox value. Can be boolean, array, or custom true/false values.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text to display next to the checkbox.
+</ParamField>
+
+<ParamField path="value" type="any">
+  The value used when the checkbox is checked (useful for arrays).
+</ParamField>
+
+<ParamField path="trueValue" type="any" default="true">
+  The value when checked in single checkbox mode.
+</ParamField>
+
+<ParamField path="falseValue" type="any" default="false">
+  The value when unchecked in single checkbox mode.
+</ParamField>
+
+<ParamField path="indeterminate" type="boolean" default="false">
+  Display the checkbox in an indeterminate state.
+</ParamField>
+
+<ParamField path="indeterminateIcon" type="string" default="$checkboxIndeterminate">
+  Icon to display when in indeterminate state.
+</ParamField>
+
+<ParamField path="trueIcon" type="string" default="$checkboxOn">
+  Icon to display when checked.
+</ParamField>
+
+<ParamField path="falseIcon" type="string" default="$checkboxOff">
+  Icon to display when unchecked.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color of the checkbox when checked.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the checkbox.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make the checkbox readonly (cannot be changed by user).
+</ParamField>
+
+<ParamField path="error" type="boolean" default="false">
+  Put the checkbox in an error state.
+</ParamField>
+
+<ParamField path="rules" type="ValidationRule[]">
+  Validation rules for the checkbox.
+</ParamField>
+
+<ParamField path="ripple" type="boolean" default="true">
+  Enable ripple effect on click.
+</ParamField>
+
+## Multiple Checkboxes with Array
+
+```vue
+<template>
+  <div>
+    <VCheckbox
+      v-model="selected"
+      label="Red"
+      value="red"
+    />
+    <VCheckbox
+      v-model="selected"
+      label="Green"
+      value="green"
+    />
+    <VCheckbox
+      v-model="selected"
+      label="Blue"
+      value="blue"
+    />
+    <p>Selected: {{ selected }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref([])
+</script>
+```
+
+## Custom True/False Values
+
+```vue
+<template>
+  <VCheckbox
+    v-model="status"
+    label="Active"
+    :true-value="'active'"
+    :false-value="'inactive'"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const status = ref('inactive')
+</script>
+```
+
+## Indeterminate State
+
+```vue
+<template>
+  <div>
+    <VCheckbox
+      v-model="selectAll"
+      :indeterminate="indeterminate"
+      label="Select All"
+      @click="toggleAll"
+    />
+    <VCheckbox
+      v-for="item in items"
+      :key="item.id"
+      v-model="selected"
+      :value="item.id"
+      :label="item.name"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const items = [
+  { id: 1, name: 'Item 1' },
+  { id: 2, name: 'Item 2' },
+  { id: 3, name: 'Item 3' },
+]
+
+const selected = ref([])
+const selectAll = computed({
+  get: () => selected.value.length === items.length,
+  set: (value) => {
+    if (value) {
+      selected.value = items.map(item => item.id)
+    } else {
+      selected.value = []
+    }
+  }
+})
+
+const indeterminate = computed(() => 
+  selected.value.length > 0 && selected.value.length < items.length
+)
+
+function toggleAll() {
+  if (selected.value.length === items.length) {
+    selected.value = []
+  } else {
+    selected.value = items.map(item => item.id)
+  }
+}
+</script>
+```
+
+## With Validation
+
+```vue
+<template>
+  <VCheckbox
+    v-model="agreed"
+    label="I agree to the terms and conditions"
+    :rules="[v => !!v || 'You must agree to continue']"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const agreed = ref(false)
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the checkbox value changes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+<ParamField path="update:indeterminate" type="(value: boolean) => void">
+  Emitted when the indeterminate state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="{ label, props }">
+  Customize the label content.
+</ParamField>
+
+<ParamField path="input" type="{ }">
+  Customize the input element.
+</ParamField>

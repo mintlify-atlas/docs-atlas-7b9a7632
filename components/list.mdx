@@ -1,0 +1,408 @@
+---
+title: List
+description: The VList component displays a collection of items in a vertical format with support for navigation, selection, and nesting.
+---
+
+# List
+
+The `VList` component is used to display a collection of items. It can contain multiple list items, sub-lists, dividers, and subheaders. Lists support navigation, selection, and various styling options.
+
+## Usage
+
+```vue
+<template>
+  <v-list>
+    <v-list-item title="Item 1" />
+    <v-list-item title="Item 2" />
+    <v-list-item title="Item 3" />
+  </v-list>
+</template>
+```
+
+## Props
+
+<ParamField path="items" type="any[]">
+  Array of items to display. Each item can be a string or object with properties like `title`, `value`, `props`
+</ParamField>
+
+<ParamField path="itemTitle" type="string | function" default="title">
+  Property name or function to use for item titles
+</ParamField>
+
+<ParamField path="itemValue" type="string | function" default="value">
+  Property name or function to use for item values
+</ParamField>
+
+<ParamField path="itemChildren" type="string | function" default="children">
+  Property name or function for nested children items
+</ParamField>
+
+<ParamField path="itemProps" type="string | function | boolean">
+  Property name, function, or true to pass all props to list items
+</ParamField>
+
+<ParamField path="lines" type="string | boolean" default="one">
+  Number of lines to display. Options: `one`, `two`, `three`, `false`
+</ParamField>
+
+<ParamField path="nav" type="boolean" default="false">
+  Applies navigation list styling (reduces width and rounds corners)
+</ParamField>
+
+<ParamField path="slim" type="boolean" default="false">
+  Reduces horizontal spacing
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all list item interactions
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts vertical spacing. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the list
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to active/selected items
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color for active items (deprecated, use `color` instead)
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color for inactive items
+</ParamField>
+
+<ParamField path="activeClass" type="string">
+  CSS class applied to active items
+</ParamField>
+
+<ParamField path="selected" type="any[]">
+  Array of selected item values (v-model)
+</ParamField>
+
+<ParamField path="opened" type="any[]">
+  Array of opened/expanded item values
+</ParamField>
+
+<ParamField path="selectStrategy" type="string" default="single-leaf">
+  Selection strategy. Options: `single-leaf`, `leaf`, `independent`, `single-independent`, `classic`
+</ParamField>
+
+<ParamField path="openStrategy" type="string" default="list">
+  Strategy for opening nested items. Options: `list`, `single`, `multiple`
+</ParamField>
+
+<ParamField path="expandIcon" type="IconValue">
+  Icon to show for expandable items
+</ParamField>
+
+<ParamField path="collapseIcon" type="IconValue">
+  Icon to show for collapsible items
+</ParamField>
+
+<ParamField path="navigationStrategy" type="string" default="focus">
+  Keyboard navigation strategy. Options: `focus`, `track`
+</ParamField>
+
+<ParamField path="navigationIndex" type="number">
+  Current navigation index
+</ParamField>
+
+<ParamField path="prependGap" type="string | number">
+  Gap before prepend content
+</ParamField>
+
+<ParamField path="indent" type="string | number">
+  Indentation for nested items
+</ParamField>
+
+<ParamField path="border" type="string | number | boolean">
+  Border styles
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius
+</ParamField>
+
+<ParamField path="variant" type="string" default="text">
+  Variant style. Options: `flat`, `text`, `elevated`, `tonal`, `outlined`, `plain`
+</ParamField>
+
+## Events
+
+<ParamField path="update:selected" type="(value: any[]) => void">
+  Emitted when selection changes
+</ParamField>
+
+<ParamField path="update:opened" type="(value: any[]) => void">
+  Emitted when opened items change
+</ParamField>
+
+<ParamField path="click:open" type="(value: object) => void">
+  Emitted when an item is opened/closed. Receives `{ id, value, path }`
+</ParamField>
+
+<ParamField path="click:select" type="(value: object) => void">
+  Emitted when an item is selected. Receives `{ id, value, path }`
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Default slot for list items
+</ParamField>
+
+<ParamField path="item">
+  Slot for customizing individual list items
+</ParamField>
+
+<ParamField path="header">
+  Slot for list header content
+</ParamField>
+
+<ParamField path="title">
+  Slot for item titles
+</ParamField>
+
+<ParamField path="subtitle">
+  Slot for item subtitles
+</ParamField>
+
+<ParamField path="prepend">
+  Slot for content before item text
+</ParamField>
+
+<ParamField path="append">
+  Slot for content after item text
+</ParamField>
+
+## Examples
+
+### Basic List
+
+```vue
+<template>
+  <v-list>
+    <v-list-item
+      v-for="item in items"
+      :key="item.title"
+      :title="item.title"
+      :subtitle="item.subtitle"
+    />
+  </v-list>
+</template>
+
+<script setup>
+const items = [
+  { title: 'Home', subtitle: 'Go to homepage' },
+  { title: 'Profile', subtitle: 'View your profile' },
+  { title: 'Settings', subtitle: 'Configure your account' },
+]
+</script>
+```
+
+### List with Icons
+
+```vue
+<template>
+  <v-list>
+    <v-list-item
+      v-for="item in menuItems"
+      :key="item.title"
+      :title="item.title"
+      :prepend-icon="item.icon"
+      :to="item.to"
+    />
+  </v-list>
+</template>
+
+<script setup>
+const menuItems = [
+  { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
+  { title: 'Messages', icon: 'mdi-message', to: '/messages' },
+  { title: 'Profile', icon: 'mdi-account', to: '/profile' },
+  { title: 'Settings', icon: 'mdi-cog', to: '/settings' },
+]
+</script>
+```
+
+### Navigation List
+
+```vue
+<template>
+  <v-list nav>
+    <v-list-item
+      v-for="item in navItems"
+      :key="item.title"
+      :title="item.title"
+      :prepend-icon="item.icon"
+      :value="item.value"
+      color="primary"
+    />
+  </v-list>
+</template>
+
+<script setup>
+const navItems = [
+  { title: 'Home', icon: 'mdi-home', value: 'home' },
+  { title: 'About', icon: 'mdi-information', value: 'about' },
+  { title: 'Contact', icon: 'mdi-email', value: 'contact' },
+]
+</script>
+```
+
+### List with Avatars
+
+```vue
+<template>
+  <v-list>
+    <v-list-item
+      v-for="user in users"
+      :key="user.id"
+      :title="user.name"
+      :subtitle="user.email"
+      :prepend-avatar="user.avatar"
+    >
+      <template v-slot:append>
+        <v-btn icon="mdi-message" variant="text" />
+      </template>
+    </v-list-item>
+  </v-list>
+</template>
+
+<script setup>
+const users = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', avatar: '/john.jpg' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', avatar: '/jane.jpg' },
+]
+</script>
+```
+
+### Selectable List
+
+```vue
+<template>
+  <v-list
+    v-model:selected="selected"
+    select-strategy="classic"
+  >
+    <v-list-item
+      v-for="item in items"
+      :key="item.value"
+      :title="item.title"
+      :value="item.value"
+    />
+  </v-list>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(['item1'])
+
+const items = [
+  { title: 'Item 1', value: 'item1' },
+  { title: 'Item 2', value: 'item2' },
+  { title: 'Item 3', value: 'item3' },
+]
+</script>
+```
+
+### Nested List
+
+```vue
+<template>
+  <v-list
+    :items="items"
+    :opened="opened"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const opened = ref(['users'])
+
+const items = [
+  {
+    title: 'Users',
+    value: 'users',
+    children: [
+      { title: 'John Doe', value: 'john' },
+      { title: 'Jane Smith', value: 'jane' },
+    ],
+  },
+  {
+    title: 'Settings',
+    value: 'settings',
+    children: [
+      { title: 'Profile', value: 'profile' },
+      { title: 'Security', value: 'security' },
+    ],
+  },
+]
+</script>
+```
+
+### List with Dividers
+
+```vue
+<template>
+  <v-list>
+    <v-list-item title="Item 1" />
+    <v-list-item title="Item 2" />
+    <v-divider />
+    <v-list-subheader>Section 2</v-list-subheader>
+    <v-list-item title="Item 3" />
+    <v-list-item title="Item 4" />
+  </v-list>
+</template>
+```
+
+### Multi-line List
+
+```vue
+<template>
+  <v-list lines="two">
+    <v-list-item
+      v-for="item in notifications"
+      :key="item.id"
+      :title="item.title"
+      :subtitle="item.message"
+      :prepend-icon="item.icon"
+    >
+      <template v-slot:append>
+        <div class="text-caption">{{ item.time }}</div>
+      </template>
+    </v-list-item>
+  </v-list>
+</template>
+
+<script setup>
+const notifications = [
+  { 
+    id: 1, 
+    title: 'New message', 
+    message: 'You have a new message from John',
+    icon: 'mdi-email',
+    time: '2m ago'
+  },
+  { 
+    id: 2, 
+    title: 'Update available', 
+    message: 'A new version is ready to install',
+    icon: 'mdi-update',
+    time: '1h ago'
+  },
+]
+</script>
+```

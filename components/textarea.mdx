@@ -1,0 +1,324 @@
+---
+title: VTextarea
+description: Textarea component for multi-line text input with auto-grow support
+---
+
+# VTextarea
+
+The `VTextarea` component provides a multi-line text input field with features like auto-grow, character counter, and validation.
+
+## Basic Usage
+
+```vue
+<template>
+  <VTextarea
+    v-model="message"
+    label="Message"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message = ref('')
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="string">
+  The text value of the textarea.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text for the textarea.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text.
+</ParamField>
+
+<ParamField path="rows" type="number | string" default="5">
+  Number of rows to display.
+</ParamField>
+
+<ParamField path="autoGrow" type="boolean" default="false">
+  Automatically grow the textarea to fit content.
+</ParamField>
+
+<ParamField path="noResize" type="boolean" default="false">
+  Disable manual resizing of the textarea.
+</ParamField>
+
+<ParamField path="maxRows" type="number | string">
+  Maximum number of rows when auto-grow is enabled.
+</ParamField>
+
+<ParamField path="maxHeight" type="number | string">
+  Maximum height in pixels when auto-grow is enabled.
+</ParamField>
+
+<ParamField path="counter" type="boolean | number | string">
+  Display a character counter. Pass a number to set max length.
+</ParamField>
+
+<ParamField path="counterValue" type="(value: any) => number">
+  Function to compute the counter value.
+</ParamField>
+
+<ParamField path="persistentCounter" type="boolean" default="false">
+  Always show the counter instead of only when focused.
+</ParamField>
+
+<ParamField path="persistentPlaceholder" type="boolean" default="false">
+  Always show the placeholder.
+</ParamField>
+
+<ParamField path="prefix" type="string">
+  Text to prepend to the input.
+</ParamField>
+
+<ParamField path="suffix" type="string">
+  Text to append to the input.
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default="false">
+  Add a clear icon to remove the text.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the textarea.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make the textarea readonly.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="false">
+  Automatically focus the textarea when mounted.
+</ParamField>
+
+## Auto Grow
+
+```vue
+<template>
+  <VTextarea
+    v-model="message"
+    label="Auto-grow textarea"
+    auto-grow
+    rows="3"
+    max-rows="10"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message = ref('')
+</script>
+```
+
+## Character Counter
+
+```vue
+<template>
+  <div>
+    <!-- Simple counter -->
+    <VTextarea
+      v-model="message1"
+      label="With counter"
+      counter
+    />
+    
+    <!-- Counter with max length -->
+    <VTextarea
+      v-model="message2"
+      label="Max 100 characters"
+      :counter="100"
+      :rules="[v => v.length <= 100 || 'Max 100 characters']"
+    />
+    
+    <!-- Always visible counter -->
+    <VTextarea
+      v-model="message3"
+      label="Persistent counter"
+      counter
+      persistent-counter
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message1 = ref('')
+const message2 = ref('')
+const message3 = ref('')
+</script>
+```
+
+## No Resize
+
+```vue
+<template>
+  <VTextarea
+    v-model="message"
+    label="Cannot be resized"
+    no-resize
+    rows="4"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message = ref('')
+</script>
+```
+
+## With Validation
+
+```vue
+<template>
+  <VForm>
+    <VTextarea
+      v-model="bio"
+      label="Biography"
+      :counter="200"
+      :rules="[
+        v => !!v || 'Bio is required',
+        v => v.length >= 10 || 'Bio must be at least 10 characters',
+        v => v.length <= 200 || 'Bio must be less than 200 characters'
+      ]"
+      auto-grow
+      rows="3"
+    />
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const bio = ref('')
+</script>
+```
+
+## Custom Row Count
+
+```vue
+<template>
+  <div>
+    <VTextarea
+      v-model="message1"
+      label="3 rows"
+      rows="3"
+    />
+    
+    <VTextarea
+      v-model="message2"
+      label="10 rows"
+      rows="10"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message1 = ref('')
+const message2 = ref('')
+</script>
+```
+
+## With Prefix and Suffix
+
+```vue
+<template>
+  <VTextarea
+    v-model="comment"
+    label="Comment"
+    prefix="Note:"
+    suffix="(optional)"
+    auto-grow
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const comment = ref('')
+</script>
+```
+
+## Auto Grow with Constraints
+
+```vue
+<template>
+  <VTextarea
+    v-model="message"
+    label="Constrained auto-grow"
+    auto-grow
+    rows="2"
+    max-rows="8"
+    hint="Grows from 2 to 8 rows"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message = ref('')
+</script>
+```
+
+## Clearable
+
+```vue
+<template>
+  <VTextarea
+    v-model="message"
+    label="Clearable textarea"
+    clearable
+    auto-grow
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const message = ref('This text can be cleared')
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: string) => void">
+  Emitted when the textarea value changes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+<ParamField path="update:rows" type="(rows: number) => void">
+  Emitted when the row count changes (auto-grow mode).
+</ParamField>
+
+<ParamField path="click:control" type="(e: MouseEvent) => void">
+  Emitted when the control area is clicked.
+</ParamField>
+
+<ParamField path="mousedown:control" type="(e: MouseEvent) => void">
+  Emitted when mousedown occurs on the control area.
+</ParamField>
+
+## Slots
+
+<ParamField path="counter" type="{}">
+  Customize the counter display.
+</ParamField>
+
+<ParamField path="details" type="{}">
+  Customize the details area (below the input).
+</ParamField>

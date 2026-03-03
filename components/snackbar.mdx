@@ -1,0 +1,358 @@
+---
+title: VSnackbar
+description: Snackbar component for brief notifications and messages
+---
+
+# VSnackbar
+
+The `VSnackbar` component is used to display a quick message to a user. Snackbars support positioning, can have actions, and can be dismissed automatically after a timeout.
+
+## Usage
+
+Snackbars are controlled by a `v-model` which determines whether the snackbar is visible.
+
+```vue
+<template>
+  <div>
+    <v-btn @click="snackbar = true">Show Snackbar</v-btn>
+    
+    <v-snackbar v-model="snackbar">
+      This is a snackbar message
+    </v-snackbar>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const snackbar = ref(false)
+</script>
+```
+
+## Timeout
+
+Control how long the snackbar is displayed with the `timeout` prop (in milliseconds). Set to `-1` to keep it open indefinitely.
+
+```vue
+<template>
+  <v-snackbar v-model="snackbar" :timeout="2000">
+    This will close after 2 seconds
+  </v-snackbar>
+</template>
+```
+
+<Note>
+The default timeout is 5000ms (5 seconds). The timer pauses when hovering over or focusing the snackbar.
+</Note>
+
+## Actions
+
+Add action buttons to the snackbar using the `actions` slot.
+
+```vue
+<template>
+  <v-snackbar v-model="snackbar">
+    Item deleted
+    
+    <template v-slot:actions>
+      <v-btn color="primary" @click="undo">Undo</v-btn>
+      <v-btn @click="snackbar = false">Close</v-btn>
+    </template>
+  </v-snackbar>
+</template>
+```
+
+## Location
+
+Position the snackbar using the `location` prop.
+
+```vue
+<template>
+  <div>
+    <!-- Top -->
+    <v-snackbar v-model="snackbar1" location="top">
+      Top snackbar
+    </v-snackbar>
+    
+    <!-- Bottom (default) -->
+    <v-snackbar v-model="snackbar2" location="bottom">
+      Bottom snackbar
+    </v-snackbar>
+    
+    <!-- Top right -->
+    <v-snackbar v-model="snackbar3" location="top end">
+      Top right snackbar
+    </v-snackbar>
+  </div>
+</template>
+```
+
+## Color and Variant
+
+Customize the appearance with color and variant props.
+
+```vue
+<template>
+  <div>
+    <v-snackbar v-model="snackbar1" color="success">
+      Success message
+    </v-snackbar>
+    
+    <v-snackbar v-model="snackbar2" color="error" variant="tonal">
+      Error message
+    </v-snackbar>
+    
+    <v-snackbar v-model="snackbar3" color="info" variant="outlined">
+      Info message
+    </v-snackbar>
+  </div>
+</template>
+```
+
+## Vertical
+
+Display actions below the message with the `vertical` prop.
+
+```vue
+<template>
+  <v-snackbar v-model="snackbar" vertical>
+    Your message has been sent
+    
+    <template v-slot:actions>
+      <v-btn @click="snackbar = false">Close</v-btn>
+    </template>
+  </v-snackbar>
+</template>
+```
+
+## Title and Text
+
+Use structured content with the `title` and `text` props.
+
+```vue
+<template>
+  <v-snackbar
+    v-model="snackbar"
+    title="Update Available"
+    text="A new version of the app is ready to install."
+  >
+    <template v-slot:actions>
+      <v-btn color="primary">Update</v-btn>
+      <v-btn @click="snackbar = false">Later</v-btn>
+    </template>
+  </v-snackbar>
+</template>
+```
+
+## Timer
+
+Display a progress indicator showing the remaining time with the `timer` prop.
+
+```vue
+<template>
+  <v-snackbar
+    v-model="snackbar"
+    timer
+    :timeout="5000"
+  >
+    This will close in 5 seconds
+  </v-snackbar>
+</template>
+```
+
+<Note>
+The timer can be positioned at the `top` or `bottom` by setting `timer="top"` or `timer="bottom"`. The default position is bottom.
+</Note>
+
+## Reverse Timer
+
+Show the timer counting down instead of up with `reverseTimer`.
+
+```vue
+<template>
+  <v-snackbar
+    v-model="snackbar"
+    timer
+    reverse-timer
+    :timeout="5000"
+  >
+    Countdown timer
+  </v-snackbar>
+</template>
+```
+
+## Prepend Content
+
+Add icons or avatars to the beginning of the snackbar.
+
+```vue
+<template>
+  <div>
+    <!-- Icon -->
+    <v-snackbar v-model="snackbar1" prepend-icon="mdi-check-circle">
+      Success message
+    </v-snackbar>
+    
+    <!-- Avatar -->
+    <v-snackbar v-model="snackbar2" prepend-avatar="/avatar.jpg">
+      Message from John
+    </v-snackbar>
+    
+    <!-- Loading -->
+    <v-snackbar v-model="snackbar3" loading>
+      Processing...
+    </v-snackbar>
+  </div>
+</template>
+```
+
+## Multi-line
+
+Snackbars automatically adapt to multi-line content.
+
+```vue
+<template>
+  <v-snackbar v-model="snackbar">
+    This is a longer message that will wrap to multiple lines when needed.
+    It automatically adjusts its height based on the content.
+  </v-snackbar>
+</template>
+```
+
+## Position
+
+Combine location with position props for precise placement.
+
+```vue
+<template>
+  <v-snackbar
+    v-model="snackbar"
+    location="top"
+    position="fixed"
+  >
+    Fixed position snackbar
+  </v-snackbar>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean" default="false">
+  Controls whether the snackbar is visible.
+</ParamField>
+
+<ParamField path="text" type="string">
+  The text content of the snackbar.
+</ParamField>
+
+<ParamField path="title" type="string">
+  The title text of the snackbar.
+</ParamField>
+
+<ParamField path="timeout" type="number | string" default="5000">
+  Time in milliseconds to wait before automatically hiding the snackbar. Set to `-1` to keep open.
+</ParamField>
+
+<ParamField path="location" type="string" default="bottom">
+  Position of the snackbar. Options: `top`, `bottom`, `left`, `right`, `center`, or combinations like `top end`.
+</ParamField>
+
+<ParamField path="vertical" type="boolean" default="false">
+  Stacks snackbar content and actions vertically.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the snackbar.
+</ParamField>
+
+<ParamField path="variant" type="string">
+  Applies a distinct style to the component. Options: `flat`, `elevated`, `tonal`, `outlined`, `text`, `plain`.
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component.
+</ParamField>
+
+<ParamField path="timer" type="boolean | 'top' | 'bottom'" default="false">
+  Displays a progress indicator showing remaining time. Can be positioned at top or bottom.
+</ParamField>
+
+<ParamField path="reverseTimer" type="boolean" default="false">
+  Makes the timer progress bar count down instead of up.
+</ParamField>
+
+<ParamField path="timerColor" type="string">
+  Color of the timer progress bar.
+</ParamField>
+
+<ParamField path="prependIcon" type="string">
+  Prepends an icon to the snackbar content.
+</ParamField>
+
+<ParamField path="prependAvatar" type="string">
+  Prepends an avatar to the snackbar content.
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Displays a loading spinner at the start of the snackbar.
+</ParamField>
+
+<ParamField path="position" type="string">
+  Sets the position for the snackbar (e.g., `fixed`, `absolute`).
+</ParamField>
+
+<ParamField path="transition" type="string" default="v-snackbar-transition">
+  Sets the component transition. Supports `-auto` suffix for automatic direction.
+</ParamField>
+
+<ParamField path="zIndex" type="number | string">
+  The z-index used for the snackbar.
+</ParamField>
+
+<ParamField path="closeOnBack" type="boolean" default="true">
+  Closes the snackbar when the browser back button is pressed.
+</ParamField>
+
+<ParamField path="contained" type="boolean" default="false">
+  Keeps the snackbar contained within its parent element.
+</ParamField>
+
+<ParamField path="attach" type="boolean | string | Element">
+  Specifies which DOM element the snackbar should detach to.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default Vue slot for snackbar content.
+</ParamField>
+
+<ParamField path="activator" type="{ isActive: boolean, props: Record<string, any> }">
+  Slot for the activator element that triggers the snackbar.
+</ParamField>
+
+<ParamField path="actions" type="{ isActive: Ref<boolean> }">
+  Slot for action buttons.
+</ParamField>
+
+<ParamField path="header">
+  Slot for custom header content.
+</ParamField>
+
+<ParamField path="title">
+  Slot for the snackbar title.
+</ParamField>
+
+<ParamField path="text">
+  Slot for the snackbar text content.
+</ParamField>
+
+<ParamField path="prepend">
+  Slot for prepended content (icon, avatar, etc.).
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the snackbar visibility changes.
+</ParamField>

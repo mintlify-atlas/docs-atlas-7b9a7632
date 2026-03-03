@@ -1,0 +1,265 @@
+---
+title: File Upload
+description: The VFileUpload component provides drag-and-drop file uploading with preview, validation, and customization options.
+---
+
+# File Upload
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VFileUpload`.
+</Warning>
+
+The VFileUpload component creates an intuitive file upload interface with drag-and-drop support, file filtering, and item display.
+
+## Usage
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    label="Upload Files"
+    multiple
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
+
+const files = ref([])
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="File | File[]">
+  The selected file(s).
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allows selecting multiple files.
+</ParamField>
+
+<ParamField path="title" type="string" default="$vuetify.fileUpload.title">
+  Title displayed in the upload area.
+</ParamField>
+
+<ParamField path="subtitle" type="string">
+  Subtitle displayed below the browse button.
+</ParamField>
+
+<ParamField path="browseText" type="string" default="$vuetify.fileUpload.browse">
+  Text for the browse button.
+</ParamField>
+
+<ParamField path="dividerText" type="string" default="$vuetify.fileUpload.divider">
+  Text displayed in the divider.
+</ParamField>
+
+<ParamField path="icon" type="string" default="$upload">
+  Icon displayed in the upload area.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables file selection.
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default="false">
+  Shows a clear button on each file item.
+</ParamField>
+
+<ParamField path="hideBrowse" type="boolean" default="false">
+  Hides the browse button (drag-and-drop only).
+</ParamField>
+
+<ParamField path="showSize" type="boolean" default="false">
+  Displays file sizes in the file list.
+</ParamField>
+
+<ParamField path="scrim" type="boolean | string" default="true">
+  Shows a scrim overlay when dragging files.
+</ParamField>
+
+<ParamField path="name" type="string">
+  Name attribute for the file input.
+</ParamField>
+
+<ParamField path="filterByType" type="string">
+  Filter files by MIME type (e.g., "image/*", "application/pdf").
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(files: File[]) => void">
+  Emitted when the file selection changes.
+</ParamField>
+
+<ParamField path="rejected" type="(files: File[]) => void">
+  Emitted when files are rejected due to filtering.
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Default content (hidden by default).
+</ParamField>
+
+<ParamField path="icon">
+  Customize the upload icon.
+</ParamField>
+
+<ParamField path="title">
+  Customize the title text.
+</ParamField>
+
+<ParamField path="divider">
+  Customize the divider section.
+</ParamField>
+
+<ParamField path="browse" type="{ props }">
+  Customize the browse button.
+</ParamField>
+
+<ParamField path="input" type="{ inputNode }">
+  Access or replace the file input element.
+</ParamField>
+
+<ParamField path="item" type="{ file, props }">
+  Customize individual file item display.
+</ParamField>
+
+## Examples
+
+### Image Upload Only
+
+```vue
+<template>
+  <v-file-upload
+    v-model="images"
+    filter-by-type="image/*"
+    multiple
+    title="Upload Images"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
+
+const images = ref([])
+</script>
+```
+
+### With File Size Display
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    show-size
+    clearable
+    multiple
+  />
+</template>
+```
+
+### Drag-and-Drop Only
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    hide-browse
+    title="Drop files here"
+    subtitle="Drag and drop only"
+  />
+</template>
+```
+
+### Custom Styling
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    color="primary"
+    variant="outlined"
+    rounded="lg"
+  />
+</template>
+```
+
+### File Validation
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    @rejected="onRejected"
+    filter-by-type="application/pdf"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
+
+const files = ref([])
+
+function onRejected(rejectedFiles) {
+  console.log('Rejected files:', rejectedFiles)
+  alert(`${rejectedFiles.length} file(s) rejected. Only PDF files are allowed.`)
+}
+</script>
+```
+
+### Custom File Items
+
+```vue
+<template>
+  <v-file-upload v-model="files" multiple>
+    <template #item="{ file }">
+      <v-card class="mb-2">
+        <v-card-text>
+          <div class="d-flex align-center">
+            <v-icon class="mr-2">mdi-file</v-icon>
+            <div class="flex-grow-1">
+              <div>{{ file.name }}</div>
+              <div class="text-caption">{{ formatSize(file.size) }}</div>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </template>
+  </v-file-upload>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
+
+const files = ref([])
+
+function formatSize(bytes) {
+  if (bytes === 0) return '0 Bytes'
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+}
+</script>
+```
+
+### Compact Density
+
+```vue
+<template>
+  <v-file-upload
+    v-model="files"
+    density="compact"
+    multiple
+  />
+</template>
+```

@@ -1,0 +1,317 @@
+---
+title: Card
+description: The VCard component is a versatile content container with multiple variants and features for displaying grouped information.
+---
+
+# Card
+
+The `VCard` component is a versatile container that can be used to display content containing a variety of elements such as images, text, and actions. Cards are entry points to more detailed information.
+
+## Usage
+
+```vue
+<template>
+  <v-card>
+    <v-card-title>Card Title</v-card-title>
+    <v-card-text>Card content goes here</v-card-text>
+  </v-card>
+</template>
+```
+
+## Props
+
+<ParamField path="title" type="string | number | boolean">
+  Title text displayed at the top of the card
+</ParamField>
+
+<ParamField path="subtitle" type="string | number | boolean">
+  Subtitle text displayed below the title
+</ParamField>
+
+<ParamField path="text" type="string | number | boolean">
+  Main text content of the card
+</ParamField>
+
+<ParamField path="image" type="string">
+  URL for a header image
+</ParamField>
+
+<ParamField path="prependAvatar" type="string">
+  Avatar image URL displayed before the title
+</ParamField>
+
+<ParamField path="prependIcon" type="IconValue">
+  Icon displayed before the title
+</ParamField>
+
+<ParamField path="appendAvatar" type="string">
+  Avatar image URL displayed after the title
+</ParamField>
+
+<ParamField path="appendIcon" type="IconValue">
+  Icon displayed after the title
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Removes the card's click functionality
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+  Removes the card's elevation
+</ParamField>
+
+<ParamField path="hover" type="boolean" default="false">
+  Applies hover effect with elevation change
+</ParamField>
+
+<ParamField path="link" type="boolean">
+  Makes the card a link (automatically detected when using `to` or `href`)
+</ParamField>
+
+<ParamField path="ripple" type="boolean | object" default="true">
+  Applies the ripple directive
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Vue Router location for the card link
+</ParamField>
+
+<ParamField path="href" type="string">
+  Standard anchor href attribute
+</ParamField>
+
+<ParamField path="loading" type="boolean | string">
+  Displays a loading bar at the top of the card
+</ParamField>
+
+<ParamField path="border" type="string | number | boolean">
+  Applies border styles to the component
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the card background
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts the vertical height. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the component
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the component
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the component
+</ParamField>
+
+<ParamField path="minHeight" type="string | number">
+  Sets the minimum height of the component
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+  Sets the minimum width of the component
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the component
+</ParamField>
+
+<ParamField path="location" type="string">
+  Positions the element. Options: combinations of `top`, `bottom`, `start`, `end`
+</ParamField>
+
+<ParamField path="position" type="string">
+  CSS position property. Options: `static`, `relative`, `fixed`, `absolute`, `sticky`
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the card
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+<ParamField path="variant" type="string" default="elevated">
+  Applies a distinct style. Options: `flat`, `text`, `elevated`, `tonal`, `outlined`, `plain`
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default slot for card content
+</ParamField>
+
+<ParamField path="image">
+  Slot for custom header image content
+</ParamField>
+
+<ParamField path="item">
+  Slot that replaces the default card item (title/subtitle area)
+</ParamField>
+
+<ParamField path="prepend">
+  Slot for content before the title
+</ParamField>
+
+<ParamField path="title">
+  Slot for custom title content
+</ParamField>
+
+<ParamField path="subtitle">
+  Slot for custom subtitle content
+</ParamField>
+
+<ParamField path="append">
+  Slot for content after the title
+</ParamField>
+
+<ParamField path="text">
+  Slot for custom text content
+</ParamField>
+
+<ParamField path="actions">
+  Slot for action buttons at the bottom of the card
+</ParamField>
+
+<ParamField path="loader">
+  Slot for custom loading indicator
+</ParamField>
+
+## Examples
+
+### Basic Card
+
+```vue
+<template>
+  <v-card width="400">
+    <v-card-title>Card Title</v-card-title>
+    <v-card-subtitle>Card Subtitle</v-card-subtitle>
+    <v-card-text>
+      This is the main content of the card. It can contain any text or components.
+    </v-card-text>
+    <v-card-actions>
+      <v-btn>Action</v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+### Card with Image
+
+```vue
+<template>
+  <v-card width="400">
+    <v-img
+      src="/landscape.jpg"
+      height="200"
+      cover
+    />
+    <v-card-title>Beautiful Landscape</v-card-title>
+    <v-card-text>
+      A stunning view captured at sunrise.
+    </v-card-text>
+    <v-card-actions>
+      <v-btn color="primary">View More</v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+### Card with Avatar and Icons
+
+```vue
+<template>
+  <v-card
+    width="400"
+    prepend-avatar="/user.jpg"
+    title="John Doe"
+    subtitle="@johndoe"
+    append-icon="mdi-dots-vertical"
+  >
+    <v-card-text>
+      Just posted a new article about Vue.js best practices!
+    </v-card-text>
+    <v-card-actions>
+      <v-btn prepend-icon="mdi-heart" variant="text">Like</v-btn>
+      <v-btn prepend-icon="mdi-share-variant" variant="text">Share</v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+### Clickable Card
+
+```vue
+<template>
+  <v-card
+    hover
+    to="/details"
+    width="300"
+  >
+    <v-card-title>Clickable Card</v-card-title>
+    <v-card-text>
+      This card navigates to another page when clicked.
+    </v-card-text>
+  </v-card>
+</template>
+```
+
+### Card Variants
+
+```vue
+<template>
+  <div class="d-flex flex-wrap gap-4">
+    <v-card variant="elevated" width="200">
+      <v-card-title>Elevated</v-card-title>
+    </v-card>
+    
+    <v-card variant="flat" width="200">
+      <v-card-title>Flat</v-card-title>
+    </v-card>
+    
+    <v-card variant="tonal" width="200" color="primary">
+      <v-card-title>Tonal</v-card-title>
+    </v-card>
+    
+    <v-card variant="outlined" width="200">
+      <v-card-title>Outlined</v-card-title>
+    </v-card>
+  </div>
+</template>
+```
+
+### Loading Card
+
+```vue
+<template>
+  <v-card
+    :loading="loading"
+    width="400"
+  >
+    <v-card-title>Loading Example</v-card-title>
+    <v-card-text>
+      This card shows a loading indicator at the top.
+    </v-card-text>
+    <v-card-actions>
+      <v-btn @click="loading = !loading">
+        Toggle Loading
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(false)
+</script>
+```

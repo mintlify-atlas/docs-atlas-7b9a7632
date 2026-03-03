@@ -1,0 +1,279 @@
+---
+title: Command Palette
+description: The VCommandPalette component provides a keyboard-driven command interface for quick navigation and actions.
+---
+
+# Command Palette
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VCommandPalette`.
+</Warning>
+
+The VCommandPalette component creates a searchable command interface, similar to those found in modern applications like VS Code or Slack.
+
+## Usage
+
+```vue
+<template>
+  <v-command-palette
+    v-model="open"
+    :items="items"
+    hotkey="meta+k"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VCommandPalette } from 'vuetify/labs/VCommandPalette'
+
+const open = ref(false)
+const items = ref([
+  {
+    type: 'item',
+    title: 'Go to Dashboard',
+    onClick: () => console.log('Navigate to dashboard')
+  },
+  {
+    type: 'item',
+    title: 'Settings',
+    subtitle: 'Manage preferences',
+    onClick: () => console.log('Open settings')
+  }
+])
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="boolean">
+  Controls the visibility of the command palette.
+</ParamField>
+
+<ParamField path="items" type="VCommandPaletteItem[]" default="[]">
+  Array of command items or subheaders.
+</ParamField>
+
+<ParamField path="search" type="string">
+  The current search query.
+</ParamField>
+
+<ParamField path="hotkey" type="string">
+  Keyboard shortcut to open the palette (e.g., "meta+k", "ctrl+k").
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="$vuetify.command.search">
+  Placeholder text for the search input.
+</ParamField>
+
+<ParamField path="inputIcon" type="string" default="$search">
+  Icon displayed in the search input.
+</ParamField>
+
+<ParamField path="noDataText" type="string" default="$vuetify.noDataText">
+  Text displayed when no results are found.
+</ParamField>
+
+<ParamField path="listProps" type="object">
+  Props passed to the internal VList component.
+</ParamField>
+
+<ParamField path="filterKeys" type="string[]" default="['title', 'subtitle']">
+  Keys used for filtering items.
+</ParamField>
+
+<ParamField path="maxWidth" type="number | string" default="500">
+  Maximum width of the dialog.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the palette visibility changes.
+</ParamField>
+
+<ParamField path="update:search" type="(value: string) => void">
+  Emitted when the search query changes.
+</ParamField>
+
+<ParamField path="click:item" type="(item: VCommandPaletteItem, event: Event) => void">
+  Emitted when an item is clicked or selected.
+</ParamField>
+
+### Slots
+
+<ParamField path="activator" type="{ props }">
+  Slot for custom activator button.
+</ParamField>
+
+<ParamField path="prepend">
+  Content displayed before the input.
+</ParamField>
+
+<ParamField path="append">
+  Content displayed after the items list.
+</ParamField>
+
+<ParamField path="input">
+  Customize the search input.
+</ParamField>
+
+<ParamField path="no-data">
+  Customize the no results message.
+</ParamField>
+
+<ParamField path="item" type="{ item, index }">
+  Customize individual item display.
+</ParamField>
+
+<ParamField path="item.prepend" type="{ item, index }">
+  Prepend content for items.
+</ParamField>
+
+<ParamField path="item.title" type="{ item, index }">
+  Customize item titles.
+</ParamField>
+
+<ParamField path="item.append" type="{ item, index }">
+  Append content for items (e.g., hotkey badges).
+</ParamField>
+
+## Item Types
+
+### Action Item
+
+```js
+{
+  type: 'item',
+  title: 'Command Title',
+  subtitle: 'Optional description',
+  value: 'unique-id',
+  hotkey: 'ctrl+shift+x',
+  onClick: (event, value) => {
+    // Handle action
+  }
+}
+```
+
+### Subheader
+
+```js
+{
+  type: 'subheader',
+  title: 'Section Title'
+}
+```
+
+## Examples
+
+### With Categories
+
+```vue
+<template>
+  <v-command-palette
+    v-model="open"
+    :items="items"
+    hotkey="meta+k"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VCommandPalette } from 'vuetify/labs/VCommandPalette'
+
+const open = ref(false)
+const items = ref([
+  { type: 'subheader', title: 'Navigation' },
+  { type: 'item', title: 'Dashboard', onClick: () => {} },
+  { type: 'item', title: 'Settings', onClick: () => {} },
+  { type: 'subheader', title: 'Actions' },
+  { type: 'item', title: 'Create New', hotkey: 'ctrl+n', onClick: () => {} },
+  { type: 'item', title: 'Save', hotkey: 'ctrl+s', onClick: () => {} }
+])
+</script>
+```
+
+### With Icons and Hotkeys
+
+```vue
+<template>
+  <v-command-palette v-model="open" :items="items">
+    <template #item.prepend="{ item }">
+      <v-icon :icon="item.icon" />
+    </template>
+    <template #item.append="{ item }">
+      <kbd v-if="item.hotkey">{{ item.hotkey }}</kbd>
+    </template>
+  </v-command-palette>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VCommandPalette } from 'vuetify/labs/VCommandPalette'
+
+const open = ref(false)
+const items = ref([
+  {
+    type: 'item',
+    title: 'New File',
+    icon: 'mdi-file-plus',
+    hotkey: 'Ctrl+N',
+    onClick: () => {}
+  },
+  {
+    type: 'item',
+    title: 'Search',
+    icon: 'mdi-magnify',
+    hotkey: 'Ctrl+F',
+    onClick: () => {}
+  }
+])
+</script>
+```
+
+### Custom Activator
+
+```vue
+<template>
+  <v-command-palette v-model="open" :items="items">
+    <template #activator="{ props }">
+      <v-btn v-bind="props" prepend-icon="mdi-magnify">
+        Search Commands
+      </v-btn>
+    </template>
+  </v-command-palette>
+</template>
+```
+
+### Dynamic Items
+
+```vue
+<template>
+  <v-command-palette
+    v-model="open"
+    :items="filteredItems"
+    @update:search="onSearch"
+  />
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { VCommandPalette } from 'vuetify/labs/VCommandPalette'
+
+const open = ref(false)
+const searchQuery = ref('')
+const allItems = ref([...])
+
+const filteredItems = computed(() => {
+  // Custom filtering logic
+  return allItems.value.filter(item => {
+    return item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  })
+})
+
+function onSearch(query) {
+  searchQuery.value = query
+}
+</script>
+```

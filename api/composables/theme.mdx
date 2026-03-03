@@ -1,0 +1,223 @@
+---
+title: useTheme()
+description: Composable for accessing and managing Vuetify's theme system
+---
+
+## Overview
+
+The `useTheme()` composable provides access to Vuetify's theme system, allowing you to read current theme values, switch between themes, and manage theme state reactively.
+
+## Import
+
+```typescript
+import { useTheme } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useTheme(): ThemeInstance
+```
+
+## Return Value
+
+Returns a `ThemeInstance` object with the following properties and methods:
+
+<ResponseField name="name" type="Readonly<Ref<string>>">
+  The name of the currently active theme (e.g., 'light', 'dark', or custom theme name)
+</ResponseField>
+
+<ResponseField name="current" type="DeepReadonly<Ref<InternalThemeDefinition>>">
+  The complete current theme definition including colors and variables
+</ResponseField>
+
+<ResponseField name="themes" type="Ref<Record<string, InternalThemeDefinition>>">
+  All available theme definitions
+</ResponseField>
+
+<ResponseField name="computedThemes" type="DeepReadonly<Ref<Record<string, InternalThemeDefinition>>>">
+  Computed themes with variations and generated on-colors
+</ResponseField>
+
+<ResponseField name="isDisabled" type="boolean">
+  Whether the theme system is disabled
+</ResponseField>
+
+<ResponseField name="isSystem" type="Readonly<Ref<boolean>>">
+  Whether the theme is set to follow system preferences
+</ResponseField>
+
+<ResponseField name="prefix" type="string">
+  CSS variable prefix (default: 'v-')
+</ResponseField>
+
+<ResponseField name="themeClasses" type="Readonly<Ref<string | undefined>>">
+  CSS classes to apply based on current theme
+</ResponseField>
+
+<ResponseField name="styles" type="Readonly<Ref<string>>">
+  Generated CSS styles for the theme
+</ResponseField>
+
+<ResponseField name="global" type="object">
+  Global theme reference with `name` and `current` properties
+</ResponseField>
+
+### Methods
+
+<ResponseField name="change" type="(themeName: string) => void">
+  Switch to a different theme by name
+  
+  **Parameters:**
+  - `themeName` - Name of the theme to activate (e.g., 'light', 'dark', 'system')
+</ResponseField>
+
+<ResponseField name="cycle" type="(themeArray?: string[]) => void">
+  Cycle through an array of themes
+  
+  **Parameters:**
+  - `themeArray` - Optional array of theme names to cycle through (defaults to all themes)
+</ResponseField>
+
+<ResponseField name="toggle" type="(themeArray?: [string, string]) => void">
+  Toggle between two themes
+  
+  **Parameters:**
+  - `themeArray` - Optional tuple of two theme names (defaults to ['light', 'dark'])
+</ResponseField>
+
+## Theme Definition
+
+```typescript
+interface ThemeDefinition {
+  dark: boolean
+  colors: {
+    background: string
+    surface: string
+    primary: string
+    secondary: string
+    success: string
+    warning: string
+    error: string
+    info: string
+    'on-background': string
+    'on-surface': string
+    'on-primary': string
+    // ... and more
+    [key: string]: string
+  }
+  variables: Record<string, string | number>
+}
+```
+
+## Usage Examples
+
+### Basic Usage
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
+
+// Get current theme name
+console.log(theme.name.value) // 'light' or 'dark'
+
+// Get current theme colors
+console.log(theme.current.value.colors.primary) // '#1867C0'
+</script>
+```
+
+### Switch Themes
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
+
+function switchToDark() {
+  theme.change('dark')
+}
+
+function switchToLight() {
+  theme.change('light')
+}
+
+function toggleTheme() {
+  theme.toggle() // Toggles between light and dark
+}
+</script>
+
+<template>
+  <v-btn @click="toggleTheme">
+    Toggle {{ theme.name }}
+  </v-btn>
+</template>
+```
+
+### Access Theme Colors
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+import { computed } from 'vue'
+
+const theme = useTheme()
+
+const primaryColor = computed(() => theme.current.value.colors.primary)
+const backgroundColor = computed(() => theme.current.value.colors.background)
+</script>
+
+<template>
+  <div :style="{ backgroundColor }">
+    <h1 :style="{ color: primaryColor }">
+      Themed Content
+    </h1>
+  </div>
+</template>
+```
+
+### Cycle Through Custom Themes
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
+
+function cycleThemes() {
+  theme.cycle(['light', 'dark', 'custom'])
+}
+</script>
+```
+
+### Check System Theme Preference
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+import { watch } from 'vue'
+
+const theme = useTheme()
+
+watch(() => theme.isSystem.value, (isSystem) => {
+  if (isSystem) {
+    console.log('Following system theme preference')
+  }
+})
+</script>
+```
+
+## Notes
+
+- Must be called within a component setup function or composable
+- Throws an error if the Vuetify theme provider is not found
+- Theme changes are reactive and will update all dependent components
+- The `system` theme name will automatically follow OS preferences
+
+## See Also
+
+- [Theme Configuration](/features/theme)
+- [createTheme()](/api/utilities/create-theme)
+- [provideTheme()](/api/composables/provide-theme)

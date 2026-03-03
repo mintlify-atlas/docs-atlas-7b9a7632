@@ -1,0 +1,205 @@
+---
+title: VBtnGroup
+description: Group buttons together with consistent styling
+---
+
+# VBtnGroup
+
+The `VBtnGroup` component wraps buttons in a unified container, applying consistent styling and eliminating gaps between buttons.
+
+## Basic Usage
+
+```vue
+<template>
+  <VBtnGroup>
+    <VBtn>One</VBtn>
+    <VBtn>Two</VBtn>
+    <VBtn>Three</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+## Variants
+
+<Tabs>
+  <Tab title="Elevated">
+    ```vue
+    <VBtnGroup variant="elevated">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnGroup>
+    ```
+  </Tab>
+  
+  <Tab title="Flat">
+    ```vue
+    <VBtnGroup variant="flat">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnGroup>
+    ```
+  </Tab>
+  
+  <Tab title="Outlined">
+    ```vue
+    <VBtnGroup variant="outlined">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnGroup>
+    ```
+  </Tab>
+  
+  <Tab title="Text">
+    ```vue
+    <VBtnGroup variant="text">
+      <VBtn>One</VBtn>
+      <VBtn>Two</VBtn>
+      <VBtn>Three</VBtn>
+    </VBtnGroup>
+    ```
+  </Tab>
+</Tabs>
+
+## Direction
+
+```vue
+<template>
+  <!-- Horizontal (default) -->
+  <VBtnGroup direction="horizontal">
+    <VBtn>Left</VBtn>
+    <VBtn>Center</VBtn>
+    <VBtn>Right</VBtn>
+  </VBtnGroup>
+  
+  <!-- Vertical -->
+  <VBtnGroup direction="vertical">
+    <VBtn>Top</VBtn>
+    <VBtn>Middle</VBtn>
+    <VBtn>Bottom</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+## Divided
+
+```vue
+<template>
+  <VBtnGroup divided>
+    <VBtn>One</VBtn>
+    <VBtn>Two</VBtn>
+    <VBtn>Three</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+## Props
+
+<ParamField path="variant" type="string">
+  Visual style variant applied to all buttons. Options: `elevated`, `flat`, `outlined`, `text`, `tonal`, `plain`
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to all buttons in the group
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color for all buttons when not active
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  Layout direction of the button group
+</ParamField>
+
+<ParamField path="divided" type="boolean" default="false">
+  Adds dividers between buttons
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts vertical spacing for all buttons. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level applied to the group (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius for the group. Options: `0`, `xs`, `sm`, `md`, `lg`, `xl`, `pill`, `circle`, or number
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+  Adds border to the group. Can specify width or side
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  HTML tag to use for root element
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Theme to apply to the component
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Button group content (VBtn components)
+</ParamField>
+
+## Examples
+
+### With Icons
+
+```vue
+<template>
+  <VBtnGroup>
+    <VBtn icon="mdi-format-align-left" />
+    <VBtn icon="mdi-format-align-center" />
+    <VBtn icon="mdi-format-align-right" />
+    <VBtn icon="mdi-format-align-justify" />
+  </VBtnGroup>
+</template>
+```
+
+### Colored Group
+
+```vue
+<template>
+  <VBtnGroup color="primary" variant="outlined">
+    <VBtn>Option A</VBtn>
+    <VBtn>Option B</VBtn>
+    <VBtn>Option C</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+### Elevated with Rounded Corners
+
+```vue
+<template>
+  <VBtnGroup variant="elevated" rounded="lg" elevation="8">
+    <VBtn>First</VBtn>
+    <VBtn>Second</VBtn>
+    <VBtn>Third</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+### Vertical Divided Group
+
+```vue
+<template>
+  <VBtnGroup direction="vertical" divided variant="outlined">
+    <VBtn prepend-icon="mdi-home">Home</VBtn>
+    <VBtn prepend-icon="mdi-account">Profile</VBtn>
+    <VBtn prepend-icon="mdi-cog">Settings</VBtn>
+  </VBtnGroup>
+</template>
+```
+
+## Notes
+
+- The `VBtnGroup` component automatically applies `flat: true` to all child buttons by default
+- In horizontal mode, button heights are set to `auto` for consistent sizing
+- Child buttons inherit variant, color, and density from the parent group unless explicitly overridden

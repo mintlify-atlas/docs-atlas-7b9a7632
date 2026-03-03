@@ -1,0 +1,310 @@
+---
+title: useLocale()
+description: Composable for accessing and managing localization and RTL support
+---
+
+## Overview
+
+The `useLocale()` composable provides access to Vuetify's localization system, including translation functions, current locale management, and RTL (right-to-left) support.
+
+## Import
+
+```typescript
+import { useLocale } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useLocale(): LocaleInstance & RtlInstance
+```
+
+## Return Value
+
+Returns a combined `LocaleInstance` and `RtlInstance` object:
+
+### Locale Properties
+
+<ResponseField name="name" type="string">
+  The adapter name identifier
+</ResponseField>
+
+<ResponseField name="current" type="Ref<string>">
+  Currently active locale code (e.g., 'en', 'es', 'fr')
+</ResponseField>
+
+<ResponseField name="fallback" type="Ref<string>">
+  Fallback locale code when translation is not found
+</ResponseField>
+
+<ResponseField name="messages" type="Ref<LocaleMessages>">
+  All available translation messages
+  
+  ```typescript
+  interface LocaleMessages {
+    [key: string]: LocaleMessages | string
+  }
+  ```
+</ResponseField>
+
+<ResponseField name="decimalSeparator" type="ShallowRef<string>">
+  Decimal separator character for the current locale
+</ResponseField>
+
+### Translation Methods
+
+<ResponseField name="t" type="(key: string, ...params: unknown[]) => string">
+  Translate a message key
+  
+  **Parameters:**
+  - `key` - Translation key (e.g., 'close', 'dataIterator.rowsPerPageText')
+  - `...params` - Optional parameters to interpolate into the translation
+  
+  **Returns:** Translated string or the key if translation not found
+</ResponseField>
+
+<ResponseField name="n" type="(value: number) => string">
+  Format a number according to current locale
+  
+  **Parameters:**
+  - `value` - Number to format
+  
+  **Returns:** Formatted number string
+</ResponseField>
+
+<ResponseField name="provide" type="(props: LocaleOptions) => LocaleInstance">
+  Create a scoped locale instance with custom options
+</ResponseField>
+
+### RTL Properties
+
+<ResponseField name="isRtl" type="Ref<boolean>">
+  Whether the current locale uses right-to-left text direction
+</ResponseField>
+
+<ResponseField name="rtl" type="Ref<Record<string, boolean>>">
+  RTL configuration for all locales
+</ResponseField>
+
+<ResponseField name="rtlClasses" type="Ref<string>">
+  CSS class for current text direction (e.g., 'v-locale--is-ltr')
+</ResponseField>
+
+## Locale Options
+
+```typescript
+interface LocaleOptions {
+  decimalSeparator?: string
+  messages?: LocaleMessages
+  locale?: string
+  fallback?: string
+  adapter?: LocaleInstance
+}
+```
+
+## RTL Languages
+
+The following locales default to RTL:
+- `ar` - Arabic
+- `fa` - Persian/Farsi
+- `he` - Hebrew
+
+## Usage Examples
+
+### Basic Translation
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { t, current } = useLocale()
+</script>
+
+<template>
+  <div>
+    <h1>{{ t('welcome') }}</h1>
+    <p>Current locale: {{ current }}</p>
+    
+    <v-btn>{{ t('close') }}</v-btn>
+    <v-btn>{{ t('save') }}</v-btn>
+  </div>
+</template>
+```
+
+### Change Locale
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { current, t } = useLocale()
+
+function switchToSpanish() {
+  current.value = 'es'
+}
+
+function switchToEnglish() {
+  current.value = 'en'
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="switchToEnglish">English</v-btn>
+    <v-btn @click="switchToSpanish">Español</v-btn>
+    
+    <h1>{{ t('greeting') }}</h1>
+  </div>
+</template>
+```
+
+### RTL Support
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { isRtl, rtlClasses, current } = useLocale()
+
+function toggleRtl() {
+  current.value = isRtl.value ? 'en' : 'ar'
+}
+</script>
+
+<template>
+  <div :class="rtlClasses">
+    <p>Is RTL: {{ isRtl }}</p>
+    <v-btn @click="toggleRtl">
+      Switch to {{ isRtl ? 'LTR' : 'RTL' }}
+    </v-btn>
+  </div>
+</template>
+```
+
+### Number Formatting
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { n, current } = useLocale()
+
+const price = 1234.56
+</script>
+
+<template>
+  <div>
+    <p>Price: {{ n(price) }}</p>
+    <p>Locale: {{ current }}</p>
+  </div>
+</template>
+```
+
+### Custom Messages
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const locale = useLocale()
+
+// Add custom translations
+locale.messages.value = {
+  en: {
+    welcome: 'Welcome',
+    goodbye: 'Goodbye',
+    greeting: 'Hello, {name}!'
+  },
+  es: {
+    welcome: 'Bienvenido',
+    goodbye: 'Adiós',
+    greeting: '¡Hola, {name}!'
+  }
+}
+</script>
+
+<template>
+  <div>
+    <h1>{{ locale.t('welcome') }}</h1>
+    <p>{{ locale.t('greeting', 'John') }}</p>
+  </div>
+</template>
+```
+
+### Locale Selector
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+import { ref } from 'vue'
+
+const { current, t } = useLocale()
+
+const locales = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'ar', label: 'العربية' },
+]
+</script>
+
+<template>
+  <v-select
+    v-model="current"
+    :items="locales"
+    item-title="label"
+    item-value="code"
+    :label="t('selectLanguage')"
+  />
+</template>
+```
+
+### Fallback Locale
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { t, fallback } = useLocale()
+
+// Set fallback to English
+fallback.value = 'en'
+
+// If a translation isn't found in current locale,
+// it will fall back to English
+</script>
+
+<template>
+  <div>
+    <p>{{ t('someKey') }}</p>
+  </div>
+</template>
+```
+
+## Built-in Translation Keys
+
+Vuetify components use these translation keys:
+
+- `close` - Close button text
+- `dataIterator.rowsPerPageText` - Data table rows per page
+- `dataIterator.pageText` - Data table page text
+- `noDataText` - No data available message
+- `carousel.prev` - Carousel previous button
+- `carousel.next` - Carousel next button
+- `calendar.today` - Calendar today button
+- And many more...
+
+## Notes
+
+- Must be called within a component setup function or composable
+- Throws an error if the Vuetify locale provider is not found
+- Locale changes are reactive and will update all dependent components
+- RTL is automatically applied based on current locale
+- Custom locale adapters can be provided for integration with i18n libraries
+
+## See Also
+
+- [Internationalization Guide](/features/internationalization)
+- [useRtl()](/api/composables/rtl)
+- [provideLocale()](/api/composables/provide-locale)

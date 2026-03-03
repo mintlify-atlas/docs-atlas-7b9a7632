@@ -1,0 +1,554 @@
+---
+title: Icon System
+description: Comprehensive guide to Vuetify's flexible icon system supporting multiple icon libraries
+---
+
+# Icon System
+
+Vuetify features a powerful, extensible icon system that supports multiple icon libraries including Material Design Icons, Font Awesome, Material Icons, and many more. The system provides automatic icon resolution, alias support, and flexible rendering strategies.
+
+## Icon Configuration
+
+Configure icons during Vuetify initialization (`icons.ts:22`):
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { fa } from 'vuetify/iconsets/fa'
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+      fa,
+    },
+  },
+})
+```
+
+### IconOptions Interface
+
+The icon configuration accepts these options (`composables/icons.tsx:84-91`):
+
+```typescript
+type IconOptions = {
+  defaultSet?: string
+  aliases?: Partial<IconAliases>
+  sets?: Record<string, IconSet>
+}
+```
+
+## Supported Icon Sets
+
+Vuetify includes built-in support for 14 icon libraries:
+
+- **Material Design Icons (MDI)** - `iconsets/mdi.ts` (default)
+- **Material Design Icons SVG** - `iconsets/mdi-svg.ts`
+- **Material Design Icons UnoCSS** - `iconsets/mdi-unocss.ts`
+- **Font Awesome 4** - `iconsets/fa4.ts`
+- **Font Awesome 5+** - `iconsets/fa.ts`
+- **Font Awesome 6** - `iconsets/fa6.ts`
+- **Font Awesome SVG** - `iconsets/fa-svg.ts`
+- **Material Icons** - `iconsets/md.ts`
+- **Tabler Icons** - `iconsets/tabler.ts`
+- **Remix Icon** - `iconsets/ri.ts`
+- **Phosphor Icons** - `iconsets/ph.ts`
+- **Lucide** - `iconsets/lucide.ts`
+- **Carbon Icons** - `iconsets/carbon.ts`
+- **Box Icons** - `iconsets/bx.ts`
+
+## Material Design Icons (Default)
+
+The default icon set uses Material Design Icons (`iconsets/mdi.ts:76-79`):
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import '@mdi/font/css/materialdesignicons.css'
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: { mdi },
+  },
+})
+```
+
+### Using MDI Icons
+
+```vue
+<template>
+  <!-- Direct icon name -->
+  <v-icon icon="mdi-home" />
+  <v-icon icon="mdi-account-circle" />
+  <v-icon icon="mdi-magnify" />
+
+  <!-- Using aliases -->
+  <v-icon icon="$vuetify" />
+  <v-icon icon="$complete" />
+</template>
+```
+
+<Note>
+MDI uses a class-based component that applies the icon name as a CSS class. Ensure you've installed `@mdi/font` or use the SVG variant.
+</Note>
+
+## Font Awesome
+
+Use Font Awesome icons with the FA icon set (`iconsets/fa.ts:73-75`):
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { aliases, fa } from 'vuetify/iconsets/fa'
+import '@fortawesome/fontawesome-free/css/all.css'
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'fa',
+    aliases,
+    sets: { fa },
+  },
+})
+```
+
+### Font Awesome Examples
+
+```vue
+<template>
+  <!-- Solid icons -->
+  <v-icon icon="fas fa-home" />
+  <v-icon icon="fas fa-user" />
+  
+  <!-- Regular icons -->
+  <v-icon icon="far fa-star" />
+  <v-icon icon="far fa-circle" />
+  
+  <!-- Brand icons -->
+  <v-icon icon="fab fa-github" />
+  <v-icon icon="fab fa-twitter" />
+</template>
+```
+
+## Icon Aliases
+
+Vuetify uses aliases to provide semantic icon names that work across all icon sets (`iconsets/mdi.ts:10-74`):
+
+```typescript
+const aliases: IconAliases = {
+  collapse: 'mdi-chevron-up',
+  complete: 'mdi-check',
+  cancel: 'mdi-close-circle',
+  close: 'mdi-close',
+  delete: 'mdi-close-circle',
+  clear: 'mdi-close-circle',
+  success: 'mdi-check-circle',
+  info: 'mdi-information',
+  warning: 'mdi-alert-circle',
+  error: 'mdi-close-circle',
+  prev: 'mdi-chevron-left',
+  next: 'mdi-chevron-right',
+  checkboxOn: 'mdi-checkbox-marked',
+  checkboxOff: 'mdi-checkbox-blank-outline',
+  checkboxIndeterminate: 'mdi-minus-box',
+  delimiter: 'mdi-circle',
+  sortAsc: 'mdi-arrow-up',
+  sortDesc: 'mdi-arrow-down',
+  expand: 'mdi-chevron-down',
+  menu: 'mdi-menu',
+  subgroup: 'mdi-menu-down',
+  dropdown: 'mdi-menu-down',
+  radioOn: 'mdi-radiobox-marked',
+  radioOff: 'mdi-radiobox-blank',
+  edit: 'mdi-pencil',
+  ratingEmpty: 'mdi-star-outline',
+  ratingFull: 'mdi-star',
+  ratingHalf: 'mdi-star-half-full',
+  loading: 'mdi-cached',
+  first: 'mdi-page-first',
+  last: 'mdi-page-last',
+  unfold: 'mdi-unfold-more-horizontal',
+  file: 'mdi-paperclip',
+  plus: 'mdi-plus',
+  minus: 'mdi-minus',
+  calendar: 'mdi-calendar',
+  // ... and more
+}
+```
+
+### Using Aliases
+
+```vue
+<template>
+  <!-- Aliases are prefixed with $ -->
+  <v-icon icon="$complete" />
+  <v-icon icon="$error" />
+  <v-icon icon="$prev" />
+  <v-icon icon="$next" />
+</template>
+```
+
+<Note>
+Aliases ensure components work consistently regardless of which icon set you choose. Vuetify components use aliases internally.
+</Note>
+
+## Custom Aliases
+
+Define your own custom aliases:
+
+```typescript
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+
+const customAliases = {
+  ...aliases,
+  home: 'mdi-home',
+  dashboard: 'mdi-view-dashboard',
+  settings: 'mdi-cog',
+  logout: 'mdi-logout',
+}
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases: customAliases,
+    sets: { mdi },
+  },
+})
+```
+
+Use custom aliases:
+
+```vue
+<template>
+  <v-icon icon="$home" />
+  <v-icon icon="$dashboard" />
+  <v-icon icon="$settings" />
+</template>
+```
+
+## Icon Types
+
+Vuetify supports multiple icon value types (`composables/icons.tsx:9-13`):
+
+```typescript
+type IconValue =
+  | string                                    // 'mdi-home'
+  | (string | [path: string, opacity: number])[]  // SVG paths
+  | JSXComponent                              // Component
+```
+
+### SVG Icons
+
+Use inline SVG path definitions:
+
+```vue
+<template>
+  <!-- Single path -->
+  <v-icon :icon="['M12,2 L2,7 L12,12 L22,7 L12,2Z']" />
+
+  <!-- Multiple paths with opacity -->
+  <v-icon :icon="[
+    'M12,2 L2,7 L12,12 L22,7 L12,2Z',
+    ['M12,12 L2,17 L12,22 L22,17 L12,12Z', 0.6]
+  ]" />
+</template>
+```
+
+Vuetify's built-in logo uses this format (`icons.ts:36-44`):
+
+```typescript
+alias: {
+  vuetify: [
+    'M8.2241 14.2009L12 21L22 3H14.4459L8.2241 14.2009Z',
+    ['M7.26303 12.4733L7.00113 12L2 3H12.5261L7.26303 12.4733Z', 0.6],
+  ],
+}
+```
+
+### Component Icons
+
+Pass a component as an icon:
+
+```vue
+<script setup>
+import CustomIcon from './CustomIcon.vue'
+</script>
+
+<template>
+  <v-icon :icon="CustomIcon" />
+</template>
+```
+
+## Icon Sets
+
+Each icon set defines a component that renders the icon (`composables/icons.tsx:80-82`):
+
+```typescript
+interface IconSet {
+  component: IconComponent
+}
+```
+
+### Built-in Icon Components
+
+Vuetify provides four built-in icon component types:
+
+<Tabs>
+  <Tab title="VClassIcon">
+    Used by class-based icon sets (MDI, FA):
+
+    ```typescript
+    // iconsets/mdi.ts:76-79
+    const mdi: IconSet = {
+      component: (props) => h(VClassIcon, { 
+        ...props, 
+        class: 'mdi' 
+      }),
+    }
+    ```
+
+    Renders: `<i class="mdi mdi-home"></i>`
+  </Tab>
+
+  <Tab title="VSvgIcon">
+    Used for inline SVG paths:
+
+    ```typescript
+    // icons.ts:13-18
+    sets: {
+      svg: {
+        component: VSvgIcon,
+      },
+    }
+    ```
+
+    Renders SVG with viewBox and paths.
+  </Tab>
+
+  <Tab title="VLigatureIcon">
+    Used for ligature-based icon fonts:
+
+    ```typescript
+    <v-icon>home</v-icon>
+    ```
+
+    Renders: `<i>home</i>`
+  </Tab>
+
+  <Tab title="VComponentIcon">
+    Used for Vue component icons:
+
+    ```vue
+    <v-icon :icon="MyIconComponent" />
+    ```
+
+    Renders the provided component.
+  </Tab>
+</Tabs>
+
+## Multiple Icon Sets
+
+Use multiple icon sets simultaneously:
+
+```typescript
+import { mdi } from 'vuetify/iconsets/mdi'
+import { fa } from 'vuetify/iconsets/fa'
+import { md } from 'vuetify/iconsets/md'
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    sets: {
+      mdi,
+      fa,
+      md,
+    },
+  },
+})
+```
+
+Specify the icon set per icon using the `set:` prefix:
+
+```vue
+<template>
+  <!-- Default set (MDI) -->
+  <v-icon icon="mdi-home" />
+  
+  <!-- Explicitly use Font Awesome -->
+  <v-icon icon="fa:fas fa-home" />
+  
+  <!-- Explicitly use Material Icons -->
+  <v-icon icon="md:home" />
+</template>
+```
+
+## useIcon Composable
+
+The `useIcon` composable resolves icon values to components (`composables/icons.tsx:188-235`):
+
+```typescript
+import { useIcon } from 'vuetify'
+
+const { iconData } = useIcon(() => 'mdi-home')
+
+// iconData.value contains:
+// { component: VClassIcon, icon: 'mdi-home' }
+```
+
+### Icon Resolution Logic
+
+The resolution process (`composables/icons.tsx:193-231`):
+
+1. **Alias resolution** - If icon starts with `$`, resolve from aliases
+2. **Type detection** - Determine if icon is array (SVG), component, or string
+3. **Set detection** - Check if icon contains `set:` prefix
+4. **Component selection** - Return appropriate icon component
+
+```typescript
+// Alias resolution
+if (icon.startsWith('$')) {
+  icon = icons.aliases?.[icon.slice(1)]
+}
+
+// Array = SVG
+if (Array.isArray(icon)) {
+  return { component: VSvgIcon, icon }
+}
+
+// Component
+if (typeof icon !== 'string') {
+  return { component: VComponentIcon, icon }
+}
+
+// Set detection
+const iconSetName = Object.keys(icons.sets).find(
+  setName => icon.startsWith(`${setName}:`)
+)
+
+const iconSet = icons.sets[iconSetName ?? icons.defaultSet]
+return { component: iconSet.component, icon: iconName }
+```
+
+## Icon Props
+
+The VIcon component accepts these props:
+
+```vue
+<template>
+  <!-- Basic usage -->
+  <v-icon icon="mdi-home" />
+  
+  <!-- With size -->
+  <v-icon icon="mdi-home" size="x-large" />
+  <v-icon icon="mdi-home" size="48" />
+  
+  <!-- With color -->
+  <v-icon icon="mdi-home" color="primary" />
+  
+  <!-- With custom tag -->
+  <v-icon icon="mdi-home" tag="span" />
+  
+  <!-- Disabled state -->
+  <v-icon icon="mdi-home" disabled />
+</template>
+```
+
+## Custom Icon Set
+
+Create a custom icon set:
+
+```typescript
+import { VClassIcon } from 'vuetify/iconsets'
+
+const customIconSet = {
+  component: (props) => h(VClassIcon, {
+    ...props,
+    class: 'custom-icon',
+  }),
+}
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'custom',
+    sets: {
+      custom: customIconSet,
+    },
+  },
+})
+```
+
+## Best Practices
+
+1. **Use aliases** - Prefer semantic aliases (`$complete`) over specific icons
+2. **Choose one primary set** - Use one main icon set for consistency
+3. **Tree-shake unused sets** - Only import icon sets you use
+4. **Lazy load icon fonts** - Load icon fonts asynchronously when possible
+5. **Consider SVG** - Use SVG icon sets for better performance and smaller bundles
+6. **Cache CDN fonts** - Configure proper caching for icon font CDN resources
+7. **Provide fallbacks** - Ensure icons have text alternatives for accessibility
+
+## Performance Optimization
+
+### SVG Icon Sets
+
+For better performance, use SVG-based icon sets:
+
+```typescript
+import { mdiAccount, mdiHome } from '@mdi/js'
+import { aliases } from 'vuetify/iconsets/mdi-svg'
+
+const customSvgAliases = {
+  ...aliases,
+  account: mdiAccount,
+  home: mdiHome,
+}
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases: customSvgAliases,
+    sets: {
+      mdi: {
+        component: VSvgIcon,
+      },
+    },
+  },
+})
+```
+
+Benefits:
+- Smaller bundle size (only icons you use)
+- No font loading delay
+- Better rendering performance
+- Easier to customize
+
+### Icon Subsetting
+
+When using icon fonts, subset to only include needed icons:
+
+```bash
+# Example: Generate MDI subset
+npx @mdi/font-build --icons home,account,menu --output custom-mdi.css
+```
+
+## Accessibility
+
+Ensure icons are accessible:
+
+```vue
+<template>
+  <!-- Decorative icon -->
+  <v-icon icon="mdi-home" aria-hidden="true" />
+  
+  <!-- Meaningful icon -->
+  <v-icon icon="mdi-delete" aria-label="Delete item" />
+  
+  <!-- Icon with text -->
+  <v-btn>
+    <v-icon icon="mdi-plus" />
+    Add Item
+  </v-btn>
+</template>
+```

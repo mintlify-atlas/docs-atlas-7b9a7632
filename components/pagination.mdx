@@ -1,0 +1,335 @@
+---
+title: VPagination
+description: Navigation component for paginating large datasets.
+---
+
+# VPagination
+
+The `VPagination` component provides pagination controls for navigating through large datasets. It features responsive design, keyboard navigation, and extensive customization options.
+
+## Basic Usage
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="15"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number">
+  Current active page number. Use with v-model.
+</ParamField>
+
+<ParamField path="length" type="number | string" default="1">
+  Total number of pages.
+</ParamField>
+
+<ParamField path="start" type="number | string" default="1">
+  Starting page number (allows 0-based or 1-based indexing).
+</ParamField>
+
+<ParamField path="totalVisible" type="number | string">
+  Maximum number of page buttons to display. Auto-calculated based on available width if not specified.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all pagination controls.
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color applied to the active page button.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to page buttons.
+</ParamField>
+
+<ParamField path="showFirstLastPage" type="boolean" default="false">
+  Whether to show first and last page navigation buttons.
+</ParamField>
+
+<ParamField path="firstIcon" type="IconValue" default="'$first'">
+  Icon for the first page button.
+</ParamField>
+
+<ParamField path="prevIcon" type="IconValue" default="'$prev'">
+  Icon for the previous page button.
+</ParamField>
+
+<ParamField path="nextIcon" type="IconValue" default="'$next'">
+  Icon for the next page button.
+</ParamField>
+
+<ParamField path="lastIcon" type="IconValue" default="'$last'">
+  Icon for the last page button.
+</ParamField>
+
+<ParamField path="ellipsis" type="string" default="'...'">
+  Text displayed for page ellipsis.
+</ParamField>
+
+<ParamField path="ariaLabel" type="string" default="'$vuetify.pagination.ariaLabel.root'">
+  ARIA label for the pagination navigation.
+</ParamField>
+
+<ParamField path="pageAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.page'">
+  ARIA label template for page buttons.
+</ParamField>
+
+<ParamField path="currentPageAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.currentPage'">
+  ARIA label template for the current page button.
+</ParamField>
+
+<ParamField path="firstAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.first'">
+  ARIA label for first page button.
+</ParamField>
+
+<ParamField path="previousAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.previous'">
+  ARIA label for previous page button.
+</ParamField>
+
+<ParamField path="nextAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.next'">
+  ARIA label for next page button.
+</ParamField>
+
+<ParamField path="lastAriaLabel" type="string" default="'$vuetify.pagination.ariaLabel.last'">
+  ARIA label for last page button.
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing of buttons.
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Size of the pagination buttons.
+</ParamField>
+
+<ParamField path="variant" type="'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain'" default="'text'">
+  Button variant style.
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of buttons.
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+  Border style for buttons.
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation depth of buttons.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'nav'">
+  HTML tag for the root element.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: number) => void">
+  Emitted when the page changes.
+</ParamField>
+
+<ParamField path="first" type="(value: number) => void">
+  Emitted when navigating to the first page.
+</ParamField>
+
+<ParamField path="prev" type="(value: number) => void">
+  Emitted when navigating to the previous page.
+</ParamField>
+
+<ParamField path="next" type="(value: number) => void">
+  Emitted when navigating to the next page.
+</ParamField>
+
+<ParamField path="last" type="(value: number) => void">
+  Emitted when navigating to the last page.
+</ParamField>
+
+## Slots
+
+<ParamField path="item" type="{ isActive: boolean, key: string | number, page: string, props: object }">
+  Slot to customize individual page buttons.
+</ParamField>
+
+<ParamField path="first" type="{ icon: IconValue, onClick: Function, disabled: boolean, aria-label: string, aria-disabled: boolean }">
+  Slot to customize the first page button.
+</ParamField>
+
+<ParamField path="prev" type="{ icon: IconValue, onClick: Function, disabled: boolean, aria-label: string, aria-disabled: boolean }">
+  Slot to customize the previous page button.
+</ParamField>
+
+<ParamField path="next" type="{ icon: IconValue, onClick: Function, disabled: boolean, aria-label: string, aria-disabled: boolean }">
+  Slot to customize the next page button.
+</ParamField>
+
+<ParamField path="last" type="{ icon: IconValue, onClick: Function, disabled: boolean, aria-label: string, aria-disabled: boolean }">
+  Slot to customize the last page button.
+</ParamField>
+
+## Navigation Patterns
+
+### With First and Last Buttons
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="15"
+    show-first-last-page
+  />
+</template>
+```
+
+### Limited Visible Pages
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="100"
+    :total-visible="7"
+  />
+</template>
+```
+
+### Custom Styling
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="10"
+    active-color="primary"
+    variant="elevated"
+    rounded="circle"
+  />
+</template>
+```
+
+### Compact Size
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="10"
+    density="compact"
+    size="small"
+  />
+</template>
+```
+
+## Keyboard Navigation
+
+- **Arrow Left**: Navigate to previous page
+- **Arrow Right**: Navigate to next page
+
+## Examples
+
+### Event Handling
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="10"
+    @first="onFirst"
+    @prev="onPrev"
+    @next="onNext"
+    @last="onLast"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+
+function onFirst(value) {
+  console.log('First page:', value)
+}
+
+function onPrev(value) {
+  console.log('Previous page:', value)
+}
+
+function onNext(value) {
+  console.log('Next page:', value)
+}
+
+function onLast(value) {
+  console.log('Last page:', value)
+}
+</script>
+```
+
+### Zero-Based Indexing
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="10"
+    :start="0"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(0)
+</script>
+```
+
+### Custom Page Rendering
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="10"
+  >
+    <template #item="{ page, isActive, props }">
+      <v-btn
+        v-bind="props"
+        :color="isActive ? 'primary' : 'default'"
+      >
+        Page {{ page }}
+      </v-btn>
+    </template>
+  </v-pagination>
+</template>
+```
+
+### Responsive Pagination
+
+The component automatically adjusts the number of visible pages based on available screen width when `totalVisible` is not specified:
+
+```vue
+<template>
+  <v-pagination
+    v-model="page"
+    :length="50"
+  />
+</template>
+```
+
+## Accessibility
+
+- Uses semantic `<nav>` element with `role="navigation"`
+- Provides ARIA labels for all navigation controls
+- Sets `aria-current` on the active page
+- Supports keyboard navigation
+- Properly marks disabled states with `aria-disabled`

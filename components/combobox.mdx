@@ -1,0 +1,224 @@
+---
+title: VCombobox
+description: Combobox component that combines autocomplete with the ability to enter custom values
+---
+
+# VCombobox
+
+The `VCombobox` component combines the functionality of VAutocomplete with the ability to enter values that aren't in the items list. Perfect for tagging or allowing custom entries.
+
+## Basic Usage
+
+```vue
+<template>
+  <VCombobox
+    v-model="selected"
+    :items="items"
+    label="Select or create"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = ['Vue', 'React', 'Angular', 'Svelte']
+</script>
+```
+
+## Props
+
+<ParamField path="alwaysFilter" type="boolean" default="false">
+  Always filter items even when not pristine.
+</ParamField>
+
+<ParamField path="autoSelectFirst" type="boolean | 'exact'">
+  Automatically select the first matching item. If 'exact', only when search exactly matches.
+</ParamField>
+
+<ParamField path="clearOnSelect" type="boolean" default="true">
+  Clear the search input after selecting an item.
+</ParamField>
+
+<ParamField path="delimiters" type="string[]">
+  Characters that will trigger selection when typed (e.g., [',', ' ']).
+</ParamField>
+
+<ParamField path="items" type="readonly any[]">
+  Array of items to display in the dropdown.
+</ParamField>
+
+<ParamField path="itemTitle" type="string | function">
+  Property name or function to determine the display text for each item.
+</ParamField>
+
+<ParamField path="itemValue" type="string | function">
+  Property name or function to determine the value for each item.
+</ParamField>
+
+<ParamField path="returnObject" type="boolean" default="true">
+  Return the entire item object as the value instead of just the item value.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allow multiple item selection.
+</ParamField>
+
+<ParamField path="chips" type="boolean" default="false">
+  Display selected items as chips.
+</ParamField>
+
+<ParamField path="closableChips" type="boolean" default="false">
+  Allow chips to be closed/removed.
+</ParamField>
+
+<ParamField path="hideSelected" type="boolean" default="false">
+  Hide selected items from the list.
+</ParamField>
+
+<ParamField path="hideNoData" type="boolean" default="true">
+  Hide the menu when there are no items to display.
+</ParamField>
+
+<ParamField path="filterKeys" type="string[]" default="['title']">
+  Item properties to use when filtering.
+</ParamField>
+
+## Multiple with Custom Values
+
+```vue
+<template>
+  <VCombobox
+    v-model="tags"
+    :items="suggestedTags"
+    label="Add tags"
+    multiple
+    chips
+    closable-chips
+    hint="Press enter to add a new tag"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tags = ref([])
+const suggestedTags = ['JavaScript', 'TypeScript', 'Vue', 'React', 'Node.js']
+</script>
+```
+
+## With Delimiters
+
+```vue
+<template>
+  <VCombobox
+    v-model="emails"
+    :items="contacts"
+    label="Email addresses"
+    multiple
+    chips
+    :delimiters="[',', ' ', ';']"
+    hint="Separate emails with comma, space, or semicolon"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const emails = ref([])
+const contacts = [
+  'john@example.com',
+  'jane@example.com',
+  'bob@example.com',
+]
+</script>
+```
+
+## Custom Item Objects
+
+```vue
+<template>
+  <VCombobox
+    v-model="selected"
+    :items="items"
+    item-title="name"
+    item-value="id"
+    label="Select or create framework"
+    return-object
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { id: 1, name: 'Vue.js', color: 'green' },
+  { id: 2, name: 'React', color: 'blue' },
+  { id: 3, name: 'Angular', color: 'red' },
+]
+</script>
+```
+
+## Paste Support
+
+The combobox automatically handles pasting multiple values when delimiters are configured:
+
+```vue
+<template>
+  <VCombobox
+    v-model="values"
+    :items="[]"
+    label="Paste multiple values"
+    multiple
+    chips
+    :delimiters="[',', '\n']"
+    hint="Try pasting: value1,value2,value3"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const values = ref([])
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+<ParamField path="update:search" type="(value: string) => void">
+  Emitted when the search query changes.
+</ParamField>
+
+<ParamField path="update:menu" type="(value: boolean) => void">
+  Emitted when the menu opens or closes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the input focus state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="item" type="{ item, index, props }">
+  Customize the appearance of list items.
+</ParamField>
+
+<ParamField path="chip" type="{ item, index, props }">
+  Customize the appearance of selected chips.
+</ParamField>
+
+<ParamField path="selection" type="{ item, index }">
+  Customize how selected items are displayed.
+</ParamField>
+
+<ParamField path="no-data" type="{}">
+  Content to display when no items are available.
+</ParamField>

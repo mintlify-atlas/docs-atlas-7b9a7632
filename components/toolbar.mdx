@@ -1,0 +1,546 @@
+---
+title: VToolbar
+description: The VToolbar component is a flexible container for headers, toolbars, and action bars with support for extensions and images.
+---
+
+# VToolbar
+
+The VToolbar component is a versatile container typically used for headers, navigation bars, and action bars. It supports extensions, images, density variants, and provides slots for organized content placement.
+
+## Usage
+
+```vue
+<template>
+  <v-toolbar color="primary">
+    <v-toolbar-title>Application</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+  </v-toolbar>
+</template>
+```
+
+## Basic Example
+
+```vue
+<template>
+  <v-toolbar>
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-toolbar-title>Title</v-toolbar-title>
+  </v-toolbar>
+</template>
+```
+
+## Props
+
+<ParamField path="color" type="string">
+Applies specified color to the toolbar background.
+
+```vue
+<v-toolbar color="primary">
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="height" type="number | string" default="64">
+Sets the height of the toolbar in pixels.
+
+```vue
+<v-toolbar :height="80">
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact' | 'prominent'" default="'default'">
+Adjusts the vertical spacing and height of the toolbar.
+
+```vue
+<!-- Extra large toolbar -->
+<v-toolbar density="prominent">
+  <!-- Content -->
+</v-toolbar>
+
+<!-- Compact toolbar -->
+<v-toolbar density="compact">
+  <!-- Content -->
+</v-toolbar>
+```
+
+- `default` - Standard height (64px)
+- `comfortable` - Slightly reduced height (56px)
+- `compact` - Compact height (48px)
+- `prominent` - Double height (128px)
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+Removes the toolbar's box-shadow.
+
+```vue
+<v-toolbar flat>
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="floating" type="boolean" default="false">
+Applies a floating style to the toolbar.
+
+```vue
+<v-toolbar floating>
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+Applies position: absolute to the toolbar.
+
+```vue
+<v-toolbar absolute>
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="collapse" type="boolean" default="false">
+Puts the toolbar into a collapsed state, reducing the extension area.
+
+```vue
+<v-toolbar collapse>
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="collapsePosition" type="'start' | 'end'" default="'start'">
+Determines the position where the collapse occurs.
+</ParamField>
+
+<ParamField path="extended" type="boolean" default="null">
+Forces the toolbar to have an extension area. Auto-detected if extension slot is used.
+
+```vue
+<v-toolbar extended>
+  <v-toolbar-title>Title</v-toolbar-title>
+  <template v-slot:extension>
+    <!-- Extension content -->
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="extensionHeight" type="number | string" default="48">
+Sets the height of the extension area in pixels.
+
+```vue
+<v-toolbar :extension-height="64">
+  <template v-slot:extension>
+    <!-- Taller extension -->
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="image" type="string">
+Specifies a background image for the toolbar.
+
+```vue
+<v-toolbar image="/path/to/image.jpg">
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="title" type="string">
+Specifies a title text for the toolbar.
+
+```vue
+<v-toolbar title="My Application">
+  <!-- Other content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="elevation" type="number | string">
+Sets the elevation (box-shadow) of the toolbar.
+
+```vue
+<v-toolbar elevation="8">
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+Applies a border to the toolbar.
+
+```vue
+<v-toolbar border="b">
+  <!-- Content with bottom border -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="rounded" type="boolean | string | number">
+Applies border radius to the toolbar.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'header'">
+Specifies the custom tag to use for the root element.
+
+```vue
+<v-toolbar tag="div">
+  <!-- Content -->
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="theme" type="string">
+Applies a specific theme to the toolbar.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+The default slot for toolbar content.
+
+```vue
+<v-toolbar>
+  <v-btn icon>
+    <v-icon>mdi-menu</v-icon>
+  </v-btn>
+  <v-toolbar-title>Title</v-toolbar-title>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+Slot for content at the start of the toolbar.
+
+```vue
+<v-toolbar>
+  <template v-slot:prepend>
+    <v-btn icon>
+      <v-icon>mdi-menu</v-icon>
+    </v-btn>
+  </template>
+  <v-toolbar-title>Title</v-toolbar-title>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="append" type="slot">
+Slot for content at the end of the toolbar.
+
+```vue
+<v-toolbar>
+  <v-toolbar-title>Title</v-toolbar-title>
+  <template v-slot:append>
+    <v-btn icon>
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="title" type="slot">
+Slot for custom title content, replacing the title prop.
+
+```vue
+<v-toolbar>
+  <template v-slot:title>
+    <v-img src="/logo.png" height="32" contain></v-img>
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="image" type="slot">
+Slot for custom image content.
+
+```vue
+<v-toolbar>
+  <template v-slot:image>
+    <v-img src="/bg.jpg" gradient="to top, rgba(0,0,0,.5), rgba(0,0,0,.5)"></v-img>
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+<ParamField path="extension" type="slot">
+Slot for extension content below the main toolbar.
+
+```vue
+<v-toolbar>
+  <v-toolbar-title>Title</v-toolbar-title>
+  
+  <template v-slot:extension>
+    <v-tabs>
+      <v-tab>Tab 1</v-tab>
+      <v-tab>Tab 2</v-tab>
+    </v-tabs>
+  </template>
+</v-toolbar>
+```
+</ParamField>
+
+## Examples
+
+### Basic Toolbar
+
+```vue
+<template>
+  <v-toolbar color="blue-grey-darken-2" dark>
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-toolbar-title>My Application</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+    <v-btn icon>
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
+    <v-btn icon>
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </v-toolbar>
+</template>
+```
+
+### With Tabs Extension
+
+```vue
+<template>
+  <v-toolbar color="primary">
+    <v-toolbar-title>Page Title</v-toolbar-title>
+    
+    <template v-slot:extension>
+      <v-tabs v-model="tab">
+        <v-tab value="one">Tab 1</v-tab>
+        <v-tab value="two">Tab 2</v-tab>
+        <v-tab value="three">Tab 3</v-tab>
+      </v-tabs>
+    </template>
+  </v-toolbar>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('one')
+</script>
+```
+
+### Prominent Toolbar
+
+```vue
+<template>
+  <v-toolbar
+    density="prominent"
+    color="deep-purple-accent-4"
+    dark
+  >
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-toolbar-title>Prominent Toolbar</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+  </v-toolbar>
+</template>
+```
+
+<Note>
+The prominent density makes the toolbar twice the normal height, providing more visual emphasis.
+</Note>
+
+### With Background Image
+
+```vue
+<template>
+  <v-toolbar
+    image="https://picsum.photos/1920/1080?random"
+    dark
+  >
+    <template v-slot:image>
+      <v-img 
+        gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
+      ></v-img>
+    </template>
+
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-toolbar-title>Image Background</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </v-toolbar>
+</template>
+```
+
+### Using Slots
+
+```vue
+<template>
+  <v-toolbar color="teal-darken-3">
+    <template v-slot:prepend>
+      <v-btn icon>
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </template>
+
+    <v-toolbar-title>Title</v-toolbar-title>
+
+    <template v-slot:append>
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </template>
+  </v-toolbar>
+</template>
+```
+
+### Collapsing Toolbar
+
+```vue
+<template>
+  <div>
+    <v-toolbar :collapse="collapsed" color="primary">
+      <v-toolbar-title>Collapsing Toolbar</v-toolbar-title>
+      
+      <template v-slot:extension>
+        <v-tabs v-model="tab">
+          <v-tab value="tab-1">Tab 1</v-tab>
+          <v-tab value="tab-2">Tab 2</v-tab>
+          <v-tab value="tab-3">Tab 3</v-tab>
+        </v-tabs>
+      </template>
+    </v-toolbar>
+
+    <v-container>
+      <v-btn @click="collapsed = !collapsed">
+        Toggle Collapse
+      </v-btn>
+    </v-container>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const collapsed = ref(false)
+const tab = ref('tab-1')
+</script>
+```
+
+### Dense Variants
+
+```vue
+<template>
+  <div>
+    <v-toolbar density="default" color="blue">
+      <v-toolbar-title>Default (64px)</v-toolbar-title>
+    </v-toolbar>
+
+    <v-toolbar density="comfortable" color="green">
+      <v-toolbar-title>Comfortable (56px)</v-toolbar-title>
+    </v-toolbar>
+
+    <v-toolbar density="compact" color="orange">
+      <v-toolbar-title>Compact (48px)</v-toolbar-title>
+    </v-toolbar>
+
+    <v-toolbar density="prominent" color="red">
+      <v-toolbar-title>Prominent (128px)</v-toolbar-title>
+    </v-toolbar>
+  </div>
+</template>
+```
+
+### Custom Height
+
+```vue
+<template>
+  <v-toolbar :height="100" color="indigo">
+    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-toolbar-title>Custom Height Toolbar</v-toolbar-title>
+  </v-toolbar>
+</template>
+```
+
+### Floating and Flat
+
+```vue
+<template>
+  <div>
+    <!-- Flat toolbar (no shadow) -->
+    <v-toolbar flat color="grey-lighten-4">
+      <v-toolbar-title>Flat Toolbar</v-toolbar-title>
+    </v-toolbar>
+
+    <v-spacer></v-spacer>
+
+    <!-- Floating toolbar -->
+    <v-toolbar floating color="primary" class="mx-4 mt-4">
+      <v-toolbar-title>Floating Toolbar</v-toolbar-title>
+    </v-toolbar>
+  </div>
+</template>
+```
+
+## Use Cases
+
+### App Bar
+VToolbar is the base component for VAppBar, which extends it with scroll behaviors and layout integration.
+
+### Section Headers
+Use toolbars to create distinct section headers within your application:
+
+```vue
+<template>
+  <v-card>
+    <v-toolbar color="primary" density="compact">
+      <v-toolbar-title>Section Title</v-toolbar-title>
+    </v-toolbar>
+    <v-card-text>
+      Section content goes here
+    </v-card-text>
+  </v-card>
+</template>
+```
+
+### Dialog Headers
+Toolbars work well as dialog headers:
+
+```vue
+<template>
+  <v-dialog v-model="dialog" max-width="600">
+    <v-card>
+      <v-toolbar color="primary">
+        <v-toolbar-title>Dialog Title</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card-text>
+        Dialog content
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+<Note>
+VToolbar automatically provides VBtn components with a text variant by default, making icon buttons appear properly styled without additional configuration.
+</Note>

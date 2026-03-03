@@ -1,0 +1,502 @@
+---
+title: v-scroll
+description: Directive for detecting scroll events on window or custom elements
+---
+
+## Overview
+
+The `v-scroll` directive listens to scroll events and calls a handler function. Can listen to window scroll, element scroll, or custom scroll containers.
+
+## Import
+
+```typescript
+import { Scroll } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Scroll } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('scroll', Scroll)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Scroll } from 'vuetify/directives'
+
+const vScroll = Scroll
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Listen to window scroll -->
+<div v-scroll="handler"></div>
+
+<!-- Listen to element's own scroll -->
+<div v-scroll.self="handler"></div>
+
+<!-- Listen to custom target -->
+<div v-scroll:"#scrollable"="handler"></div>
+
+<!-- With options -->
+<div v-scroll="{ handler, options }"></div>
+```
+
+## Value Types
+
+### Function Handler
+
+```typescript
+v-scroll="(e: Event) => void"
+```
+
+### Object Configuration
+
+```typescript
+v-scroll="{
+  handler: EventListener | EventListenerObject
+  options?: AddEventListenerOptions
+}"
+```
+
+## Parameters
+
+<ParamField path="handler" type="EventListener | EventListenerObject" required>
+  Function or object with `handleEvent` method called on scroll
+</ParamField>
+
+<ParamField path="options" type="AddEventListenerOptions">
+  Event listener options
+  
+  <ParamField path="options.passive" type="boolean" default="true">
+    Use passive event listener (better performance)
+  </ParamField>
+  
+  <ParamField path="options.capture" type="boolean">
+    Use capture phase
+  </ParamField>
+  
+  <ParamField path="options.once" type="boolean">
+    Remove listener after first invocation
+  </ParamField>
+</ParamField>
+
+## Modifiers
+
+<ParamField path="self" type="boolean">
+  Listen to the element's own scroll events instead of window
+</ParamField>
+
+## Directive Argument
+
+<ParamField path="arg" type="string">
+  CSS selector for custom scroll target element
+</ParamField>
+
+## Usage Examples
+
+### Window Scroll Detection
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const scrollY = ref(0)
+
+function onScroll() {
+  scrollY.value = window.scrollY
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <p>Scroll position: {{ scrollY }}px</p>
+    <div style="height: 2000px">Scroll down</div>
+  </div>
+</template>
+```
+
+### Show/Hide on Scroll
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+let lastScroll = 0
+
+function onScroll() {
+  const currentScroll = window.scrollY
+  
+  if (currentScroll > lastScroll && currentScroll > 100) {
+    show.value = false // Scrolling down
+  } else {
+    show.value = true  // Scrolling up
+  }
+  
+  lastScroll = currentScroll
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <v-app-bar :style="{ transform: show ? 'none' : 'translateY(-100%)' }">
+      App Bar
+    </v-app-bar>
+  </div>
+</template>
+```
+
+### Scroll to Top Button
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useGoTo } from 'vuetify'
+
+const showButton = ref(false)
+const goTo = useGoTo()
+
+function onScroll() {
+  showButton.value = window.scrollY > 300
+}
+
+function scrollToTop() {
+  goTo(0)
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <v-btn
+      v-if="showButton"
+      icon="mdi-chevron-up"
+      color="primary"
+      position="fixed"
+      location="bottom right"
+      @click="scrollToTop"
+    />
+  </div>
+</template>
+```
+
+### Element Scroll
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const scrollPosition = ref(0)
+
+function onScroll(e: Event) {
+  const target = e.target as HTMLElement
+  scrollPosition.value = target.scrollTop
+}
+</script>
+
+<template>
+  <div>
+    <p>Scroll position: {{ scrollPosition }}px</p>
+    
+    <div 
+      v-scroll.self="onScroll"
+      style="height: 300px; overflow-y: auto"
+    >
+      <div style="height: 1000px">
+        Scrollable content
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### Custom Scroll Target
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const scrolled = ref(false)
+
+function onScroll() {
+  const container = document.querySelector('#scroll-container')
+  if (container) {
+    scrolled.value = container.scrollTop > 50
+  }
+}
+</script>
+
+<template>
+  <div>
+    <div v-scroll:"#scroll-container"="onScroll">
+      <p>Container scrolled: {{ scrolled }}</p>
+    </div>
+    
+    <div id="scroll-container" style="height: 300px; overflow-y: auto">
+      <div style="height: 1000px">Content</div>
+    </div>
+  </div>
+</template>
+```
+
+### Parallax Effect
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const parallaxOffset = ref(0)
+
+function onScroll() {
+  parallaxOffset.value = window.scrollY * 0.5
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <div 
+      class="parallax-bg" 
+      :style="{ transform: `translateY(${parallaxOffset}px)` }"
+    >
+      Background
+    </div>
+    <div style="height: 2000px" class="content">
+      Foreground content
+    </div>
+  </div>
+</template>
+```
+
+### Infinite Scroll
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref(Array.from({ length: 20 }, (_, i) => i))
+const loading = ref(false)
+
+async function onScroll() {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+  
+  if (scrollTop + clientHeight >= scrollHeight - 100 && !loading.value) {
+    loading.value = true
+    
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    const newItems = Array.from(
+      { length: 20 }, 
+      (_, i) => items.value.length + i
+    )
+    items.value.push(...newItems)
+    
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <v-card v-for="item in items" :key="item" class="mb-2">
+      Item {{ item }}
+    </v-card>
+    <v-progress-circular v-if="loading" indeterminate />
+  </div>
+</template>
+```
+
+### Scroll Progress Indicator
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const progress = ref(0)
+
+function onScroll() {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+  const scrolled = (scrollTop / (scrollHeight - clientHeight)) * 100
+  progress.value = Math.min(100, Math.max(0, scrolled))
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <v-progress-linear 
+      :model-value="progress" 
+      color="primary"
+      style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000"
+    />
+    <div style="height: 3000px">
+      Long content
+    </div>
+  </div>
+</template>
+```
+
+### Sticky Header
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isSticky = ref(false)
+
+function onScroll() {
+  isSticky.value = window.scrollY > 100
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <header :class="{ sticky: isSticky }">
+      Header
+    </header>
+  </div>
+</template>
+
+<style scoped>
+header {
+  transition: all 0.3s;
+  padding: 2rem;
+  background: white;
+}
+
+header.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+</style>
+```
+
+### Scroll Spy Navigation
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const activeSection = ref('section1')
+const sections = ['section1', 'section2', 'section3']
+
+function onScroll() {
+  for (const id of sections) {
+    const element = document.getElementById(id)
+    if (element) {
+      const rect = element.getBoundingClientRect()
+      if (rect.top <= 100 && rect.bottom >= 100) {
+        activeSection.value = id
+        break
+      }
+    }
+  }
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <nav style="position: fixed; top: 0">
+      <a 
+        v-for="section in sections" 
+        :key="section"
+        :class="{ active: activeSection === section }"
+        :href="`#${section}`"
+      >
+        {{ section }}
+      </a>
+    </nav>
+    
+    <div id="section1" style="height: 100vh">Section 1</div>
+    <div id="section2" style="height: 100vh">Section 2</div>
+    <div id="section3" style="height: 100vh">Section 3</div>
+  </div>
+</template>
+```
+
+### Throttled Scroll Handler
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const scrollY = ref(0)
+let ticking = false
+
+function onScroll() {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      scrollY.value = window.scrollY
+      ticking = false
+    })
+    ticking = true
+  }
+}
+</script>
+
+<template>
+  <div v-scroll="onScroll">
+    <p>Scroll: {{ scrollY }}px (throttled)</p>
+  </div>
+</template>
+```
+
+### With Custom Options
+
+```vue
+<script setup>
+function onScroll(e: Event) {
+  console.log('Scroll event', e)
+}
+
+const scrollOptions = {
+  handler: onScroll,
+  options: {
+    passive: false,  // Allow preventDefault
+    capture: true    // Use capture phase
+  }
+}
+</script>
+
+<template>
+  <div v-scroll="scrollOptions">
+    Custom scroll options
+  </div>
+</template>
+```
+
+## Performance Tips
+
+1. **Use passive listeners** (default) for better scroll performance
+2. **Throttle handlers** for expensive operations
+3. **Use requestAnimationFrame** for visual updates
+4. **Debounce** if you only care about scroll end
+5. **Minimize DOM queries** in scroll handlers
+
+## Notes
+
+- Default target is `window`
+- Use `.self` modifier to listen to element's own scroll
+- Use argument to target specific element by selector
+- Automatically removes listener on unmount
+- Safe to use with conditional rendering (v-if)
+- Uses passive listeners by default for better performance
+- Handler receives the native scroll Event object
+
+## See Also
+
+- [useGoTo()](/api/composables/goto)
+- [v-intersect](/api/directives/intersect)
+- [Scrolling Guide](/features/scrolling)

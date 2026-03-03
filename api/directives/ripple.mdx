@@ -1,0 +1,456 @@
+---
+title: v-ripple
+description: Directive for adding Material Design ripple effects to elements
+---
+
+## Overview
+
+The `v-ripple` directive creates Material Design ripple effects on click interactions. It provides visual feedback with customizable appearance and behavior.
+
+## Import
+
+```typescript
+import { Ripple } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Ripple } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('ripple', Ripple)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Ripple } from 'vuetify/directives'
+
+const vRipple = Ripple
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Enable ripple -->
+<div v-ripple></div>
+
+<!-- Disable ripple -->
+<div v-ripple="false"></div>
+
+<!-- With options -->
+<div v-ripple="{ class: 'custom-ripple' }"></div>
+
+<!-- With modifiers -->
+<div v-ripple.center></div>
+```
+
+## Value Types
+
+### Boolean
+
+```typescript
+v-ripple="true"  // Enable ripple
+v-ripple="false" // Disable ripple
+```
+
+### Object Configuration
+
+```typescript
+v-ripple="{
+  class?: string
+  keys?: string[]
+}"
+```
+
+## Parameters
+
+<ParamField path="class" type="string">
+  Custom CSS class to apply to ripple container
+</ParamField>
+
+<ParamField path="keys" type="string[]" default="['Enter', 'Space']">
+  Keyboard keys that trigger ripple effect
+</ParamField>
+
+## Modifiers
+
+<ParamField path="center" type="boolean">
+  Ripple originates from center of element instead of click position
+</ParamField>
+
+<ParamField path="circle" type="boolean">
+  Use circular ripple shape (for circular buttons)
+</ParamField>
+
+<ParamField path="stop" type="boolean">
+  Prevent ripple from propagating to parent elements
+</ParamField>
+
+## Usage Examples
+
+### Basic Ripple
+
+```vue
+<template>
+  <div v-ripple class="pa-4" style="cursor: pointer">
+    Click me for ripple effect
+  </div>
+</template>
+```
+
+### Centered Ripple
+
+```vue
+<template>
+  <v-btn v-ripple.center>
+    Centered Ripple
+  </v-btn>
+</template>
+```
+
+### Circular Ripple
+
+```vue
+<template>
+  <v-btn 
+    v-ripple.circle 
+    icon 
+    size="large"
+  >
+    <v-icon>mdi-heart</v-icon>
+  </v-btn>
+</template>
+```
+
+### Custom Ripple Color
+
+```vue
+<template>
+  <div 
+    v-ripple="{ class: 'red-ripple' }" 
+    class="pa-4"
+    style="cursor: pointer"
+  >
+    Red ripple effect
+  </div>
+</template>
+
+<style scoped>
+.red-ripple .v-ripple__container .v-ripple__animation {
+  background: rgba(255, 0, 0, 0.3);
+}
+</style>
+```
+
+### Conditional Ripple
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const rippleEnabled = ref(true)
+</script>
+
+<template>
+  <div>
+    <v-switch v-model="rippleEnabled" label="Enable Ripple" />
+    
+    <v-btn v-ripple="rippleEnabled">
+      Toggle ripple with switch
+    </v-btn>
+  </div>
+</template>
+```
+
+### Custom Keyboard Keys
+
+```vue
+<template>
+  <button
+    v-ripple="{ keys: ['Enter', 'Space', 'Tab'] }"
+    @keydown.tab.prevent
+  >
+    Press Enter, Space, or Tab
+  </button>
+</template>
+```
+
+### Stop Propagation
+
+```vue
+<template>
+  <div v-ripple class="outer pa-8">
+    Outer element
+    
+    <!-- Inner ripple won't trigger outer ripple -->
+    <v-btn v-ripple.stop>
+      Inner button
+    </v-btn>
+  </div>
+</template>
+```
+
+### Card with Ripple
+
+```vue
+<template>
+  <v-card v-ripple class="mx-auto" max-width="344">
+    <v-img src="/image.jpg" />
+    <v-card-title>Card Title</v-card-title>
+    <v-card-text>
+      Click anywhere on the card
+    </v-card-text>
+  </v-card>
+</template>
+```
+
+### List Items
+
+```vue
+<template>
+  <v-list>
+    <v-list-item v-ripple>
+      <v-list-item-title>Item 1</v-list-item-title>
+    </v-list-item>
+    <v-list-item v-ripple>
+      <v-list-item-title>Item 2</v-list-item-title>
+    </v-list-item>
+    <v-list-item v-ripple>
+      <v-list-item-title>Item 3</v-list-item-title>
+    </v-list-item>
+  </v-list>
+</template>
+```
+
+### Custom Animation
+
+```vue
+<template>
+  <div 
+    v-ripple="{ class: 'slow-ripple' }" 
+    class="pa-4"
+    style="cursor: pointer"
+  >
+    Slow ripple animation
+  </div>
+</template>
+
+<style scoped>
+.slow-ripple .v-ripple__animation {
+  transition: transform 1s cubic-bezier(0.25, 0.8, 0.5, 1),
+              opacity 2s cubic-bezier(0.25, 0.8, 0.5, 1) !important;
+}
+</style>
+```
+
+### Disabled State
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const disabled = ref(false)
+</script>
+
+<template>
+  <div>
+    <v-switch v-model="disabled" label="Disable" />
+    
+    <v-btn 
+      :disabled="disabled" 
+      v-ripple="!disabled"
+    >
+      Button
+    </v-btn>
+  </div>
+</template>
+```
+
+### Navigation Menu
+
+```vue
+<template>
+  <v-navigation-drawer>
+    <v-list>
+      <v-list-item 
+        v-for="item in items" 
+        :key="item.title"
+        v-ripple
+        :to="item.to"
+      >
+        <template #prepend>
+          <v-icon>{{ item.icon }}</v-icon>
+        </template>
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
+</template>
+
+<script setup>
+const items = [
+  { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/' },
+  { title: 'Settings', icon: 'mdi-cog', to: '/settings' },
+  { title: 'Profile', icon: 'mdi-account', to: '/profile' },
+]
+</script>
+```
+
+### Different Ripple per Theme
+
+```vue
+<script setup>
+import { useTheme } from 'vuetify'
+import { computed } from 'vue'
+
+const theme = useTheme()
+const rippleClass = computed(() => 
+  theme.current.value.dark ? 'light-ripple' : 'dark-ripple'
+)
+</script>
+
+<template>
+  <div 
+    v-ripple="{ class: rippleClass }" 
+    class="pa-4"
+    style="cursor: pointer"
+  >
+    Theme-aware ripple
+  </div>
+</template>
+
+<style scoped>
+.dark-ripple .v-ripple__animation {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.light-ripple .v-ripple__animation {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+```
+
+## Ripple Behavior
+
+### Touch Events
+- 80ms delay before ripple appears on touch
+- Allows for better scroll detection
+- Ripple continues if touch doesn't become scroll
+
+### Mouse Events
+- Immediate ripple on mousedown
+- No delay for desktop interactions
+
+### Keyboard Events
+- Triggered by Enter and Space keys by default
+- Customizable via `keys` option
+- Ripple appears on keydown
+- Hides on keyup or blur
+
+## Styling
+
+### Ripple Classes
+
+```css
+/* Container */
+.v-ripple__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Animation element */
+.v-ripple__animation {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform-origin: center;
+}
+
+/* States */
+.v-ripple__animation--enter {
+  transition: none;
+}
+
+.v-ripple__animation--in {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v-ripple__animation--out {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+```
+
+### Custom Colors
+
+```vue
+<style scoped>
+/* Primary color ripple */
+.primary-ripple .v-ripple__animation {
+  background: rgb(var(--v-theme-primary));
+  opacity: 0.2;
+}
+
+/* Success color ripple */
+.success-ripple .v-ripple__animation {
+  background: rgb(var(--v-theme-success));
+  opacity: 0.15;
+}
+
+/* Custom gradient ripple */
+.gradient-ripple .v-ripple__animation {
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  opacity: 0.25;
+}
+</style>
+```
+
+## Performance Notes
+
+- Ripple uses CSS transforms for smooth animation
+- Automatically cleans up after animation completes
+- Position restoration for static elements
+- Efficient event handling with minimal DOM manipulation
+
+## Accessibility
+
+- Provides visual feedback for interactions
+- Supports keyboard navigation
+- Works with screen readers
+- Respects reduced motion preferences
+
+## Browser Support
+
+- All modern browsers
+- Gracefully degrades without visual effect
+- Touch events supported on mobile devices
+- Mouse and keyboard events on desktop
+
+## Notes
+
+- Automatically sets `position: relative` if element is static
+- Restores original position on cleanup
+- Multiple ripples can be active simultaneously
+- Ripple respects element's border-radius
+- Safe to use with conditional rendering (v-if)
+- Automatically removes event listeners on unmount
+
+## See Also
+
+- [v-touch](/api/directives/touch)
+- [Material Design Ripple](https://material.io/design/interaction/states.html)
+- [VBtn Component](/api/components/v-btn)

@@ -1,0 +1,333 @@
+---
+title: VBtn
+description: Button component with multiple variants and styles
+---
+
+# VBtn
+
+The `VBtn` component is a versatile button that supports multiple variants, sizes, and states. It can be used as a regular button, link, or router link with icon support.
+
+## Basic Usage
+
+```vue
+<template>
+  <VBtn>Click Me</VBtn>
+</template>
+```
+
+## Variants
+
+<Tabs>
+  <Tab title="Elevated">
+    ```vue
+    <VBtn variant="elevated">Elevated Button</VBtn>
+    ```
+    Default variant with elevation shadow.
+  </Tab>
+  
+  <Tab title="Flat">
+    ```vue
+    <VBtn variant="flat">Flat Button</VBtn>
+    ```
+    Button with solid background, no elevation.
+  </Tab>
+  
+  <Tab title="Outlined">
+    ```vue
+    <VBtn variant="outlined">Outlined Button</VBtn>
+    ```
+    Button with border and transparent background.
+  </Tab>
+  
+  <Tab title="Text">
+    ```vue
+    <VBtn variant="text">Text Button</VBtn>
+    ```
+    Button with no background or border.
+  </Tab>
+  
+  <Tab title="Tonal">
+    ```vue
+    <VBtn variant="tonal">Tonal Button</VBtn>
+    ```
+    Button with tinted background.
+  </Tab>
+  
+  <Tab title="Plain">
+    ```vue
+    <VBtn variant="plain">Plain Button</VBtn>
+    ```
+    Minimal styling button.
+  </Tab>
+</Tabs>
+
+## Icon Buttons
+
+```vue
+<template>
+  <!-- Icon only button -->
+  <VBtn icon="mdi-heart" />
+  
+  <!-- Button with prepend icon -->
+  <VBtn prepend-icon="mdi-heart">Like</VBtn>
+  
+  <!-- Button with append icon -->
+  <VBtn append-icon="mdi-arrow-right">Next</VBtn>
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <VBtn size="x-small">X-Small</VBtn>
+  <VBtn size="small">Small</VBtn>
+  <VBtn size="default">Default</VBtn>
+  <VBtn size="large">Large</VBtn>
+  <VBtn size="x-large">X-Large</VBtn>
+</template>
+```
+
+## Loading State
+
+```vue
+<template>
+  <VBtn :loading="true">Loading...</VBtn>
+  <VBtn loading="primary">Custom Color Loader</VBtn>
+</template>
+```
+
+## Block Button
+
+```vue
+<template>
+  <VBtn block>Full Width Button</VBtn>
+</template>
+```
+
+## Router Integration
+
+```vue
+<template>
+  <VBtn to="/about">Go to About</VBtn>
+  <VBtn href="https://example.com">External Link</VBtn>
+</template>
+```
+
+## Props
+
+<ParamField path="variant" type="string" default="elevated">
+  The visual style variant. Options: `elevated`, `flat`, `outlined`, `text`, `tonal`, `plain`
+</ParamField>
+
+<ParamField path="color" type="string">
+  The button color (supports theme colors)
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  The base color when button is not active
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  The color when button is active
+</ParamField>
+
+<ParamField path="size" type="string" default="default">
+  Button size. Options: `x-small`, `small`, `default`, `large`, `x-large`
+</ParamField>
+
+<ParamField path="icon" type="boolean | string | IconValue">
+  Makes button an icon button or specifies the icon to display
+</ParamField>
+
+<ParamField path="prependIcon" type="IconValue">
+  Icon to display before button text
+</ParamField>
+
+<ParamField path="appendIcon" type="IconValue">
+  Icon to display after button text
+</ParamField>
+
+<ParamField path="block" type="boolean" default="false">
+  Expands button to 100% of available width
+</ParamField>
+
+<ParamField path="loading" type="boolean | string" default="false">
+  Shows loading indicator. Can specify color as string
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the button
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes button readonly (visual only, prevents interaction)
+</ParamField>
+
+<ParamField path="active" type="boolean">
+  Forces button active state
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+  Removes button elevation
+</ParamField>
+
+<ParamField path="slim" type="boolean" default="false">
+  Reduces horizontal padding
+</ParamField>
+
+<ParamField path="stacked" type="boolean" default="false">
+  Stacks icon and text vertically
+</ParamField>
+
+<ParamField path="spaced" type="'start' | 'end' | 'both'">
+  Adds spacing on specified side(s)
+</ParamField>
+
+<ParamField path="ripple" type="boolean | object" default="true">
+  Enables/configures ripple effect
+</ParamField>
+
+<ParamField path="text" type="string | number | boolean">
+  Text content to display in button
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Vue Router route location
+</ParamField>
+
+<ParamField path="href" type="string">
+  External link URL
+</ParamField>
+
+<ParamField path="tag" type="string" default="button">
+  HTML tag to use for root element
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts vertical spacing. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius. Options: `0`, `xs`, `sm`, `md`, `lg`, `xl`, `pill`, `circle`, or number
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+  Adds border. Can specify width or side
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets height of button
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets width of button
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+  Sets minimum width
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets maximum width
+</ParamField>
+
+<ParamField path="minHeight" type="string | number">
+  Sets minimum height
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets maximum height
+</ParamField>
+
+<ParamField path="position" type="string">
+  CSS position. Options: `static`, `relative`, `fixed`, `absolute`, `sticky`
+</ParamField>
+
+<ParamField path="location" type="string">
+  Position on screen (when using fixed/absolute)
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Theme to apply to component
+</ParamField>
+
+<ParamField path="value" type="any">
+  Value used when button is in a button group
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Button content
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+  Content to prepend before button text
+</ParamField>
+
+<ParamField path="append" type="slot">
+  Content to append after button text
+</ParamField>
+
+<ParamField path="loader" type="slot">
+  Custom loading indicator content
+</ParamField>
+
+## Events
+
+<ParamField path="group:selected" type="event">
+  Emitted when button is selected in a group
+  
+  **Payload:** `{ value: boolean }`
+</ParamField>
+
+## Examples
+
+### Colors
+
+```vue
+<template>
+  <VBtn color="primary">Primary</VBtn>
+  <VBtn color="secondary">Secondary</VBtn>
+  <VBtn color="success">Success</VBtn>
+  <VBtn color="error">Error</VBtn>
+  <VBtn color="warning">Warning</VBtn>
+  <VBtn color="info">Info</VBtn>
+</template>
+```
+
+### Rounded
+
+```vue
+<template>
+  <VBtn rounded="0">No Rounding</VBtn>
+  <VBtn rounded="sm">Small</VBtn>
+  <VBtn rounded="lg">Large</VBtn>
+  <VBtn rounded="pill">Pill</VBtn>
+</template>
+```
+
+### Density
+
+```vue
+<template>
+  <VBtn density="default">Default</VBtn>
+  <VBtn density="comfortable">Comfortable</VBtn>
+  <VBtn density="compact">Compact</VBtn>
+</template>
+```
+
+### Stacked Icon Button
+
+```vue
+<template>
+  <VBtn stacked prepend-icon="mdi-download">
+    Download
+  </VBtn>
+</template>
+```

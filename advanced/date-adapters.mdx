@@ -1,0 +1,431 @@
+---
+title: Date Adapters
+description: Integrate date libraries like date-fns, Day.js, Luxon, or Moment.js with Vuetify's date components
+---
+
+# Date Adapters
+
+Vuetify 4 provides a flexible date adapter system that allows you to use your preferred date library with date-based components.
+
+## Date Adapter Interface
+
+All date adapters implement the `DateAdapter` interface:
+
+```ts
+export interface DateAdapter<T = unknown> {
+  date(value?: any): T | null
+  format(date: T, formatString: string): string
+  toJsDate(value: T): Date
+  parseISO(date: string): T
+  toISO(date: T): string
+
+  startOfDay(date: T): T
+  endOfDay(date: T): T
+  startOfWeek(date: T, firstDayOfWeek?: number | string): T
+  endOfWeek(date: T): T
+  startOfMonth(date: T): T
+  endOfMonth(date: T): T
+  startOfYear(date: T): T
+  endOfYear(date: T): T
+
+  isAfter(date: T, comparing: T): boolean
+  isAfterDay(date: T, comparing: T): boolean
+  isSameDay(date: T, comparing: T): boolean
+  isSameMonth(date: T, comparing: T): boolean
+  isSameYear(date: T, comparing: T): boolean
+  isBefore(date: T, comparing: T): boolean
+  isEqual(date: T, comparing: T): boolean
+  isValid(date: any): boolean
+  isWithinRange(date: T, range: [T, T]): boolean
+
+  addMinutes(date: T, amount: number): T
+  addHours(date: T, amount: number): T
+  addDays(date: T, amount: number): T
+  addWeeks(date: T, amount: number): T
+  addMonths(date: T, amount: number): T
+
+  getYear(date: T): number
+  setYear(date: T, year: number): T
+  getDiff(date: T, comparing: T | string, unit?: string): number
+  getWeekArray(date: T, firstDayOfWeek?: number | string): T[][]
+  getWeekdays(firstDayOfWeek?: number | string, weekdayFormat?: 'long' | 'short' | 'narrow'): string[]
+  getWeek(date: T, firstDayOfWeek?: number | string, firstDayOfYear?: number | string): number
+  getMonth(date: T): number
+  setMonth(date: T, month: number): T
+  getDate(date: T): number
+  setDate(date: T, day: number): T
+  getNextMonth(date: T): T
+  getPreviousMonth(date: T): T
+  getHours(date: T): number
+  setHours(date: T, hours: number): T
+  getMinutes(date: T): number
+  setMinutes(date: T, minutes: number): T
+}
+```
+
+## Built-in Adapters
+
+### VuetifyDateAdapter (Default)
+
+The default adapter uses native JavaScript Date objects and Intl API:
+
+```ts
+import { createVuetify } from 'vuetify'
+import { VuetifyDateAdapter } from 'vuetify/date/adapters/vuetify'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: VuetifyDateAdapter,
+    locale: {
+      en: 'en-US',
+      fr: 'fr-FR',
+      de: 'de-DE',
+    },
+  },
+})
+```
+
+<Tip>
+The VuetifyDateAdapter is zero-dependency and uses browser-native APIs. It's perfect for most use cases and requires no additional packages.
+</Tip>
+
+### Custom Date Formats
+
+Customize date formats with the default adapter:
+
+```ts
+import { VuetifyDateAdapter } from 'vuetify/date/adapters/vuetify'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: VuetifyDateAdapter,
+    formats: {
+      normalDate: (date: Date, formatString: string, locale: string) => {
+        const day = date.getDate()
+        const month = new Intl.DateTimeFormat(locale, { month: 'long' }).format(date)
+        return `${day} ${month}`
+      },
+      customFormat: {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      },
+    },
+  },
+})
+```
+
+### StringDateAdapter
+
+Works with ISO date strings instead of Date objects:
+
+```ts
+import { StringDateAdapter } from 'vuetify/composables/date/adapters/string'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: StringDateAdapter,
+  },
+})
+```
+
+This adapter converts all operations to work with strings:
+
+```ts
+// Internal implementation
+export class StringDateAdapter implements DateAdapter<string> {
+  base: VuetifyDateAdapter
+
+  addDays(date: string, amount: number): string {
+    return this.base.toISO(
+      this.base.addDays(this.base.date(date)!, amount)
+    )
+  }
+
+  isSameDay(date: string, comparing: string): boolean {
+    return this.base.isSameDay(
+      this.base.date(date)!,
+      this.base.date(comparing)!
+    )
+  }
+}
+```
+
+## External Date Libraries
+
+Vuetify supports popular date libraries through `@date-io` adapters.
+
+### date-fns
+
+Install dependencies:
+
+```bash
+pnpm add date-fns @date-io/date-fns
+```
+
+Configure Vuetify:
+
+```ts
+import { createVuetify } from 'vuetify'
+import DateFnsAdapter from '@date-io/date-fns'
+import { enUS, fr, de } from 'date-fns/locale'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: DateFnsAdapter,
+    locale: {
+      en: enUS,
+      fr: fr,
+      de: de,
+    },
+  },
+})
+```
+
+### Day.js
+
+Install dependencies:
+
+```bash
+pnpm add dayjs @date-io/dayjs
+```
+
+Configure with plugins:
+
+```ts
+import { createVuetify } from 'vuetify'
+import DayjsAdapter from '@date-io/dayjs'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(customParseFormat)
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+const vuetify = createVuetify({
+  date: {
+    adapter: DayjsAdapter,
+  },
+})
+```
+
+### Luxon
+
+Install dependencies:
+
+```bash
+pnpm add luxon @date-io/luxon
+```
+
+Configure Vuetify:
+
+```ts
+import { createVuetify } from 'vuetify'
+import LuxonAdapter from '@date-io/luxon'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: LuxonAdapter,
+    locale: {
+      en: 'en-US',
+      fr: 'fr-FR',
+    },
+  },
+})
+```
+
+### Moment.js
+
+Install dependencies:
+
+```bash
+pnpm add moment @date-io/moment
+```
+
+<Warning>
+Moment.js is in maintenance mode. Consider using date-fns, Day.js, or Luxon for new projects.
+</Warning>
+
+Configure Vuetify:
+
+```ts
+import { createVuetify } from 'vuetify'
+import MomentAdapter from '@date-io/moment'
+import moment from 'moment'
+import 'moment/locale/fr'
+import 'moment/locale/de'
+
+const vuetify = createVuetify({
+  date: {
+    adapter: MomentAdapter,
+  },
+})
+```
+
+## Using Date Adapter in Components
+
+Access the date adapter instance with the `useDate` composable:
+
+```vue
+<script setup>
+import { useDate } from 'vuetify'
+
+const adapter = useDate()
+
+const today = adapter.date()
+const tomorrow = adapter.addDays(today, 1)
+const formatted = adapter.format(today, 'fullDate')
+</script>
+```
+
+### Available Format Strings
+
+```ts
+const formats = [
+  'fullDate',              // Jan 1, 2024
+  'fullDateWithWeekday',   // Monday, January 1, 2024
+  'normalDate',            // 1 January
+  'normalDateWithWeekday', // Mon, Jan 1
+  'shortDate',             // Jan 1
+  'year',                  // 2024
+  'month',                 // January
+  'monthShort',            // Jan
+  'monthAndYear',          // January 2024
+  'monthAndDate',          // January 1
+  'weekday',               // Monday
+  'weekdayShort',          // Mon
+  'dayOfMonth',            // 1
+  'hours12h',              // 1 PM
+  'hours24h',              // 13
+  'minutes',               // 05
+  'seconds',               // 30
+  'fullTime',              // 1:05 PM
+  'fullTime12h',           // 1:05 PM
+  'fullTime24h',           // 13:05
+  'fullDateTime',          // Jan 1, 2024, 1:05 PM
+  'fullDateTime12h',       // Jan 1, 2024, 1:05 PM
+  'fullDateTime24h',       // Jan 1, 2024, 13:05
+  'keyboardDate',          // 01/01/2024
+  'keyboardDateTime',      // 01/01/2024 1:05 PM
+  'keyboardDateTime12h',   // 01/01/2024 1:05 PM
+  'keyboardDateTime24h',   // 01/01/2024 13:05
+]
+```
+
+## Date Instance Creation
+
+The date adapter is created during Vuetify initialization:
+
+```ts
+// From packages/vuetify/src/composables/date/date.ts
+export function createDate(
+  options: DateOptions | undefined,
+  locale: LocaleInstance
+) {
+  const _options = mergeDeep({
+    adapter: VuetifyDateAdapter,
+    locale: {
+      en: 'en-US',
+      fr: 'fr-FR',
+      de: 'de-DE',
+      // ... other locales
+    },
+  }, options) as InternalDateOptions
+
+  return {
+    options: _options,
+    instance: createInstance(_options, locale),
+  }
+}
+```
+
+The instance is reactive and updates when locale changes:
+
+```ts
+function createInstance(options: InternalDateOptions, locale: LocaleInstance) {
+  const instance = reactive(
+    typeof options.adapter === 'function'
+      ? new options.adapter({
+          locale: options.locale[locale.current.value] ?? locale.current.value,
+          formats: options.formats,
+        })
+      : options.adapter
+  )
+
+  watch(locale.current, value => {
+    instance.locale = options.locale[value] ?? value ?? instance.locale
+  })
+
+  return instance
+}
+```
+
+## Week Calculations
+
+The date adapter handles locale-specific week calculations:
+
+```ts
+// Get week number (ISO 8601)
+const weekNumber = adapter.getWeek(date, 1, 4)
+
+// Get week array for calendar
+const weeks = adapter.getWeekArray(date, 0) // Sunday as first day
+
+// Get weekday names
+const weekdays = adapter.getWeekdays(1, 'short') // ['Mon', 'Tue', ...]
+```
+
+## Custom Date Adapter
+
+Create a custom adapter by implementing the `DateAdapter` interface:
+
+```ts
+import type { DateAdapter } from 'vuetify'
+
+export class CustomDateAdapter implements DateAdapter<CustomDate> {
+  locale: string
+
+  constructor(options: { locale: string }) {
+    this.locale = options.locale
+  }
+
+  date(value?: any): CustomDate | null {
+    // Implementation
+  }
+
+  format(date: CustomDate, formatString: string): string {
+    // Implementation
+  }
+
+  // ... implement all required methods
+}
+
+// Use in Vuetify
+const vuetify = createVuetify({
+  date: {
+    adapter: CustomDateAdapter,
+  },
+})
+```
+
+<Tip>
+Extend the VuetifyDateAdapter class and override specific methods rather than implementing the entire interface from scratch.
+</Tip>
+
+## Module Augmentation
+
+Extend the date adapter types for better TypeScript support:
+
+```ts
+import type { DateTime } from 'luxon'
+
+declare module 'vuetify' {
+  namespace DateModule {
+    interface Adapter extends DateTime {}
+  }
+}
+```

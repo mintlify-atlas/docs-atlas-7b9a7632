@@ -1,0 +1,349 @@
+---
+title: VSwitch
+description: Switch component for toggling between on/off states
+---
+
+# VSwitch
+
+The `VSwitch` component provides a toggle switch for boolean input with support for loading state, custom colors, and indeterminate state.
+
+## Basic Usage
+
+```vue
+<template>
+  <VSwitch
+    v-model="enabled"
+    label="Enable notifications"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const enabled = ref(false)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The switch value. Can be boolean, array, or custom true/false values.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text to display next to the switch.
+</ParamField>
+
+<ParamField path="value" type="any">
+  The value used when the switch is on (useful for arrays).
+</ParamField>
+
+<ParamField path="trueValue" type="any" default="true">
+  The value when the switch is on.
+</ParamField>
+
+<ParamField path="falseValue" type="any" default="false">
+  The value when the switch is off.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color of the switch when on.
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Use inset styling for the switch.
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+  Remove elevation from the switch thumb.
+</ParamField>
+
+<ParamField path="loading" type="boolean | string" default="false">
+  Display a loading spinner. Pass a color string to customize.
+</ParamField>
+
+<ParamField path="indeterminate" type="boolean" default="false">
+  Display the switch in an indeterminate state.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the switch.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make the switch readonly.
+</ParamField>
+
+<ParamField path="trueIcon" type="string">
+  Icon to display when the switch is on.
+</ParamField>
+
+<ParamField path="falseIcon" type="string">
+  Icon to display when the switch is off.
+</ParamField>
+
+## Colors
+
+```vue
+<template>
+  <div>
+    <VSwitch
+      v-model="switch1"
+      label="Primary"
+      color="primary"
+    />
+    
+    <VSwitch
+      v-model="switch2"
+      label="Success"
+      color="success"
+    />
+    
+    <VSwitch
+      v-model="switch3"
+      label="Error"
+      color="error"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const switch1 = ref(true)
+const switch2 = ref(true)
+const switch3 = ref(true)
+</script>
+```
+
+## Inset Style
+
+```vue
+<template>
+  <VSwitch
+    v-model="enabled"
+    label="Inset switch"
+    inset
+    color="primary"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const enabled = ref(true)
+</script>
+```
+
+## Loading State
+
+```vue
+<template>
+  <div>
+    <VSwitch
+      v-model="switch1"
+      label="Default loading color"
+      loading
+    />
+    
+    <VSwitch
+      v-model="switch2"
+      label="Custom loading color"
+      loading="purple"
+    />
+    
+    <VSwitch
+      v-model="saving"
+      label="Save changes"
+      :loading="isSaving"
+      @update:model-value="saveChanges"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const switch1 = ref(true)
+const switch2 = ref(true)
+const saving = ref(false)
+const isSaving = ref(false)
+
+async function saveChanges(value) {
+  isSaving.value = true
+  try {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    console.log('Saved:', value)
+  } finally {
+    isSaving.value = false
+  }
+}
+</script>
+```
+
+## With Icons
+
+```vue
+<template>
+  <div>
+    <VSwitch
+      v-model="notifications"
+      label="Notifications"
+      true-icon="mdi-bell"
+      false-icon="mdi-bell-off"
+      color="primary"
+    />
+    
+    <VSwitch
+      v-model="darkMode"
+      label="Dark mode"
+      true-icon="mdi-weather-night"
+      false-icon="mdi-weather-sunny"
+      color="purple"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const notifications = ref(true)
+const darkMode = ref(false)
+</script>
+```
+
+## Custom True/False Values
+
+```vue
+<template>
+  <div>
+    <VSwitch
+      v-model="status"
+      label="Status"
+      :true-value="'active'"
+      :false-value="'inactive'"
+    />
+    <p>Current status: {{ status }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const status = ref('inactive')
+</script>
+```
+
+## Indeterminate State
+
+```vue
+<template>
+  <div>
+    <VSwitch
+      v-model="selectAll"
+      :indeterminate="indeterminate"
+      label="Select all"
+      @click="toggleAll"
+    />
+    
+    <VSwitch
+      v-for="item in items"
+      :key="item.id"
+      v-model="selected"
+      :value="item.id"
+      :label="item.name"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const items = [
+  { id: 1, name: 'Feature 1' },
+  { id: 2, name: 'Feature 2' },
+  { id: 3, name: 'Feature 3' },
+]
+
+const selected = ref([])
+const selectAll = computed({
+  get: () => selected.value.length === items.length,
+  set: (value) => {
+    if (value) {
+      selected.value = items.map(item => item.id)
+    } else {
+      selected.value = []
+    }
+  }
+})
+
+const indeterminate = computed(() => 
+  selected.value.length > 0 && selected.value.length < items.length
+)
+
+function toggleAll() {
+  if (selected.value.length === items.length) {
+    selected.value = []
+  } else {
+    selected.value = items.map(item => item.id)
+  }
+}
+</script>
+```
+
+## Validation
+
+```vue
+<template>
+  <VForm>
+    <VSwitch
+      v-model="agreed"
+      label="I agree to the terms and conditions"
+      :rules="[v => !!v || 'You must agree to continue']"
+      color="primary"
+    />
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const agreed = ref(false)
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the switch value changes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+<ParamField path="update:indeterminate" type="(value: boolean) => void">
+  Emitted when the indeterminate state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="{ label, props }">
+  Customize the label content.
+</ParamField>
+
+<ParamField path="thumb" type="{ icon, model, isValid }">
+  Customize the switch thumb content.
+</ParamField>
+
+<ParamField path="track-true" type="{ model, isValid }">
+  Customize content on the track when switch is on.
+</ParamField>
+
+<ParamField path="track-false" type="{ model, isValid }">
+  Customize content on the track when switch is off.
+</ParamField>
+
+<ParamField path="loader" type="{ }">
+  Customize the loading indicator.
+</ParamField>

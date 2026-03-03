@@ -1,0 +1,213 @@
+---
+title: Carousel
+description: The VCarousel component is used to display rotating content in a slideshow format with navigation controls and progress indicators.
+---
+
+# Carousel
+
+The VCarousel component provides a slideshow interface for cycling through content with automatic progression and manual navigation.
+
+## Usage
+
+```vue
+<template>
+  <v-carousel height="400">
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    />
+  </v-carousel>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const items = ref([
+  { src: 'https://picsum.photos/1920/1080?random=1' },
+  { src: 'https://picsum.photos/1920/1080?random=2' },
+  { src: 'https://picsum.photos/1920/1080?random=3' }
+])
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="any">
+  The currently active slide index or ID.
+</ParamField>
+
+<ParamField path="height" type="number | string" default="500">
+  Height of the carousel in pixels.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to the delimiter buttons.
+</ParamField>
+
+<ParamField path="cycle" type="boolean" default="false">
+  Enables automatic slide progression.
+</ParamField>
+
+<ParamField path="interval" type="number | string" default="6000">
+  Time in milliseconds between automatic slide transitions.
+</ParamField>
+
+<ParamField path="hideDelimiters" type="boolean" default="false">
+  Hides the navigation delimiter buttons.
+</ParamField>
+
+<ParamField path="hideDelimiterBackground" type="boolean" default="false">
+  Removes the background from the delimiter controls area.
+</ParamField>
+
+<ParamField path="delimiterIcon" type="string" default="$delimiter">
+  Icon used for delimiter buttons.
+</ParamField>
+
+<ParamField path="progress" type="boolean | string" default="false">
+  Shows a progress bar. Pass a color string to customize.
+</ParamField>
+
+<ParamField path="verticalDelimiters" type="boolean | 'left' | 'right'" default="false">
+  Positions delimiters vertically. Options: `true`, `'left'`, `'right'`.
+</ParamField>
+
+<ParamField path="showArrows" type="boolean | 'hover'" default="true">
+  Controls visibility of navigation arrows. Use `'hover'` to show on hover only.
+</ParamField>
+
+<ParamField path="continuous" type="boolean" default="true">
+  Enables continuous looping of slides.
+</ParamField>
+
+<ParamField path="direction" type="string" default="horizontal">
+  Slide transition direction. Options: `horizontal`, `vertical`.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the active slide changes.
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Default slot for carousel items.
+</ParamField>
+
+<ParamField path="item" type="{ props, item }">
+  Customize individual delimiter buttons.
+</ParamField>
+
+<ParamField path="prev">
+  Customize the previous arrow button.
+</ParamField>
+
+<ParamField path="next">
+  Customize the next arrow button.
+</ParamField>
+
+## Examples
+
+### Auto-Cycling
+
+```vue
+<template>
+  <v-carousel
+    cycle
+    :interval="3000"
+    height="400"
+  >
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    />
+  </v-carousel>
+</template>
+```
+
+### With Progress Bar
+
+```vue
+<template>
+  <v-carousel
+    progress="primary"
+    height="400"
+  >
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    />
+  </v-carousel>
+</template>
+```
+
+### Vertical Delimiters
+
+```vue
+<template>
+  <v-carousel
+    vertical-delimiters="right"
+    height="400"
+  >
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    />
+  </v-carousel>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <v-carousel height="400">
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+    >
+      <v-sheet height="100%" color="primary">
+        <div class="d-flex fill-height align-center justify-center">
+          <h1 class="text-h2">{{ item.title }}</h1>
+        </div>
+      </v-sheet>
+    </v-carousel-item>
+  </v-carousel>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const items = ref([
+  { title: 'Slide 1' },
+  { title: 'Slide 2' },
+  { title: 'Slide 3' }
+])
+</script>
+```
+
+### Hide Navigation
+
+```vue
+<template>
+  <v-carousel
+    hide-delimiters
+    :show-arrows="false"
+    height="400"
+  >
+    <v-carousel-item
+      v-for="(item, i) in items"
+      :key="i"
+      :src="item.src"
+    />
+  </v-carousel>
+</template>
+```

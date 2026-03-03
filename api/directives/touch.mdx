@@ -1,0 +1,561 @@
+---
+title: v-touch
+description: Directive for detecting touch gestures like swipe, pan, and directional movements
+---
+
+## Overview
+
+The `v-touch` directive enables detection of touch gestures including swipes, pans, and directional movements. Perfect for mobile interactions, carousels, and swipe-to-dismiss interfaces.
+
+## Import
+
+```typescript
+import { Touch } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Touch } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('touch', Touch)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Touch } from 'vuetify/directives'
+
+const vTouch = Touch
+</script>
+```
+
+## Syntax
+
+```vue
+<div v-touch="{
+  left: () => swipeLeft(),
+  right: () => swipeRight(),
+  up: () => swipeUp(),
+  down: () => swipeDown()
+}"></div>
+```
+
+## Value Configuration
+
+```typescript
+v-touch="{
+  start?: (wrapperEvent: TouchEvent & TouchData) => void
+  end?: (wrapperEvent: TouchEvent & TouchData) => void
+  move?: (wrapperEvent: TouchEvent & TouchData) => void
+  left?: (wrapper: TouchData) => void
+  right?: (wrapper: TouchData) => void
+  up?: (wrapper: TouchData) => void
+  down?: (wrapper: TouchData) => void
+  parent?: boolean
+  options?: AddEventListenerOptions
+}"
+```
+
+## Parameters
+
+<ParamField path="left" type="(wrapper: TouchData) => void">
+  Called when user swipes left (minimum 16px)
+</ParamField>
+
+<ParamField path="right" type="(wrapper: TouchData) => void">
+  Called when user swipes right (minimum 16px)
+</ParamField>
+
+<ParamField path="up" type="(wrapper: TouchData) => void">
+  Called when user swipes up (minimum 16px)
+</ParamField>
+
+<ParamField path="down" type="(wrapper: TouchData) => void">
+  Called when user swipes down (minimum 16px)
+</ParamField>
+
+<ParamField path="start" type="(wrapperEvent: TouchEvent & TouchData) => void">
+  Called when touch starts
+</ParamField>
+
+<ParamField path="move" type="(wrapperEvent: TouchEvent & TouchData) => void">
+  Called during touch movement
+</ParamField>
+
+<ParamField path="end" type="(wrapperEvent: TouchEvent & TouchData) => void">
+  Called when touch ends
+</ParamField>
+
+<ParamField path="parent" type="boolean">
+  Attach listeners to parent element instead of element itself
+</ParamField>
+
+<ParamField path="options" type="AddEventListenerOptions">
+  Event listener options (default: `{ passive: true }`)
+</ParamField>
+
+## Touch Data
+
+All handlers receive touch data:
+
+```typescript
+interface TouchData {
+  touchstartX: number      // Initial touch X position
+  touchstartY: number      // Initial touch Y position
+  touchmoveX: number       // Current/final move X position
+  touchmoveY: number       // Current/final move Y position
+  touchendX: number        // Final touch X position
+  touchendY: number        // Final touch Y position
+  offsetX: number          // Horizontal distance traveled
+  offsetY: number          // Vertical distance traveled
+}
+```
+
+## Usage Examples
+
+### Basic Swipe Detection
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const direction = ref('')
+
+function swipeLeft() {
+  direction.value = 'Left'
+}
+
+function swipeRight() {
+  direction.value = 'Right'
+}
+
+function swipeUp() {
+  direction.value = 'Up'
+}
+
+function swipeDown() {
+  direction.value = 'Down'
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      left: swipeLeft,
+      right: swipeRight,
+      up: swipeUp,
+      down: swipeDown
+    }"
+    class="pa-8 bg-surface"
+  >
+    <p>Swipe in any direction</p>
+    <p v-if="direction">Swiped: {{ direction }}</p>
+  </div>
+</template>
+```
+
+### Image Carousel
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const currentIndex = ref(0)
+const images = [
+  '/image1.jpg',
+  '/image2.jpg',
+  '/image3.jpg',
+  '/image4.jpg'
+]
+
+function nextImage() {
+  currentIndex.value = (currentIndex.value + 1) % images.length
+}
+
+function prevImage() {
+  currentIndex.value = (currentIndex.value - 1 + images.length) % images.length
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      left: nextImage,
+      right: prevImage
+    }"
+  >
+    <v-img :src="images[currentIndex]" />
+    <div class="text-center mt-2">
+      {{ currentIndex + 1 }} / {{ images.length }}
+    </div>
+  </div>
+</template>
+```
+
+### Swipe to Delete
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref(['Item 1', 'Item 2', 'Item 3', 'Item 4'])
+
+function removeItem(index: number) {
+  items.value.splice(index, 1)
+}
+</script>
+
+<template>
+  <v-list>
+    <v-list-item
+      v-for="(item, index) in items"
+      :key="item"
+      v-touch="{
+        left: () => removeItem(index)
+      }"
+    >
+      {{ item }}
+      <template #append>
+        <small class="text-grey">Swipe left to delete</small>
+      </template>
+    </v-list-item>
+  </v-list>
+</template>
+```
+
+### Pull to Refresh
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const refreshing = ref(false)
+
+function handleTouchMove(e: any) {
+  if (e.touchstartY < 100 && e.offsetY > 80) {
+    refresh()
+  }
+}
+
+async function refresh() {
+  if (refreshing.value) return
+  
+  refreshing.value = true
+  await new Promise(resolve => setTimeout(resolve, 2000))
+  refreshing.value = false
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      move: handleTouchMove
+    }"
+  >
+    <v-progress-linear v-if="refreshing" indeterminate />
+    <div class="pa-4">
+      Pull down to refresh
+    </div>
+  </div>
+</template>
+```
+
+### Card Stack Swipe
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const cards = ref([
+  { id: 1, title: 'Card 1', color: 'red' },
+  { id: 2, title: 'Card 2', color: 'blue' },
+  { id: 3, title: 'Card 3', color: 'green' },
+])
+
+const currentCard = ref(0)
+
+function swipeCard(direction: string) {
+  console.log(`Swiped ${direction} on ${cards.value[currentCard.value].title}`)
+  currentCard.value++
+}
+</script>
+
+<template>
+  <div class="card-stack">
+    <v-card
+      v-if="currentCard < cards.value.length"
+      v-touch="{
+        left: () => swipeCard('left'),
+        right: () => swipeCard('right')
+      }"
+      :color="cards.value[currentCard].color"
+      class="pa-8"
+    >
+      <v-card-title>{{ cards.value[currentCard].title }}</v-card-title>
+      <v-card-text>
+        Swipe left or right
+      </v-card-text>
+    </v-card>
+    <p v-else>No more cards!</p>
+  </div>
+</template>
+```
+
+### Navigation Drawer Swipe
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const drawer = ref(false)
+
+function openDrawer() {
+  drawer.value = true
+}
+
+function closeDrawer() {
+  drawer.value = false
+}
+</script>
+
+<template>
+  <div>
+    <div
+      v-touch="{ right: openDrawer }"
+      style="position: fixed; left: 0; top: 0; bottom: 0; width: 20px"
+    />
+    
+    <v-navigation-drawer v-model="drawer" v-touch="{ left: closeDrawer }">
+      <v-list>
+        <v-list-item title="Item 1" />
+        <v-list-item title="Item 2" />
+      </v-list>
+    </v-navigation-drawer>
+  </div>
+</template>
+```
+
+### Gesture Tracking
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const touchInfo = ref({
+  startX: 0,
+  startY: 0,
+  endX: 0,
+  endY: 0,
+  distance: 0
+})
+
+function onTouchStart(e: any) {
+  touchInfo.value.startX = e.touchstartX
+  touchInfo.value.startY = e.touchstartY
+}
+
+function onTouchEnd(e: any) {
+  touchInfo.value.endX = e.touchendX
+  touchInfo.value.endY = e.touchendY
+  touchInfo.value.distance = Math.sqrt(
+    Math.pow(e.offsetX, 2) + Math.pow(e.offsetY, 2)
+  )
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      start: onTouchStart,
+      end: onTouchEnd
+    }"
+    class="pa-4 bg-surface"
+  >
+    <p>Touch and drag</p>
+    <p>Start: ({{ touchInfo.startX }}, {{ touchInfo.startY }})</p>
+    <p>End: ({{ touchInfo.endX }}, {{ touchInfo.endY }})</p>
+    <p>Distance: {{ Math.round(touchInfo.distance) }}px</p>
+  </div>
+</template>
+```
+
+### Tab Navigation
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const currentTab = ref(0)
+const tabs = ['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4']
+
+function nextTab() {
+  if (currentTab.value < tabs.length - 1) {
+    currentTab.value++
+  }
+}
+
+function prevTab() {
+  if (currentTab.value > 0) {
+    currentTab.value--
+  }
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      left: nextTab,
+      right: prevTab
+    }"
+  >
+    <v-tabs v-model="currentTab">
+      <v-tab v-for="tab in tabs" :key="tab">
+        {{ tab }}
+      </v-tab>
+    </v-tabs>
+    
+    <v-window v-model="currentTab">
+      <v-window-item v-for="(tab, i) in tabs" :key="i">
+        <div class="pa-4">
+          Content for {{ tab }}
+        </div>
+      </v-window-item>
+    </v-window>
+  </div>
+</template>
+```
+
+### Swipe with Visual Feedback
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const offset = ref(0)
+const isDragging = ref(false)
+
+function onMove(e: any) {
+  offset.value = e.touchmoveX - e.touchstartX
+}
+
+function onEnd(e: any) {
+  isDragging.value = false
+  
+  if (Math.abs(e.offsetX) > 100) {
+    // Swipe threshold reached
+    if (e.offsetX > 0) {
+      console.log('Swiped right')
+    } else {
+      console.log('Swiped left')
+    }
+  }
+  
+  offset.value = 0
+}
+
+function onStart() {
+  isDragging.value = true
+}
+</script>
+
+<template>
+  <div
+    v-touch="{
+      start: onStart,
+      move: onMove,
+      end: onEnd
+    }"
+    :style="{
+      transform: `translateX(${offset}px)`,
+      transition: isDragging ? 'none' : 'transform 0.3s'
+    }"
+    class="pa-4 bg-primary"
+  >
+    Drag me left or right
+  </div>
+</template>
+```
+
+### Bottom Sheet Swipe
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const sheet = ref(true)
+
+function closeSheet(data: any) {
+  if (data.offsetY > 50) {
+    sheet.value = false
+  }
+}
+</script>
+
+<template>
+  <v-bottom-sheet v-model="sheet">
+    <v-card v-touch="{ down: closeSheet }">
+      <div class="text-center pa-2">
+        <div class="handle" />
+      </div>
+      <v-card-text>
+        Swipe down to close
+      </v-card-text>
+    </v-card>
+  </v-bottom-sheet>
+</template>
+
+<style scoped>
+.handle {
+  width: 40px;
+  height: 4px;
+  background: currentColor;
+  opacity: 0.3;
+  border-radius: 2px;
+  margin: 0 auto;
+}
+</style>
+```
+
+## Gesture Detection
+
+The directive uses these thresholds:
+
+- **Minimum distance**: 16px
+- **Direction ratio**: 0.5
+  - Horizontal swipe: `|offsetY| < 0.5 * |offsetX|`
+  - Vertical swipe: `|offsetX| < 0.5 * |offsetY|`
+
+## Performance Tips
+
+1. Use passive listeners (default) for better scroll performance
+2. Avoid expensive operations in `move` handler
+3. Debounce or throttle if needed
+4. Use `start`/`end` instead of `move` when possible
+
+## Touch Events
+
+- `touchstart` - Finger touches screen
+- `touchmove` - Finger moves on screen
+- `touchend` - Finger leaves screen
+
+## Notes
+
+- Only works on touch-enabled devices
+- Uses passive event listeners by default
+- Automatically cleans up listeners on unmount
+- Parent modifier attaches to parent element
+- Safe to use with conditional rendering (v-if)
+- Does not prevent default scroll behavior
+- Swipe requires minimum 16px movement
+
+## See Also
+
+- [v-ripple](/api/directives/ripple)
+- [v-scroll](/api/directives/scroll)
+- [Touch Events API](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events)

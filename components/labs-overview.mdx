@@ -1,0 +1,136 @@
+---
+title: Labs Overview
+description: Experimental Vuetify components that are in active development and testing before graduating to the main component library.
+---
+
+# Labs Components
+
+<Warning>
+  Labs components are **experimental** and may have breaking changes between minor versions. Use them at your own risk in production applications.
+</Warning>
+
+Labs components are experimental features that are under active development. These components provide cutting-edge functionality but may undergo significant changes before being promoted to stable status.
+
+## What are Labs Components?
+
+Labs components are:
+
+- **Experimental** - APIs may change without following semver
+- **Community-driven** - Often developed based on user feedback
+- **Pre-release** - Testing ground for new features
+- **Opt-in** - Must be explicitly imported from `vuetify/labs`
+
+## Using Labs Components
+
+Labs components must be imported separately from the main Vuetify library:
+
+```js
+// Using individual imports
+import { VDateInput } from 'vuetify/labs/VDateInput'
+import { VColorInput } from 'vuetify/labs/VColorInput'
+
+export default {
+  components: {
+    VDateInput,
+    VColorInput
+  }
+}
+```
+
+Or register them globally:
+
+```js
+import { createVuetify } from 'vuetify'
+import * as labs from 'vuetify/labs/components'
+
+export default createVuetify({
+  components: {
+    ...labs,
+  },
+})
+```
+
+## Available Components
+
+### Input Components
+
+<ParamField path="VColorInput">
+  A text field with integrated color picker for selecting colors.
+  [View Documentation](/components/color-input)
+</ParamField>
+
+<ParamField path="VDateInput">
+  A text field with integrated date picker for selecting dates.
+  [View Documentation](/components/date-input)
+</ParamField>
+
+<ParamField path="VMaskInput">
+  A text field with input masking functionality.
+  [View Documentation](/components/mask-input)
+</ParamField>
+
+### User Interface
+
+<ParamField path="VCommandPalette">
+  A command palette for keyboard-driven navigation and actions.
+  [View Documentation](/components/command-palette)
+</ParamField>
+
+<ParamField path="VFileUpload">
+  A drag-and-drop file upload component with preview.
+  [View Documentation](/components/file-upload)
+</ParamField>
+
+<ParamField path="VAvatarGroup">
+  Display a group of avatars with overflow handling.
+  [View Documentation](/components/avatar-group)
+</ParamField>
+
+<ParamField path="VIconBtn">
+  An icon button component with enhanced features.
+  [View Documentation](/components/icon-btn)
+</ParamField>
+
+### Other Components
+
+Additional labs components include:
+
+- **VPicker** - Base picker component
+- **VPie** - Pie chart component
+- **VPullToRefresh** - Pull-to-refresh functionality
+- **VStepperVertical** - Vertical stepper component
+- **VVideo** - Video player component
+
+## Migration Path
+
+When a labs component graduates to stable:
+
+1. The component moves from `vuetify/labs` to the main `vuetify` package
+2. A deprecation warning is added to the labs export
+3. The labs version is removed in the next major release
+
+## Providing Feedback
+
+Your feedback helps improve these components:
+
+- Report bugs on [GitHub Issues](https://github.com/vuetifyjs/vuetify/issues)
+- Request features through [GitHub Discussions](https://github.com/vuetifyjs/vuetify/discussions)
+- Share your use cases in the community
+
+## Important Considerations
+
+<Warning>
+  - Labs components may have incomplete documentation
+  - Breaking changes can occur in minor releases
+  - Some props and events may not be finalized
+  - TypeScript types may change
+  - Not all features may be fully tested
+</Warning>
+
+## Best Practices
+
+1. **Pin your Vuetify version** when using labs components
+2. **Test thoroughly** before deploying to production
+3. **Monitor release notes** for breaking changes
+4. **Provide feedback** to help shape the final API
+5. **Have a migration plan** for when APIs change

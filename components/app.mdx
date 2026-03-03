@@ -1,0 +1,134 @@
+---
+title: VApp
+description: The VApp component is the root wrapper for all Vuetify applications, providing the layout system foundation and theme support.
+---
+
+# VApp
+
+The VApp component is a **required** wrapper for all Vuetify applications. It provides the layout system foundation, theme support, and manages the root application structure.
+
+## Usage
+
+```vue
+<template>
+  <v-app>
+    <v-app-bar>
+      <!-- App bar content -->
+    </v-app-bar>
+    
+    <v-navigation-drawer>
+      <!-- Drawer content -->
+    </v-navigation-drawer>
+    
+    <v-main>
+      <!-- Main content -->
+    </v-main>
+    
+    <v-footer>
+      <!-- Footer content -->
+    </v-footer>
+  </v-app>
+</template>
+```
+
+## Basic Example
+
+```vue
+<template>
+  <v-app>
+    <v-main>
+      <v-container>
+        <h1>My Vuetify Application</h1>
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
+```
+
+<Note>
+VApp must be the root component of your application. All Vuetify components should be nested within VApp to ensure proper functionality.
+</Note>
+
+## Props
+
+<ParamField path="theme" type="string">
+Applies a specific theme to the component and all its children.
+
+```vue
+<v-app theme="dark">
+  <!-- Content -->
+</v-app>
+```
+</ParamField>
+
+<ParamField path="class" type="string | array | object">
+Applies custom CSS classes to the component.
+</ParamField>
+
+<ParamField path="style" type="string | array | object">
+Applies custom inline styles to the component.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+The default slot for application content. All layout components should be placed here.
+</ParamField>
+
+## Layout System
+
+VApp provides the layout system foundation that manages the positioning and sizing of layout components like VAppBar, VNavigationDrawer, VFooter, and VBottomNavigation.
+
+```vue
+<template>
+  <v-app>
+    <v-app-bar app>
+      <v-toolbar-title>Application</v-toolbar-title>
+    </v-app-bar>
+
+    <v-navigation-drawer app>
+      <!-- Navigation items -->
+    </v-navigation-drawer>
+
+    <v-main>
+      <!-- Page content -->
+    </v-main>
+  </v-app>
+</template>
+```
+
+<Note>
+Layout components with the `app` prop automatically register with VApp's layout system and adjust the content area accordingly.
+</Note>
+
+## Theme Integration
+
+VApp automatically provides theme context to all child components:
+
+```vue
+<template>
+  <v-app theme="dark">
+    <!-- All children inherit dark theme -->
+    <v-main>
+      <v-card>
+        <!-- Card uses dark theme -->
+      </v-card>
+    </v-main>
+  </v-app>
+</template>
+```
+
+## RTL Support
+
+VApp automatically handles RTL (right-to-left) layout when the locale is set to an RTL language:
+
+```vue
+<template>
+  <v-app>
+    <!-- Automatically applies RTL classes when needed -->
+    <v-main>
+      <!-- Content -->
+    </v-main>
+  </v-app>
+</template>
+```

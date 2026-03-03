@@ -1,0 +1,298 @@
+---
+title: VOverlay
+description: Overlay component for creating backdrop layers and popups
+---
+
+# VOverlay
+
+The `VOverlay` component is used to emphasize a particular element or parts of it. It provides a scrim layer and can be used as a foundation for components like dialogs, menus, and navigation drawers.
+
+## Usage
+
+The overlay is controlled by the `modelValue` prop.
+
+```vue
+<template>
+  <div>
+    <v-btn @click="overlay = !overlay">Toggle Overlay</v-btn>
+    
+    <v-overlay v-model="overlay">
+      <div class="text-center">
+        <p>Overlay Content</p>
+        <v-btn @click="overlay = false">Close</v-btn>
+      </div>
+    </v-overlay>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const overlay = ref(false)
+</script>
+```
+
+## Activator
+
+The `activator` slot allows you to bind the overlay trigger to a specific element.
+
+```vue
+<template>
+  <v-overlay>
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props">Show Overlay</v-btn>
+    </template>
+    
+    <v-card class="pa-4">
+      <p>Overlay content here</p>
+    </v-card>
+  </v-overlay>
+</template>
+```
+
+<Note>
+The activator slot provides `props` that should be bound to the trigger element to handle opening and closing.
+</Note>
+
+## Absolute and Contained
+
+The `absolute` prop positions the overlay absolutely within its parent, and `contained` keeps it within the parent boundaries.
+
+```vue
+<template>
+  <v-sheet height="400" class="position-relative">
+    <v-btn @click="overlay = true">Open Contained Overlay</v-btn>
+    
+    <v-overlay v-model="overlay" contained absolute>
+      <div class="text-center">
+        <p>This overlay is contained</p>
+        <v-btn @click="overlay = false">Close</v-btn>
+      </div>
+    </v-overlay>
+  </v-sheet>
+</template>
+```
+
+## Scrim
+
+The `scrim` prop controls the backdrop overlay. It can be disabled or set to a custom color.
+
+```vue
+<template>
+  <div>
+    <!-- No scrim -->
+    <v-overlay v-model="overlay1" :scrim="false">
+      <v-card>Content without scrim</v-card>
+    </v-overlay>
+    
+    <!-- Custom scrim color -->
+    <v-overlay v-model="overlay2" scrim="primary">
+      <v-card>Content with primary scrim</v-card>
+    </v-overlay>
+  </div>
+</template>
+```
+
+## Opacity
+
+Customize the overlay opacity with the `opacity` prop.
+
+```vue
+<template>
+  <v-overlay v-model="overlay" opacity="0.3">
+    <v-card>Low opacity overlay</v-card>
+  </v-overlay>
+</template>
+```
+
+## Persistent
+
+When `persistent` is enabled, clicking outside won't close the overlay.
+
+```vue
+<template>
+  <v-overlay v-model="overlay" persistent>
+    <v-card class="pa-4">
+      <p>Click outside won't close this</p>
+      <v-btn @click="overlay = false">Close</v-btn>
+    </v-card>
+  </v-overlay>
+</template>
+```
+
+<Note>
+Persistent overlays will show a bounce animation when clicked outside, providing visual feedback to users.
+</Note>
+
+## Location Strategies
+
+The overlay supports various location strategies for positioning content relative to the activator.
+
+```vue
+<template>
+  <v-overlay location-strategy="connected">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props">Connected Overlay</v-btn>
+    </template>
+    <v-card>Positioned relative to activator</v-card>
+  </v-overlay>
+</template>
+```
+
+## Scroll Strategies
+
+Control how the overlay behaves when the page scrolls.
+
+```vue
+<template>
+  <v-overlay scroll-strategy="block">
+    <!-- Blocks scrolling when overlay is open -->
+  </v-overlay>
+  
+  <v-overlay scroll-strategy="close">
+    <!-- Closes when user scrolls -->
+  </v-overlay>
+  
+  <v-overlay scroll-strategy="reposition">
+    <!-- Repositions when user scrolls -->
+  </v-overlay>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean" default="false">
+  Controls whether the overlay is visible.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+  Positions the overlay absolutely within its parent.
+</ParamField>
+
+<ParamField path="attach" type="boolean | string | Element">
+  Specifies which DOM element the overlay should detach to.
+</ParamField>
+
+<ParamField path="closeOnBack" type="boolean" default="true">
+  Closes the overlay when the browser back button is pressed.
+</ParamField>
+
+<ParamField path="contained" type="boolean" default="false">
+  Keeps the overlay contained within its parent element.
+</ParamField>
+
+<ParamField path="contentClass" type="any">
+  Applies a custom class to the overlay content.
+</ParamField>
+
+<ParamField path="contentProps" type="any">
+  Apply additional props to the overlay content element.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the overlay from opening.
+</ParamField>
+
+<ParamField path="opacity" type="number | string">
+  Sets the overlay opacity.
+</ParamField>
+
+<ParamField path="noClickAnimation" type="boolean" default="false">
+  Disables the bounce animation when clicking outside a persistent overlay.
+</ParamField>
+
+<ParamField path="persistent" type="boolean" default="false">
+  Clicking outside or pressing ESC will not dismiss the overlay.
+</ParamField>
+
+<ParamField path="scrim" type="boolean | string" default="true">
+  Controls the scrim (backdrop). Can be a boolean or color string.
+</ParamField>
+
+<ParamField path="zIndex" type="number | string" default="2000">
+  The z-index used for the overlay.
+</ParamField>
+
+<ParamField path="activator" type="string | Element">
+  Explicitly sets the activator element.
+</ParamField>
+
+<ParamField path="activatorProps" type="object">
+  Props to pass to the activator element.
+</ParamField>
+
+<ParamField path="openOnClick" type="boolean" default="true">
+  Opens the overlay when the activator is clicked.
+</ParamField>
+
+<ParamField path="openOnHover" type="boolean" default="false">
+  Opens the overlay when hovering over the activator.
+</ParamField>
+
+<ParamField path="openOnFocus" type="boolean" default="false">
+  Opens the overlay when the activator is focused.
+</ParamField>
+
+<ParamField path="openDelay" type="number | string">
+  Delay in milliseconds before the overlay opens.
+</ParamField>
+
+<ParamField path="closeDelay" type="number | string">
+  Delay in milliseconds before the overlay closes.
+</ParamField>
+
+<ParamField path="scrollStrategy" type="'none' | 'close' | 'block' | 'reposition'" default="block">
+  Strategy used when the overlay is open and scrolling.
+</ParamField>
+
+<ParamField path="locationStrategy" type="string">
+  Strategy for positioning the overlay. Options include `static`, `connected`.
+</ParamField>
+
+<ParamField path="location" type="string">
+  Specifies the anchor point of the overlay.
+</ParamField>
+
+<ParamField path="origin" type="string">
+  Sets the transition origin.
+</ParamField>
+
+<ParamField path="offset" type="number | string | number[]">
+  Offset the overlay from its position.
+</ParamField>
+
+<ParamField path="transition" type="string | object">
+  Sets the component transition.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ isActive: Ref<boolean> }">
+  The default Vue slot for overlay content.
+</ParamField>
+
+<ParamField path="activator" type="{ isActive: boolean, props: Record<string, any>, targetRef: TemplateRef }">
+  Slot for the activator element that triggers the overlay.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the overlay visibility changes.
+</ParamField>
+
+<ParamField path="click:outside" type="(e: MouseEvent) => void">
+  Emitted when clicking outside the overlay content.
+</ParamField>
+
+<ParamField path="keydown" type="(e: KeyboardEvent) => void">
+  Emitted when a key is pressed while the overlay is active.
+</ParamField>
+
+<ParamField path="afterEnter" type="() => void">
+  Emitted after the overlay transition has entered.
+</ParamField>
+
+<ParamField path="afterLeave" type="() => void">
+  Emitted after the overlay transition has left.
+</ParamField>

@@ -1,0 +1,135 @@
+---
+title: Installation
+description: Install Vuetify using your preferred package manager. Quick setup with Vite, Nuxt, or Laravel.
+---
+
+# Installation
+
+Get started with Vuetify by creating a new project or adding it to an existing Vue application.
+
+## Quick project scaffolding
+
+The fastest way to get started is using the official Vuetify scaffolding tool. Choose your preferred package manager and run the corresponding command:
+
+<CodeGroup>
+```bash pnpm
+pnpm create vuetify
+```
+
+```bash yarn
+yarn create vuetify
+```
+
+```bash npm
+npm create vuetify@latest
+```
+
+```bash bun
+bun create vuetify
+```
+</CodeGroup>
+
+The scaffolding tool will guide you through creating a new project with Vuetify pre-configured and ready to use.
+
+## Manual installation
+
+If you prefer to add Vuetify to an existing project, follow these steps:
+
+<Steps>
+  <Step title="Install the package">
+    Add Vuetify to your project using your package manager:
+
+    <CodeGroup>
+    ```bash pnpm
+    pnpm add vuetify
+    ```
+
+    ```bash yarn
+    yarn add vuetify
+    ```
+
+    ```bash npm
+    npm install vuetify
+    ```
+
+    ```bash bun
+    bun add vuetify
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Import styles and create Vuetify instance">
+    In your main entry file (typically `main.ts` or `main.js`), import Vuetify styles and create a Vuetify instance:
+
+    ```typescript
+    import { createApp } from 'vue'
+    import { createVuetify } from 'vuetify'
+    import 'vuetify/styles'
+    import App from './App.vue'
+
+    const vuetify = createVuetify({
+      // Configuration options
+    })
+
+    const app = createApp(App)
+    app.use(vuetify)
+    app.mount('#app')
+    ```
+  </Step>
+
+  <Step title="Configure your build tool (optional)">
+    For automatic component imports and tree-shaking, install the Vuetify plugin for your build tool:
+
+    <CodeGroup>
+    ```bash Vite
+    pnpm add -D vite-plugin-vuetify
+    ```
+
+    ```bash Webpack
+    pnpm add -D webpack-plugin-vuetify
+    ```
+    </CodeGroup>
+
+    Then configure it in your build config:
+
+    ```typescript vite.config.ts
+    import vuetify from 'vite-plugin-vuetify'
+
+    export default {
+      plugins: [
+        vuetify({ autoImport: true })
+      ]
+    }
+    ```
+  </Step>
+</Steps>
+
+## Framework integration
+
+### Nuxt
+
+For Nuxt projects, use the official Vuetify Nuxt module for seamless integration with auto-imports and SSR support.
+
+Visit the [official Vuetify installation guide](https://vuetifyjs.com/getting-started/installation/) for detailed Nuxt setup instructions.
+
+### Laravel
+
+Vuetify works great with Laravel and Inertia.js. After creating your Laravel project with Vue, follow the manual installation steps above to add Vuetify.
+
+Visit the [official Vuetify installation guide](https://vuetifyjs.com/getting-started/installation/) for detailed Laravel integration steps.
+
+## TypeScript support
+
+Vuetify has full TypeScript support built-in. When using TypeScript, ensure your project includes the types:
+
+```json tsconfig.json
+{
+  "compilerOptions": {
+    "types": ["vuetify"]
+  }
+}
+```
+
+## Next steps
+
+Now that Vuetify is installed, check out the [quick start guide](/quickstart) to build your first component.

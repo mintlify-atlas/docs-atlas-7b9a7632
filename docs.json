@@ -1,122 +1,242 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Vuetify",
+  "theme": "willow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1976D2",
+    "light": "#2196F3",
+    "dark": "#0D47A1"
   },
-  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/vuetifyjs/vuetify"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/vuetifyjs/vuetify"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
+              "introduction",
+              "installation",
               "quickstart",
-              "development"
+              "browser-support"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/framework-architecture",
+              "concepts/theme-system",
+              "concepts/responsive-layout",
+              "concepts/icons",
+              "concepts/internationalization"
             ]
           },
           {
             "group": "Customization",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "customization/sass-variables",
+              "customization/theme-configuration",
+              "customization/blueprints",
+              "customization/presets"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Advanced",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "advanced/treeshaking",
+              "advanced/ssr",
+              "advanced/date-adapters",
+              "advanced/accessibility"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Migration",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "migration/upgrading-to-v4",
+              "migration/long-term-support"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Components",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Layout",
             "pages": [
-              "api-reference/introduction"
+              "components/app",
+              "components/app-bar",
+              "components/bottom-navigation",
+              "components/footer",
+              "components/grid",
+              "components/navigation-drawer",
+              "components/toolbar"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Form Inputs",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "components/autocomplete",
+              "components/checkbox",
+              "components/combobox",
+              "components/file-input",
+              "components/forms",
+              "components/radio",
+              "components/select",
+              "components/slider",
+              "components/switch",
+              "components/textarea",
+              "components/text-field"
+            ]
+          },
+          {
+            "group": "Buttons & Controls",
+            "pages": [
+              "components/btn",
+              "components/btn-group",
+              "components/btn-toggle",
+              "components/fab",
+              "components/icon",
+              "components/speed-dial"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/avatar",
+              "components/badge",
+              "components/banner",
+              "components/card",
+              "components/chip",
+              "components/data-table",
+              "components/divider",
+              "components/list",
+              "components/tooltip",
+              "components/timeline"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/breadcrumbs",
+              "components/menu",
+              "components/pagination",
+              "components/stepper",
+              "components/tabs"
+            ]
+          },
+          {
+            "group": "Feedback",
+            "pages": [
+              "components/alert",
+              "components/dialog",
+              "components/overlay",
+              "components/progress-circular",
+              "components/progress-linear",
+              "components/snackbar",
+              "components/skeleton-loader"
+            ]
+          },
+          {
+            "group": "Pickers",
+            "pages": [
+              "components/calendar",
+              "components/color-picker",
+              "components/date-picker",
+              "components/time-picker"
+            ]
+          },
+          {
+            "group": "Media",
+            "pages": [
+              "components/carousel",
+              "components/image",
+              "components/parallax"
+            ]
+          },
+          {
+            "group": "Labs (Experimental)",
+            "pages": [
+              "components/labs-overview",
+              "components/avatar-group",
+              "components/color-input",
+              "components/command-palette",
+              "components/date-input",
+              "components/file-upload",
+              "components/icon-btn",
+              "components/mask-input"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Composables",
+            "pages": [
+              "api/composables/theme",
+              "api/composables/display",
+              "api/composables/locale",
+              "api/composables/icons",
+              "api/composables/defaults",
+              "api/composables/date",
+              "api/composables/goto"
+            ]
+          },
+          {
+            "group": "Directives",
+            "pages": [
+              "api/directives/click-outside",
+              "api/directives/intersect",
+              "api/directives/resize",
+              "api/directives/ripple",
+              "api/directives/scroll",
+              "api/directives/tooltip",
+              "api/directives/touch"
+            ]
+          },
+          {
+            "group": "Utilities",
+            "pages": [
+              "api/utilities/colors",
+              "api/utilities/transitions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Community",
+            "pages": [
+              "resources/contributing",
+              "resources/support",
+              "resources/ecosystem",
+              "resources/sponsorship"
+            ]
+          },
+          {
+            "group": "Releases",
+            "pages": [
+              "resources/changelog",
+              "resources/roadmap"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

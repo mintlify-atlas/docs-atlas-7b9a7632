@@ -1,0 +1,312 @@
+---
+title: VForm
+description: Form component for validation and form state management
+---
+
+# VForm
+
+The `VForm` component provides form validation, state management, and coordination of form inputs. It works with all Vuetify input components that support validation.
+
+## Basic Usage
+
+```vue
+<template>
+  <VForm v-model="valid" @submit.prevent="onSubmit">
+    <VTextField
+      v-model="name"
+      label="Name"
+      :rules="[v => !!v || 'Name is required']"
+    />
+    
+    <VTextField
+      v-model="email"
+      label="Email"
+      :rules="emailRules"
+    />
+    
+    <VBtn
+      type="submit"
+      :disabled="!valid"
+    >
+      Submit
+    </VBtn>
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const valid = ref(false)
+const name = ref('')
+const email = ref('')
+
+const emailRules = [
+  v => !!v || 'Email is required',
+  v => /.+@.+\..+/.test(v) || 'Email must be valid',
+]
+
+function onSubmit() {
+  if (valid.value) {
+    console.log('Form submitted', { name: name.value, email: email.value })
+  }
+}
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean | null">
+  The validation state of the form. `true` when all fields are valid, `false` when any field is invalid, `null` when fields haven't been validated yet.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable all form inputs.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make all form inputs readonly.
+</ParamField>
+
+<ParamField path="fastFail" type="boolean" default="false">
+  Stop validation at the first error instead of validating all fields.
+</ParamField>
+
+<ParamField path="validateOn" type="'input' | 'blur' | 'submit'" default="input">
+  When to trigger validation on form inputs.
+</ParamField>
+
+## Validation Rules
+
+Validation rules are functions that return `true` when valid or an error message string when invalid:
+
+```vue
+<template>
+  <VForm v-model="valid">
+    <VTextField
+      v-model="username"
+      label="Username"
+      :rules="usernameRules"
+    />
+    
+    <VTextField
+      v-model="password"
+      label="Password"
+      type="password"
+      :rules="passwordRules"
+    />
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const valid = ref(false)
+const username = ref('')
+const password = ref('')
+
+const usernameRules = [
+  v => !!v || 'Username is required',
+  v => (v && v.length >= 3) || 'Username must be at least 3 characters',
+  v => /^[a-zA-Z0-9_]+$/.test(v) || 'Username must be alphanumeric',
+]
+
+const passwordRules = [
+  v => !!v || 'Password is required',
+  v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+  v => /[A-Z]/.test(v) || 'Password must contain an uppercase letter',
+  v => /[0-9]/.test(v) || 'Password must contain a number',
+]
+</script>
+```
+
+## Manual Validation
+
+You can manually trigger validation using a template ref:
+
+```vue
+<template>
+  <VForm ref="form" v-model="valid">
+    <VTextField
+      v-model="email"
+      label="Email"
+      :rules="emailRules"
+    />
+    
+    <VBtn @click="validate">Validate</VBtn>
+    <VBtn @click="reset">Reset</VBtn>
+    <VBtn @click="resetValidation">Reset Validation</VBtn>
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const form = ref(null)
+const valid = ref(false)
+const email = ref('')
+
+const emailRules = [
+  v => !!v || 'Email is required',
+  v => /.+@.+\..+/.test(v) || 'Email must be valid',
+]
+
+async function validate() {
+  const { valid } = await form.value.validate()
+  console.log('Form is valid:', valid)
+}
+
+function reset() {
+  form.value.reset()
+}
+
+function resetValidation() {
+  form.value.resetValidation()
+}
+</script>
+```
+
+## Form Submission
+
+The form emits a special submit event that includes the validation promise:
+
+```vue
+<template>
+  <VForm @submit="onSubmit">
+    <VTextField
+      v-model="name"
+      label="Name"
+      :rules="[v => !!v || 'Required']"
+    />
+    
+    <VBtn type="submit">Submit</VBtn>
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const name = ref('')
+
+async function onSubmit(event) {
+  // The event has been augmented with validation promise methods
+  const { valid } = await event
+  
+  if (valid) {
+    console.log('Form is valid, submitting...')
+    // Submit form data
+  } else {
+    console.log('Form has errors')
+  }
+}
+</script>
+```
+
+## Fast Fail
+
+Stop validation at the first error for better performance with large forms:
+
+```vue
+<template>
+  <VForm v-model="valid" fast-fail>
+    <!-- Validation will stop at first error -->
+    <VTextField
+      v-for="i in 50"
+      :key="i"
+      :label="`Field ${i}`"
+      :rules="[v => !!v || 'Required']"
+    />
+  </VForm>
+</template>
+```
+
+## Validation Timing
+
+Control when validation runs:
+
+```vue
+<template>
+  <div>
+    <!-- Validate on input (default) -->
+    <VForm validate-on="input">
+      <VTextField label="Validates on input" />
+    </VForm>
+    
+    <!-- Validate on blur -->
+    <VForm validate-on="blur">
+      <VTextField label="Validates on blur" />
+    </VForm>
+    
+    <!-- Validate only on submit -->
+    <VForm validate-on="submit">
+      <VTextField label="Validates on submit" />
+    </VForm>
+  </div>
+</template>
+```
+
+## Nested Forms
+
+Form inputs can be nested in components and will still be registered:
+
+```vue
+<!-- UserForm.vue -->
+<template>
+  <VForm v-model="valid">
+    <UserFields />
+    <AddressFields />
+    
+    <VBtn
+      type="submit"
+      :disabled="!valid"
+    >
+      Submit
+    </VBtn>
+  </VForm>
+</template>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(valid: boolean | null) => void">
+  Emitted when the form validation state changes.
+</ParamField>
+
+<ParamField path="submit" type="(e: SubmitEventPromise) => void">
+  Emitted when the form is submitted. The event object includes validation promise methods.
+</ParamField>
+
+## Methods
+
+<ParamField path="validate" type="() => Promise<FormValidationResult>">
+  Validates all form inputs and returns a promise with the result.
+</ParamField>
+
+<ParamField path="reset" type="() => void">
+  Resets all form inputs to their initial values.
+</ParamField>
+
+<ParamField path="resetValidation" type="() => void">
+  Clears validation errors without resetting input values.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ errors, isDisabled, isReadonly, isValidating, isValid, items, validate, reset, resetValidation }">
+  The default slot provides access to form state and methods.
+</ParamField>
+
+## Composable: useForm
+
+The `useForm` composable allows child components to access the parent form's state:
+
+```typescript
+import { useForm } from 'vuetify'
+
+const form = useForm()
+
+// Access form state
+const isDisabled = form.isDisabled
+const isReadonly = form.isReadonly
+```
+
+Source: `~/workspace/source/packages/vuetify/src/composables/form.ts:195`

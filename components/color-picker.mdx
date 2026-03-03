@@ -1,0 +1,160 @@
+---
+title: Color Picker
+description: The VColorPicker component provides an interactive interface for selecting colors with support for multiple color formats and swatches.
+---
+
+# Color Picker
+
+The VColorPicker component allows users to select colors using a visual color canvas, sliders, and various input modes.
+
+## Usage
+
+```vue
+<template>
+  <v-color-picker
+    v-model="color"
+    mode="rgba"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#FF5252')
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="string | object">
+  The selected color value. Can be a color string or object.
+</ParamField>
+
+<ParamField path="mode" type="string" default="rgba">
+  Color input mode. Options: `rgba`, `rgb`, `hsla`, `hsl`, `hexa`, `hex`.
+</ParamField>
+
+<ParamField path="modes" type="string[]" default="['rgba', 'rgb', 'hsla', 'hsl', 'hexa', 'hex']">
+  Available color modes that users can switch between.
+</ParamField>
+
+<ParamField path="canvasHeight" type="string | number" default="150">
+  Height of the color canvas in pixels.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the color picker.
+</ParamField>
+
+<ParamField path="dotSize" type="number | string" default="10">
+  Size of the color selector dot on the canvas.
+</ParamField>
+
+<ParamField path="hideCanvas" type="boolean" default="false">
+  Hides the color selection canvas.
+</ParamField>
+
+<ParamField path="hideSliders" type="boolean" default="false">
+  Hides the hue and alpha sliders.
+</ParamField>
+
+<ParamField path="hideInputs" type="boolean" default="false">
+  Hides the color value input fields.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the color picker read-only.
+</ParamField>
+
+<ParamField path="showSwatches" type="boolean" default="false">
+  Displays color swatches for quick selection.
+</ParamField>
+
+<ParamField path="swatches" type="Color[][]">
+  Array of color swatches to display.
+</ParamField>
+
+<ParamField path="swatchesMaxHeight" type="number | string" default="150">
+  Maximum height of the swatches section.
+</ParamField>
+
+<ParamField path="hideEyeDropper" type="boolean" default="false">
+  Hides the eye dropper tool.
+</ParamField>
+
+<ParamField path="eyeDropperIcon" type="string">
+  Custom icon for the eye dropper tool.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(color: any) => void">
+  Emitted when the color value changes.
+</ParamField>
+
+<ParamField path="update:mode" type="(mode: string) => void">
+  Emitted when the color mode changes.
+</ParamField>
+
+## Examples
+
+### With Swatches
+
+```vue
+<template>
+  <v-color-picker
+    v-model="color"
+    show-swatches
+    :swatches="swatches"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#FF5252')
+const swatches = [
+  ['#FF0000', '#AA0000', '#550000'],
+  ['#00FF00', '#00AA00', '#005500'],
+  ['#0000FF', '#0000AA', '#000055']
+]
+</script>
+```
+
+### Compact Mode
+
+```vue
+<template>
+  <v-color-picker
+    v-model="color"
+    hide-canvas
+    hide-sliders
+    show-swatches
+  />
+</template>
+```
+
+### HSL Mode
+
+```vue
+<template>
+  <v-color-picker
+    v-model="color"
+    mode="hsl"
+    :modes="['hsl', 'hsla']"
+  />
+</template>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <v-color-picker
+    v-model="color"
+    disabled
+  />
+</template>
+```

@@ -1,0 +1,218 @@
+---
+title: Image
+description: The VImg component provides advanced image loading with lazy loading, aspect ratio, transitions, and error handling.
+---
+
+# Image
+
+The VImg component is a powerful image container that handles loading states, aspect ratios, lazy loading, and provides slots for customization.
+
+## Usage
+
+```vue
+<template>
+  <v-img
+    src="https://picsum.photos/500/300"
+    alt="Sample Image"
+    cover
+  />
+</template>
+```
+
+## API
+
+### Props
+
+<ParamField path="src" type="string | srcObject">
+  The image source URL or source object with src, srcset, and lazySrc properties.
+</ParamField>
+
+<ParamField path="alt" type="string">
+  Alt text for the image (important for accessibility).
+</ParamField>
+
+<ParamField path="cover" type="boolean" default="false">
+  Resizes the image to cover the entire container (object-fit: cover).
+</ParamField>
+
+<ParamField path="aspectRatio" type="number | string">
+  Calculated as width/height. Forces the image to maintain a specific aspect ratio.
+</ParamField>
+
+<ParamField path="lazySrc" type="string">
+  Low-resolution image to display while the main image loads.
+</ParamField>
+
+<ParamField path="eager" type="boolean" default="false">
+  Forces the image to load immediately instead of lazy loading.
+</ParamField>
+
+<ParamField path="gradient" type="string">
+  CSS gradient overlay applied on top of the image.
+</ParamField>
+
+<ParamField path="position" type="string">
+  CSS object-position value for the image.
+</ParamField>
+
+<ParamField path="sizes" type="string">
+  The sizes attribute for responsive images.
+</ParamField>
+
+<ParamField path="srcset" type="string">
+  The srcset attribute for responsive images.
+</ParamField>
+
+<ParamField path="crossorigin" type="'' | 'anonymous' | 'use-credentials'">
+  The crossorigin attribute for CORS.
+</ParamField>
+
+<ParamField path="referrerpolicy" type="string">
+  The referrerpolicy attribute for the image.
+</ParamField>
+
+<ParamField path="draggable" type="boolean | 'true' | 'false'">
+  Controls whether the image is draggable.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+  Positions the image absolutely within its container.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Background color displayed while the image is loading.
+</ParamField>
+
+<ParamField path="options" type="IntersectionObserverInit">
+  Options passed to the Intersection Observer for lazy loading.
+</ParamField>
+
+<ParamField path="transition" type="string | boolean">
+  The transition to use when the image loads.
+</ParamField>
+
+### Events
+
+<ParamField path="loadstart" type="(src: string) => void">
+  Emitted when the image starts loading.
+</ParamField>
+
+<ParamField path="load" type="(src: string) => void">
+  Emitted when the image has finished loading.
+</ParamField>
+
+<ParamField path="error" type="(src: string) => void">
+  Emitted when the image fails to load.
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Default content displayed over the image.
+</ParamField>
+
+<ParamField path="placeholder">
+  Content displayed while the image is loading.
+</ParamField>
+
+<ParamField path="error">
+  Content displayed when the image fails to load.
+</ParamField>
+
+<ParamField path="sources">
+  Slot for adding source elements for the picture element.
+</ParamField>
+
+## Examples
+
+### Aspect Ratio
+
+```vue
+<template>
+  <v-img
+    src="https://picsum.photos/1920/1080"
+    aspect-ratio="16/9"
+  />
+</template>
+```
+
+### Lazy Loading with Placeholder
+
+```vue
+<template>
+  <v-img
+    src="https://picsum.photos/500/300"
+    lazy-src="https://picsum.photos/10/6"
+  >
+    <template #placeholder>
+      <div class="d-flex align-center justify-center fill-height">
+        <v-progress-circular indeterminate />
+      </div>
+    </template>
+  </v-img>
+</template>
+```
+
+### With Gradient
+
+```vue
+<template>
+  <v-img
+    src="https://picsum.photos/500/300"
+    gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+    cover
+  >
+    <div class="fill-height d-flex align-end">
+      <h2 class="text-white pa-4">Gradient Overlay</h2>
+    </div>
+  </v-img>
+</template>
+```
+
+### Error Handling
+
+```vue
+<template>
+  <v-img
+    src="invalid-url.jpg"
+    @error="handleError"
+  >
+    <template #error>
+      <div class="d-flex align-center justify-center fill-height">
+        <v-icon size="64" color="error">mdi-image-broken</v-icon>
+      </div>
+    </template>
+  </v-img>
+</template>
+
+<script setup>
+function handleError(src) {
+  console.error('Failed to load image:', src)
+}
+</script>
+```
+
+### Responsive Images
+
+```vue
+<template>
+  <v-img
+    src="image-800.jpg"
+    srcset="image-400.jpg 400w, image-800.jpg 800w, image-1200.jpg 1200w"
+    sizes="(max-width: 600px) 400px, (max-width: 960px) 800px, 1200px"
+  />
+</template>
+```
+
+### Picture Element with Sources
+
+```vue
+<template>
+  <v-img src="fallback.jpg">
+    <template #sources>
+      <source srcset="image.webp" type="image/webp">
+      <source srcset="image.jpg" type="image/jpeg">
+    </template>
+  </v-img>
+</template>
+```

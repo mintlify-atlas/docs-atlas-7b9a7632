@@ -1,0 +1,226 @@
+---
+title: Color Input
+description: The VColorInput component combines a text field with a color picker for seamless color selection and input.
+---
+
+# Color Input
+
+<Warning>
+  This is a **Labs component**. The API may change in future releases. Import from `vuetify/labs/VColorInput`.
+</Warning>
+
+The VColorInput component provides a text field with an integrated color picker, allowing users to type color values or use a visual picker.
+
+## Usage
+
+```vue
+<template>
+  <v-color-input
+    v-model="color"
+    label="Select Color"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VColorInput } from 'vuetify/labs/VColorInput'
+
+const color = ref('#FF5252')
+</script>
+```
+
+## API
+
+### Props
+
+Inherits all VTextField and VColorPicker props, plus:
+
+<ParamField path="modelValue" type="string">
+  The selected color value.
+</ParamField>
+
+<ParamField path="hidePip" type="boolean" default="false">
+  Hides the color indicator pip.
+</ParamField>
+
+<ParamField path="colorPip" type="boolean" default="false">
+  Colors the pip with the selected color.
+</ParamField>
+
+<ParamField path="pipIcon" type="string" default="$color">
+  Icon displayed in the color pip.
+</ParamField>
+
+<ParamField path="pipLocation" type="string" default="prepend">
+  Location of the color pip. Options: `prepend`, `prepend-inner`, `append`, `append-inner`.
+</ParamField>
+
+<ParamField path="pipVariant" type="string" default="text">
+  Variant style for the pip avatar.
+</ParamField>
+
+<ParamField path="menuProps" type="object">
+  Props passed to the internal VMenu component.
+</ParamField>
+
+<ParamField path="pickerProps" type="object">
+  Props passed to the internal VColorPicker component.
+</ParamField>
+
+<ParamField path="hideActions" type="boolean" default="false">
+  Hides the save/cancel action buttons.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(value: string) => void">
+  Emitted when the color value changes.
+</ParamField>
+
+### Slots
+
+Inherits all VTextField slots, plus:
+
+<ParamField path="actions" type="{ save, cancel, isPristine }">
+  Customize the action buttons in the color picker.
+</ParamField>
+
+## Examples
+
+### With Color Pip
+
+```vue
+<template>
+  <v-color-input
+    v-model="color"
+    label="Background Color"
+    color-pip
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VColorInput } from 'vuetify/labs/VColorInput'
+
+const color = ref('#1976D2')
+</script>
+```
+
+### Custom Picker Props
+
+```vue
+<template>
+  <v-color-input
+    v-model="color"
+    label="Color"
+    :picker-props="{
+      showSwatches: true,
+      mode: 'hex'
+    }"
+  />
+</template>
+```
+
+### Without Actions
+
+```vue
+<template>
+  <v-color-input
+    v-model="color"
+    label="Quick Color"
+    hide-actions
+  />
+</template>
+```
+
+### Different Pip Locations
+
+```vue
+<template>
+  <div class="d-flex flex-column ga-4">
+    <v-color-input
+      v-model="color1"
+      label="Prepend"
+      pip-location="prepend"
+      color-pip
+    />
+    <v-color-input
+      v-model="color2"
+      label="Prepend Inner"
+      pip-location="prepend-inner"
+      color-pip
+    />
+    <v-color-input
+      v-model="color3"
+      label="Append"
+      pip-location="append"
+      color-pip
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VColorInput } from 'vuetify/labs/VColorInput'
+
+const color1 = ref('#FF5252')
+const color2 = ref('#4CAF50')
+const color3 = ref('#2196F3')
+</script>
+```
+
+### Custom Actions
+
+```vue
+<template>
+  <v-color-input v-model="color" label="Color">
+    <template #actions="{ save, cancel }">
+      <v-btn @click="cancel" text="Cancel" />
+      <v-btn @click="save" color="primary" text="Apply" />
+    </template>
+  </v-color-input>
+</template>
+```
+
+### With Validation
+
+```vue
+<template>
+  <v-color-input
+    v-model="color"
+    label="Theme Color"
+    :rules="[rules.required, rules.hex]"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { VColorInput } from 'vuetify/labs/VColorInput'
+
+const color = ref('')
+
+const rules = {
+  required: value => !!value || 'Color is required',
+  hex: value => /^#[0-9A-F]{6}$/i.test(value) || 'Invalid hex color'
+}
+</script>
+```
+
+### Disabled and Readonly
+
+```vue
+<template>
+  <div class="d-flex flex-column ga-4">
+    <v-color-input
+      v-model="color"
+      label="Disabled"
+      disabled
+    />
+    <v-color-input
+      v-model="color"
+      label="Readonly"
+      readonly
+    />
+  </div>
+</template>
+```

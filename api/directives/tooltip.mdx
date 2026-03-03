@@ -1,0 +1,397 @@
+---
+title: v-tooltip
+description: Directive for adding tooltips to elements
+---
+
+## Overview
+
+The `v-tooltip` directive provides a convenient way to add tooltips to any element without using the VTooltip component. It creates a tooltip that appears on hover.
+
+## Import
+
+```typescript
+import { Tooltip } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Tooltip } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('tooltip', Tooltip)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Tooltip } from 'vuetify/directives'
+
+const vTooltip = Tooltip
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Simple text tooltip -->
+<button v-tooltip="'Tooltip text'">Hover me</button>
+
+<!-- With location -->
+<button v-tooltip:top="'Top tooltip'">Hover me</button>
+
+<!-- With configuration -->
+<button v-tooltip="{ text: 'Tooltip', ...props }">Hover me</button>
+
+<!-- Disabled tooltip -->
+<button v-tooltip="false">No tooltip</button>
+```
+
+## Value Types
+
+### String
+
+```typescript
+v-tooltip="'Tooltip text'"
+```
+
+### Boolean
+
+```typescript
+v-tooltip="true"   // Empty tooltip (not shown)
+v-tooltip="false"  // Disabled
+```
+
+### Object Configuration
+
+```typescript
+v-tooltip="{
+  text: string
+  // Any VTooltip component props
+}"
+```
+
+## Arguments
+
+<ParamField path="arg" type="Anchor">
+  Tooltip location/anchor position. Values:
+  - `top`
+  - `bottom`
+  - `left`
+  - `right`
+  - `start`
+  - `end`
+  - `top-start`, `top-end`
+  - `bottom-start`, `bottom-end`
+  - And more positioning options
+</ParamField>
+
+## Usage Examples
+
+### Basic Tooltip
+
+```vue
+<template>
+  <v-btn v-tooltip="'Click to submit'">
+    Submit
+  </v-btn>
+</template>
+```
+
+### Positioned Tooltips
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-btn v-tooltip:top="'Top tooltip'">Top</v-btn>
+    <v-btn v-tooltip:bottom="'Bottom tooltip'">Bottom</v-btn>
+    <v-btn v-tooltip:left="'Left tooltip'">Left</v-btn>
+    <v-btn v-tooltip:right="'Right tooltip'">Right</v-btn>
+  </div>
+</template>
+```
+
+### Icon Tooltips
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-icon v-tooltip="'Delete'" @click="handleDelete">
+      mdi-delete
+    </v-icon>
+    <v-icon v-tooltip="'Edit'" @click="handleEdit">
+      mdi-pencil
+    </v-icon>
+    <v-icon v-tooltip="'Share'" @click="handleShare">
+      mdi-share
+    </v-icon>
+  </div>
+</template>
+
+<script setup>
+function handleDelete() {}
+function handleEdit() {}
+function handleShare() {}
+</script>
+```
+
+### Conditional Tooltip
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+
+const disabled = ref(false)
+const tooltipText = computed(() => 
+  disabled.value ? 'Button is disabled' : 'Click me'
+)
+</script>
+
+<template>
+  <v-btn 
+    :disabled="disabled" 
+    v-tooltip="tooltipText"
+  >
+    Button
+  </v-btn>
+</template>
+```
+
+### Dynamic Tooltip Text
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref([
+  { name: 'Home', icon: 'mdi-home', tooltip: 'Go to homepage' },
+  { name: 'Settings', icon: 'mdi-cog', tooltip: 'Open settings' },
+  { name: 'Profile', icon: 'mdi-account', tooltip: 'View profile' },
+])
+</script>
+
+<template>
+  <v-list>
+    <v-list-item 
+      v-for="item in items" 
+      :key="item.name"
+      v-tooltip:right="item.tooltip"
+    >
+      <template #prepend>
+        <v-icon>{{ item.icon }}</v-icon>
+      </template>
+      <v-list-item-title>{{ item.name }}</v-list-item-title>
+    </v-list-item>
+  </v-list>
+</template>
+```
+
+### Disabled State
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const showTooltips = ref(true)
+</script>
+
+<template>
+  <div>
+    <v-switch v-model="showTooltips" label="Show Tooltips" />
+    
+    <v-btn v-tooltip="showTooltips ? 'Button tooltip' : false">
+      Hover me
+    </v-btn>
+  </div>
+</template>
+```
+
+### Truncated Text Tooltip
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const longText = 'This is a very long text that will be truncated in the UI'
+</script>
+
+<template>
+  <div 
+    v-tooltip="longText"
+    style="
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    "
+  >
+    {{ longText }}
+  </div>
+</template>
+```
+
+### Data Table Actions
+
+```vue
+<template>
+  <v-data-table :items="items" :headers="headers">
+    <template #item.actions="{ item }">
+      <v-icon 
+        v-tooltip="'Edit'"
+        size="small" 
+        @click="edit(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon 
+        v-tooltip="'Delete'"
+        size="small" 
+        @click="remove(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+  </v-data-table>
+</template>
+
+<script setup>
+const items = []
+const headers = []
+
+function edit(item: any) {}
+function remove(item: any) {}
+</script>
+```
+
+### Multiline Tooltip
+
+```vue
+<template>
+  <v-btn v-tooltip="'Line 1\nLine 2\nLine 3'">
+    Multiline
+  </v-btn>
+</template>
+```
+
+### Custom Configuration
+
+```vue
+<template>
+  <v-btn
+    v-tooltip="{
+      text: 'Custom tooltip',
+      location: 'top',
+      openDelay: 500,
+      closeDelay: 200
+    }"
+  >
+    Hover me
+  </v-btn>
+</template>
+```
+
+### Disabled Button with Tooltip
+
+```vue
+<template>
+  <!-- Wrap disabled button in div for tooltip to work -->
+  <div v-tooltip="'This action is not available'">
+    <v-btn disabled>
+      Disabled
+    </v-btn>
+  </div>
+</template>
+```
+
+### Form Field Hints
+
+```vue
+<template>
+  <v-text-field label="Username">
+    <template #append>
+      <v-icon v-tooltip="'Username must be 3-20 characters'">
+        mdi-help-circle-outline
+      </v-icon>
+    </template>
+  </v-text-field>
+</template>
+```
+
+### Card Actions
+
+```vue
+<template>
+  <v-card>
+    <v-card-title>Card Title</v-card-title>
+    <v-card-actions>
+      <v-btn 
+        icon
+        v-tooltip:bottom="'Add to favorites'"
+      >
+        <v-icon>mdi-heart-outline</v-icon>
+      </v-btn>
+      <v-btn 
+        icon
+        v-tooltip:bottom="'Share'"
+      >
+        <v-icon>mdi-share-variant</v-icon>
+      </v-btn>
+      <v-btn 
+        icon
+        v-tooltip:bottom="'More options'"
+      >
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+## VTooltip Props Support
+
+When using object configuration, you can pass any VTooltip component prop:
+
+```vue
+<template>
+  <v-btn
+    v-tooltip="{
+      text: 'Tooltip text',
+      location: 'top',
+      openDelay: 300,
+      closeDelay: 100,
+      maxWidth: 200,
+      contentClass: 'custom-tooltip'
+    }"
+  >
+    Button
+  </v-btn>
+</template>
+```
+
+Available props include:
+- `location` - Tooltip position
+- `openDelay` - Delay before opening (ms)
+- `closeDelay` - Delay before closing (ms)
+- `maxWidth` - Maximum tooltip width
+- `contentClass` - Custom CSS class
+- And all other VTooltip props
+
+## Notes
+
+- Tooltip appears on hover by default
+- Activator is set to 'parent' automatically
+- Empty strings, `false`, and `null` disable the tooltip
+- `undefined` is treated as `true` (shows empty tooltip, not recommended)
+- Location argument is converted from kebab-case to space-separated (e.g., `top-start` becomes `top start`)
+- Works with any element, not just Vuetify components
+- Tooltip is automatically removed when element is unmounted
+
+## See Also
+
+- [VTooltip Component](/api/components/v-tooltip)
+- [v-hover](/api/directives/hover)
+- [Tooltips Guide](/features/tooltips)

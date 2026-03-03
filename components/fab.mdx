@@ -1,0 +1,288 @@
+---
+title: VFab
+description: Floating Action Button component for primary actions
+---
+
+# VFab
+
+The `VFab` component is a floating action button that can be positioned on the screen. It extends `VBtn` with positioning and layout capabilities.
+
+## Basic Usage
+
+```vue
+<template>
+  <VFab icon="mdi-plus" />
+</template>
+```
+
+## Positioning
+
+```vue
+<template>
+  <!-- Bottom right (default) -->
+  <VFab icon="mdi-plus" location="bottom end" />
+  
+  <!-- Bottom left -->
+  <VFab icon="mdi-plus" location="bottom start" />
+  
+  <!-- Top right -->
+  <VFab icon="mdi-plus" location="top end" />
+  
+  <!-- Top left -->
+  <VFab icon="mdi-plus" location="top start" />
+</template>
+```
+
+## Extended FAB
+
+```vue
+<template>
+  <VFab extended icon="mdi-plus">
+    Create New
+  </VFab>
+</template>
+```
+
+## App Integration
+
+```vue
+<template>
+  <!-- Integrated with app layout -->
+  <VFab app icon="mdi-plus" location="bottom end" />
+</template>
+```
+
+## Props
+
+<ParamField path="app" type="boolean" default="false">
+  Integrates with Vuetify's application layout system
+</ParamField>
+
+<ParamField path="appear" type="boolean" default="false">
+  Applies transition on initial render
+</ParamField>
+
+<ParamField path="extended" type="boolean" default="false">
+  Extends the FAB to show text alongside the icon
+</ParamField>
+
+<ParamField path="layout" type="boolean" default="false">
+  Affects the layout size when positioned with `app`
+</ParamField>
+
+<ParamField path="offset" type="boolean" default="false">
+  Applies additional offset from the edge
+</ParamField>
+
+<ParamField path="modelValue" type="boolean" default="true">
+  Controls visibility of the FAB
+</ParamField>
+
+<ParamField path="location" type="string">
+  Position on screen. Format: `[top|bottom] [start|end|center]`
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+  Uses absolute positioning instead of fixed
+</ParamField>
+
+<ParamField path="transition" type="string" default="fab-transition">
+  Transition to use when showing/hiding
+</ParamField>
+
+<ParamField path="active" type="boolean" default="true">
+  Controls whether FAB is active/visible
+</ParamField>
+
+<ParamField path="color" type="string">
+  Button color
+</ParamField>
+
+<ParamField path="size" type="string">
+  Button size. Options: `x-small`, `small`, `default`, `large`, `x-large`
+</ParamField>
+
+<ParamField path="icon" type="string | IconValue">
+  Icon to display in the FAB
+</ParamField>
+
+<ParamField path="variant" type="string" default="elevated">
+  Visual style variant. Options: `elevated`, `flat`, `outlined`, `text`, `tonal`, `plain`
+</ParamField>
+
+<ParamField path="order" type="string | number">
+  Layout order when using `app`
+</ParamField>
+
+<ParamField path="name" type="string">
+  Identifier for the layout item when using `app`
+</ParamField>
+
+## VBtn Props
+
+The `VFab` component accepts all props from `VBtn` except `location` and `spaced`:
+
+- `rounded`
+- `elevation`
+- `ripple`
+- `disabled`
+- `loading`
+- `theme`
+- And all other VBtn props
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when visibility changes
+  
+  **Payload:** `boolean` - The new visibility state
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  FAB content (text when extended)
+</ParamField>
+
+Inherits all slots from VBtn:
+- `prepend`
+- `append`
+- `loader`
+
+## Examples
+
+### Controlled Visibility
+
+```vue
+<template>
+  <div>
+    <VBtn @click="showFab = !showFab">
+      Toggle FAB
+    </VBtn>
+    
+    <VFab 
+      v-model="showFab"
+      icon="mdi-plus" 
+      location="bottom end"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const showFab = ref(true)
+</script>
+```
+
+### Extended with Icon
+
+```vue
+<template>
+  <VFab 
+    extended 
+    icon="mdi-pencil"
+    color="primary"
+    location="bottom end"
+  >
+    Edit
+  </VFab>
+</template>
+```
+
+### Multiple Sizes
+
+```vue
+<template>
+  <VFab icon="mdi-plus" size="small" location="bottom start" />
+  <VFab icon="mdi-plus" size="default" location="bottom center" />
+  <VFab icon="mdi-plus" size="large" location="bottom end" />
+</template>
+```
+
+### With Offset
+
+```vue
+<template>
+  <VFab 
+    icon="mdi-plus"
+    offset
+    location="bottom end"
+    color="secondary"
+  />
+</template>
+```
+
+### Custom Transition
+
+```vue
+<template>
+  <VFab 
+    v-model="show"
+    icon="mdi-heart"
+    transition="scale-transition"
+    appear
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+</script>
+```
+
+### App Layout Integration
+
+```vue
+<template>
+  <VLayout>
+    <VAppBar />
+    
+    <VMain>
+      <!-- Page content -->
+    </VMain>
+    
+    <VFab 
+      app
+      icon="mdi-plus"
+      location="bottom end"
+      layout
+    />
+  </VLayout>
+</template>
+```
+
+### With Loading State
+
+```vue
+<template>
+  <VFab 
+    icon="mdi-content-save"
+    :loading="saving"
+    @click="save"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const saving = ref(false)
+
+function save() {
+  saving.value = true
+  // Perform save operation
+  setTimeout(() => {
+    saving.value = false
+  }, 2000)
+}
+</script>
+```
+
+## Notes
+
+- The FAB uses `position: fixed` by default (or `absolute` when `absolute` prop is true)
+- When using `app`, the FAB integrates with Vuetify's layout system
+- The `layout` prop determines if the FAB affects the layout size (adds padding)
+- Extended FABs automatically size to fit their content
+- Default transition is `fab-transition` which provides a scale and fade effect

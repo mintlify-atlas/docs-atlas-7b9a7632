@@ -1,0 +1,297 @@
+---
+title: Tooltip
+description: The VTooltip component displays helpful information when users hover over, focus on, or tap an element.
+---
+
+# Tooltip
+
+The `VTooltip` component is useful for conveying information when a user hovers over an element. It can be attached to any component or element using the activator slot.
+
+## Usage
+
+```vue
+<template>
+  <v-tooltip text="Tooltip text">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props">Hover me</v-btn>
+    </template>
+  </v-tooltip>
+</template>
+```
+
+## Props
+
+<ParamField path="text" type="string">
+  Text content to display in the tooltip
+</ParamField>
+
+<ParamField path="id" type="string">
+  HTML id attribute for the tooltip element
+</ParamField>
+
+<ParamField path="interactive" type="boolean" default="false">
+  Allows the tooltip content to be interactive (hover/click on tooltip content)
+</ParamField>
+
+<ParamField path="modelValue" type="boolean">
+  Controls the visibility of the tooltip (v-model)
+</ParamField>
+
+<ParamField path="location" type="string" default="end">
+  Position of the tooltip relative to the activator. Options: `top`, `bottom`, `start`, `end`, `left`, `right` and combinations like `top start`
+</ParamField>
+
+<ParamField path="origin" type="string" default="auto">
+  Transform origin for the tooltip animation. Options: `auto`, `overlap`, or position combinations
+</ParamField>
+
+<ParamField path="offset" type="string | number | array" default="10">
+  Offset distance from the activator. Can be a single value or `[x, y]` array
+</ParamField>
+
+<ParamField path="openOnClick" type="boolean" default="false">
+  Opens tooltip on click instead of hover
+</ParamField>
+
+<ParamField path="openOnHover" type="boolean" default="true">
+  Opens tooltip on hover
+</ParamField>
+
+<ParamField path="openOnFocus" type="boolean">
+  Opens tooltip when activator receives focus
+</ParamField>
+
+<ParamField path="closeOnContentClick" type="boolean" default="true">
+  Closes tooltip when clicking inside it
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the tooltip
+</ParamField>
+
+<ParamField path="eager" type="boolean" default="true">
+  Forces the tooltip content to render immediately
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Maximum width of the tooltip
+</ParamField>
+
+<ParamField path="minWidth" type="string | number" default="0">
+  Minimum width of the tooltip
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Width of the tooltip
+</ParamField>
+
+<ParamField path="transition" type="string">
+  Transition to use. Defaults to `scale-transition` when opening, `fade-transition` when closing
+</ParamField>
+
+<ParamField path="locationStrategy" type="string" default="connected">
+  Strategy for positioning. Options: `static`, `connected`
+</ParamField>
+
+<ParamField path="scrollStrategy" type="string" default="reposition">
+  Strategy when scrolling. Options: `none`, `close`, `block`, `reposition`
+</ParamField>
+
+<ParamField path="activatorProps" type="object">
+  Props to pass to the activator element
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when tooltip visibility changes
+</ParamField>
+
+## Slots
+
+<ParamField path="activator">
+  Slot for the element that triggers the tooltip. Receives `{ props }` which should be bound to the activator
+</ParamField>
+
+<ParamField path="default">
+  Slot for custom tooltip content (replaces `text` prop)
+</ParamField>
+
+## Examples
+
+### Basic Tooltip
+
+```vue
+<template>
+  <v-tooltip text="This is a tooltip">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" icon="mdi-information" />
+    </template>
+  </v-tooltip>
+</template>
+```
+
+### Tooltip Positions
+
+```vue
+<template>
+  <div class="d-flex justify-center gap-4">
+    <v-tooltip text="Top" location="top">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">Top</v-btn>
+      </template>
+    </v-tooltip>
+    
+    <v-tooltip text="Bottom" location="bottom">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">Bottom</v-btn>
+      </template>
+    </v-tooltip>
+    
+    <v-tooltip text="Start" location="start">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">Start</v-btn>
+      </template>
+    </v-tooltip>
+    
+    <v-tooltip text="End" location="end">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">End</v-btn>
+      </template>
+    </v-tooltip>
+  </div>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <v-tooltip max-width="300">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" color="primary">
+        Rich Tooltip
+      </v-btn>
+    </template>
+    <div>
+      <h4 class="mb-2">Custom Tooltip</h4>
+      <p>This tooltip has custom HTML content with formatting.</p>
+      <v-chip size="small" color="success">Feature</v-chip>
+    </div>
+  </v-tooltip>
+</template>
+```
+
+### Controlled Tooltip
+
+```vue
+<template>
+  <div>
+    <v-tooltip v-model="show" text="Controlled tooltip" location="top">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">Activator</v-btn>
+      </template>
+    </v-tooltip>
+    
+    <v-btn @click="show = !show" class="ml-4">
+      Toggle Tooltip
+    </v-btn>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(false)
+</script>
+```
+
+### Click to Open
+
+```vue
+<template>
+  <v-tooltip 
+    text="Click to see this tooltip"
+    open-on-click
+    :open-on-hover="false"
+  >
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" color="secondary">
+        Click Me
+      </v-btn>
+    </template>
+  </v-tooltip>
+</template>
+```
+
+### Interactive Tooltip
+
+```vue
+<template>
+  <v-tooltip interactive max-width="300">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props">Interactive</v-btn>
+    </template>
+    <div class="pa-2">
+      <p class="mb-2">This tooltip is interactive</p>
+      <v-btn size="small" @click="handleAction">
+        Click Me
+      </v-btn>
+    </div>
+  </v-tooltip>
+</template>
+
+<script setup>
+function handleAction() {
+  console.log('Button in tooltip clicked')
+}
+</script>
+```
+
+### Tooltip on Icon
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-tooltip text="Edit" location="top">
+      <template v-slot:activator="{ props }">
+        <v-icon v-bind="props" icon="mdi-pencil" />
+      </template>
+    </v-tooltip>
+    
+    <v-tooltip text="Delete" location="top">
+      <template v-slot:activator="{ props }">
+        <v-icon v-bind="props" icon="mdi-delete" />
+      </template>
+    </v-tooltip>
+    
+    <v-tooltip text="Share" location="top">
+      <template v-slot:activator="{ props }">
+        <v-icon v-bind="props" icon="mdi-share-variant" />
+      </template>
+    </v-tooltip>
+  </div>
+</template>
+```
+
+### Disabled Tooltip
+
+```vue
+<template>
+  <div>
+    <v-tooltip :disabled="disabled" text="This tooltip can be disabled">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props">Hover Me</v-btn>
+      </template>
+    </v-tooltip>
+    
+    <v-switch v-model="disabled" label="Disable tooltip" class="mt-4" />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const disabled = ref(false)
+</script>
+```

@@ -1,0 +1,347 @@
+---
+title: VProgressLinear
+description: Linear progress indicator for loading states and progress tracking
+---
+
+# VProgressLinear
+
+The `VProgressLinear` component is used to convey data visually to users. It can be used in a variety of scenarios including displaying determinate or indeterminate progress, buffer states, and more.
+
+## Usage
+
+The simplest form displays an indeterminate progress indicator.
+
+```vue
+<template>
+  <v-progress-linear indeterminate></v-progress-linear>
+</template>
+```
+
+## Determinate
+
+The progress linear can represent a determinate state using the `modelValue` prop.
+
+```vue
+<template>
+  <v-progress-linear
+    v-model="progress"
+  ></v-progress-linear>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const progress = ref(45)
+</script>
+```
+
+## Buffer
+
+A buffer state can be displayed using the `bufferValue` prop.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="value"
+    :buffer-value="bufferValue"
+  ></v-progress-linear>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(45)
+const bufferValue = ref(75)
+</script>
+```
+
+<Note>
+The buffer value should typically be greater than the model value to show the buffered portion ahead of the current progress.
+</Note>
+
+## Color
+
+You can customize the color of the progress bar.
+
+```vue
+<template>
+  <div>
+    <v-progress-linear color="primary" :model-value="50"></v-progress-linear>
+    <v-progress-linear color="success" :model-value="60"></v-progress-linear>
+    <v-progress-linear color="warning" :model-value="70"></v-progress-linear>
+    <v-progress-linear color="error" :model-value="80"></v-progress-linear>
+  </div>
+</template>
+```
+
+## Background Color
+
+Set the background color independently from the progress bar color.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="50"
+    color="primary"
+    bg-color="grey-lighten-3"
+  ></v-progress-linear>
+</template>
+```
+
+## Height
+
+Customize the height of the progress bar.
+
+```vue
+<template>
+  <div>
+    <v-progress-linear :model-value="50" height="4"></v-progress-linear>
+    <v-progress-linear :model-value="50" height="10"></v-progress-linear>
+    <v-progress-linear :model-value="50" height="20"></v-progress-linear>
+  </div>
+</template>
+```
+
+## Rounded
+
+The `rounded` prop adds rounded corners to the progress bar.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="50"
+    rounded
+    height="10"
+  ></v-progress-linear>
+</template>
+```
+
+## Rounded Bar
+
+The `roundedBar` prop adds rounded caps to the progress indicator itself.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="50"
+    rounded-bar
+    height="10"
+  ></v-progress-linear>
+</template>
+```
+
+## Striped
+
+The `striped` prop adds a striped pattern to the progress bar.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="50"
+    striped
+    height="10"
+  ></v-progress-linear>
+</template>
+```
+
+## Stream
+
+The `stream` prop adds a streaming animation to indicate buffering.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="30"
+    :buffer-value="60"
+    stream
+  ></v-progress-linear>
+</template>
+```
+
+## Reverse
+
+Reverse the direction of the progress bar.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="50"
+    reverse
+  ></v-progress-linear>
+</template>
+```
+
+<Note>
+The reverse prop is particularly useful for RTL (right-to-left) layouts and automatically adapts to the locale direction.
+</Note>
+
+## Default Slot
+
+Display content over the progress bar using the default slot.
+
+```vue
+<template>
+  <v-progress-linear
+    :model-value="value"
+    height="25"
+    color="primary"
+  >
+    <template v-slot:default="{ value }">
+      <strong>{{ Math.ceil(value) }}%</strong>
+    </template>
+  </v-progress-linear>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(75)
+</script>
+```
+
+## Location
+
+Position the progress bar at the top or bottom of its container.
+
+```vue
+<template>
+  <v-sheet height="200" class="position-relative">
+    <!-- Top -->
+    <v-progress-linear
+      :model-value="50"
+      location="top"
+      absolute
+    ></v-progress-linear>
+    
+    <!-- Bottom -->
+    <v-progress-linear
+      :model-value="50"
+      location="bottom"
+      absolute
+    ></v-progress-linear>
+  </v-sheet>
+</template>
+```
+
+## Clickable
+
+Make the progress bar interactive with the `clickable` prop.
+
+```vue
+<template>
+  <v-progress-linear
+    v-model="progress"
+    clickable
+  ></v-progress-linear>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const progress = ref(0)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | string" default="0">
+  The percentage value for progress (0-100).
+</ParamField>
+
+<ParamField path="indeterminate" type="boolean" default="false">
+  Displays linear progress in an indeterminate state.
+</ParamField>
+
+<ParamField path="active" type="boolean" default="true">
+  Controls whether the progress bar is visible and active.
+</ParamField>
+
+<ParamField path="bufferValue" type="number | string" default="0">
+  The percentage value for the buffer (0-100).
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the progress bar.
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Applies specified color to the background of the progress bar.
+</ParamField>
+
+<ParamField path="bufferColor" type="string">
+  Applies specified color to the buffer portion.
+</ParamField>
+
+<ParamField path="bgOpacity" type="number | string">
+  Sets the opacity of the background.
+</ParamField>
+
+<ParamField path="bufferOpacity" type="number | string">
+  Sets the opacity of the buffer.
+</ParamField>
+
+<ParamField path="height" type="number | string" default="4">
+  Sets the height of the progress bar.
+</ParamField>
+
+<ParamField path="max" type="number | string" default="100">
+  Sets the maximum value for the progress bar.
+</ParamField>
+
+<ParamField path="reverse" type="boolean" default="false">
+  Displays the progress bar in reverse (right to left).
+</ParamField>
+
+<ParamField path="stream" type="boolean" default="false">
+  Displays a stream animation indicating buffering.
+</ParamField>
+
+<ParamField path="striped" type="boolean" default="false">
+  Adds a striped pattern to the progress bar.
+</ParamField>
+
+<ParamField path="roundedBar" type="boolean" default="false">
+  Adds rounded caps to the progress indicator.
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component.
+</ParamField>
+
+<ParamField path="clickable" type="boolean" default="false">
+  Allows clicking on the progress bar to set the value.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+  Positions the progress bar absolutely within its container.
+</ParamField>
+
+<ParamField path="location" type="'top' | 'bottom'" default="top">
+  Specifies the location of the progress bar when using absolute positioning.
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use for the component.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ value: number, buffer: number }">
+  The default Vue slot for content overlaying the progress bar. Receives current value and buffer as slot props.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: number) => void">
+  Emitted when the progress value changes (when clickable is enabled).
+</ParamField>
+
+## Accessibility
+
+The component automatically includes ARIA attributes:
+
+- `role="progressbar"`
+- `aria-valuemin="0"`
+- `aria-valuemax` (based on the max prop)
+- `aria-valuenow` (only for determinate progress)
+- `aria-hidden` (based on the active state)

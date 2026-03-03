@@ -1,0 +1,239 @@
+---
+title: VDialog
+description: Dialog component for modal windows and confirmations
+---
+
+# VDialog
+
+The `VDialog` component is used to inform users about a task and can contain critical information, require decisions, or involve multiple tasks. Dialogs appear in front of app content to provide critical information or ask for a decision.
+
+## Usage
+
+Dialogs are controlled by a `v-model` which determines whether the dialog is visible.
+
+```vue
+<template>
+  <div>
+    <v-btn @click="dialog = true">Open Dialog</v-btn>
+    
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-title>Dialog Title</v-card-title>
+        <v-card-text>This is a dialog</v-card-text>
+        <v-card-actions>
+          <v-btn @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const dialog = ref(false)
+</script>
+```
+
+## Activator Slot
+
+The `activator` slot allows you to create a button or element that triggers the dialog.
+
+```vue
+<template>
+  <v-dialog>
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props">Open Dialog</v-btn>
+    </template>
+    
+    <v-card>
+      <v-card-title>Dialog Content</v-card-title>
+      <v-card-text>Click outside to close</v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+<Note>
+The activator slot automatically binds the necessary props to open the dialog when clicked.
+</Note>
+
+## Fullscreen
+
+The `fullscreen` prop makes the dialog take up the entire screen.
+
+```vue
+<template>
+  <v-dialog v-model="dialog" fullscreen>
+    <v-card>
+      <v-toolbar color="primary">
+        <v-toolbar-title>Fullscreen Dialog</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card-text>
+        This dialog takes up the entire screen
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+## Scrollable
+
+The `scrollable` prop allows the dialog content to scroll if it exceeds the dialog height.
+
+```vue
+<template>
+  <v-dialog v-model="dialog" scrollable max-width="500px">
+    <v-card>
+      <v-card-title>Scrollable Dialog</v-card-title>
+      <v-divider></v-divider>
+      <v-card-text style="height: 300px">
+        <p v-for="n in 20" :key="n">
+          Lorem ipsum dolor sit amet.
+        </p>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-btn @click="dialog = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+## Persistent
+
+The `persistent` prop prevents the dialog from closing when clicking outside or pressing ESC.
+
+```vue
+<template>
+  <v-dialog v-model="dialog" persistent>
+    <v-card>
+      <v-card-title>Persistent Dialog</v-card-title>
+      <v-card-text>
+        You must click the button to close this dialog
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="dialog = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+<Note>
+When `persistent` is enabled, clicking outside the dialog or pressing ESC will trigger a bounce animation instead of closing.
+</Note>
+
+## Width and Height
+
+Control the dialog dimensions with `width`, `maxWidth`, `height`, and `maxHeight` props.
+
+```vue
+<template>
+  <v-dialog v-model="dialog" width="600" max-width="90%">
+    <v-card>
+      <v-card-title>Custom Width Dialog</v-card-title>
+      <v-card-text>This dialog has a custom width</v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean" default="false">
+  Controls whether the dialog is visible.
+</ParamField>
+
+<ParamField path="fullscreen" type="boolean" default="false">
+  Makes the dialog fullscreen.
+</ParamField>
+
+<ParamField path="scrollable" type="boolean" default="false">
+  Allows the dialog content to scroll when it exceeds the available height.
+</ParamField>
+
+<ParamField path="persistent" type="boolean" default="false">
+  Prevents the dialog from closing when clicking outside or pressing ESC.
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the dialog.
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the dialog.
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the dialog.
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the dialog.
+</ParamField>
+
+<ParamField path="scrim" type="boolean | string" default="true">
+  Controls the scrim (overlay backdrop). Can be a boolean or color string.
+</ParamField>
+
+<ParamField path="transition" type="string | object" default="{ component: VDialogTransition }">
+  Sets the component transition.
+</ParamField>
+
+<ParamField path="zIndex" type="number | string" default="2400">
+  The z-index used for the dialog.
+</ParamField>
+
+<ParamField path="attach" type="boolean | string | Element">
+  Specifies which DOM element the dialog should detach to. Use `false` to disable detaching.
+</ParamField>
+
+<ParamField path="closeOnBack" type="boolean" default="true">
+  Closes the dialog when the browser back button is pressed.
+</ParamField>
+
+<ParamField path="contained" type="boolean" default="false">
+  Keeps the dialog contained within its parent element.
+</ParamField>
+
+<ParamField path="noClickAnimation" type="boolean" default="false">
+  Disables the bounce animation when clicking outside a persistent dialog.
+</ParamField>
+
+<ParamField path="origin" type="string" default="center center">
+  Sets the transition origin.
+</ParamField>
+
+<ParamField path="scrollStrategy" type="string" default="block">
+  Strategy used when the dialog is open and scrolling. Options: `block`, `close`, `none`, `reposition`.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ isActive: Ref<boolean> }">
+  The default Vue slot for dialog content.
+</ParamField>
+
+<ParamField path="activator" type="{ isActive: boolean, props: Record<string, any>, targetRef: TemplateRef }">
+  Slot for the activator element that triggers the dialog.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the dialog visibility changes.
+</ParamField>
+
+<ParamField path="afterEnter" type="() => void">
+  Emitted after the dialog transition has entered.
+</ParamField>
+
+<ParamField path="afterLeave" type="() => void">
+  Emitted after the dialog transition has left.
+</ParamField>

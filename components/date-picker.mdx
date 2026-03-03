@@ -1,0 +1,214 @@
+---
+title: Date Picker
+description: The VDatePicker component provides an intuitive interface for selecting dates with support for single dates, multiple dates, and date ranges.
+---
+
+# Date Picker
+
+The VDatePicker component displays a calendar interface for date selection with various modes and customization options.
+
+## Usage
+
+```vue
+<template>
+  <v-date-picker
+    v-model="date"
+    title="Select Date"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const date = ref(new Date())
+</script>
+```
+
+## API
+
+### Props
+
+<ParamField path="modelValue" type="any">
+  The selected date(s). Type depends on the `multiple` prop.
+</ParamField>
+
+<ParamField path="multiple" type="boolean | 'range' | number" default="false">
+  Enables multiple date selection. Use `'range'` for date ranges or a number for a specific count.
+</ParamField>
+
+<ParamField path="title" type="string" default="$vuetify.datePicker.title">
+  Title displayed in the picker header.
+</ParamField>
+
+<ParamField path="header" type="string" default="$vuetify.datePicker.header">
+  Header text displayed above the calendar.
+</ParamField>
+
+<ParamField path="headerColor" type="string">
+  Color of the header section.
+</ParamField>
+
+<ParamField path="headerDateFormat" type="string" default="normalDateWithWeekday">
+  Format for displaying the selected date in the header.
+</ParamField>
+
+<ParamField path="viewMode" type="string" default="month">
+  Current view mode. Options: `month`, `months`, `year`.
+</ParamField>
+
+<ParamField path="showWeek" type="boolean" default="false">
+  Displays week numbers.
+</ParamField>
+
+<ParamField path="showAdjacentMonths" type="boolean" default="false">
+  Shows dates from adjacent months.
+</ParamField>
+
+<ParamField path="weeksInMonth" type="string" default="dynamic">
+  How to calculate weeks. Options: `dynamic`, `static`.
+</ParamField>
+
+<ParamField path="min" type="any">
+  Minimum selectable date.
+</ParamField>
+
+<ParamField path="max" type="any">
+  Maximum selectable date.
+</ParamField>
+
+<ParamField path="allowedDates" type="Function | Array">
+  Function or array to determine which dates are selectable.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the date picker.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the date picker read-only.
+</ParamField>
+
+<ParamField path="landscape" type="boolean" default="false">
+  Displays the picker in landscape orientation.
+</ParamField>
+
+### Events
+
+<ParamField path="update:modelValue" type="(date: any) => void">
+  Emitted when the selected date changes.
+</ParamField>
+
+<ParamField path="update:month" type="(month: number) => void">
+  Emitted when the displayed month changes.
+</ParamField>
+
+<ParamField path="update:year" type="(year: number) => void">
+  Emitted when the displayed year changes.
+</ParamField>
+
+<ParamField path="update:viewMode" type="(mode: string) => void">
+  Emitted when the view mode changes.
+</ParamField>
+
+### Slots
+
+<ParamField path="title">
+  Customize the title section.
+</ParamField>
+
+<ParamField path="header" type="{ header, transition }">
+  Customize the header display.
+</ParamField>
+
+<ParamField path="day" type="{ date, day, month, year }">
+  Customize individual day cells.
+</ParamField>
+
+<ParamField path="month" type="{ month, year }">
+  Customize month cells in month selection view.
+</ParamField>
+
+<ParamField path="year" type="{ year }">
+  Customize year cells in year selection view.
+</ParamField>
+
+## Examples
+
+### Range Selection
+
+```vue
+<template>
+  <v-date-picker
+    v-model="dateRange"
+    multiple="range"
+    title="Select Date Range"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const dateRange = ref([])
+</script>
+```
+
+### Multiple Dates
+
+```vue
+<template>
+  <v-date-picker
+    v-model="dates"
+    :multiple="true"
+    title="Select Multiple Dates"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const dates = ref([])
+</script>
+```
+
+### With Min/Max Dates
+
+```vue
+<template>
+  <v-date-picker
+    v-model="date"
+    :min="minDate"
+    :max="maxDate"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const date = ref(new Date())
+const minDate = new Date('2024-01-01')
+const maxDate = new Date('2024-12-31')
+</script>
+```
+
+### Custom Allowed Dates
+
+```vue
+<template>
+  <v-date-picker
+    v-model="date"
+    :allowed-dates="allowedDates"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const date = ref(new Date())
+
+// Only allow weekdays
+function allowedDates(date) {
+  const day = new Date(date).getDay()
+  return day !== 0 && day !== 6
+}
+</script>
+```

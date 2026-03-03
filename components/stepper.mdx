@@ -1,0 +1,397 @@
+---
+title: VStepper
+description: Multi-step navigation component for guiding users through processes.
+---
+
+# VStepper
+
+The `VStepper` component displays progress through numbered steps in a process. It supports linear and non-linear navigation, validation, and extensive customization of step appearance.
+
+## Basic Usage
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <template #item.1>
+      <h3>Step 1 Content</h3>
+    </template>
+    <template #item.2>
+      <h3>Step 2 Content</h3>
+    </template>
+    <template #item.3>
+      <h3>Step 3 Content</h3>
+    </template>
+  </v-stepper>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(1)
+const items = [
+  { title: 'Step 1', value: 1 },
+  { title: 'Step 2', value: 2 },
+  { title: 'Step 3', value: 3 }
+]
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue">
+  Current active step value. Use with v-model.
+</ParamField>
+
+<ParamField path="items" type="StepperItem[]" default="[]">
+  Array of step items. Each item can be a string or object with title, subtitle, and validation properties.
+</ParamField>
+
+<ParamField path="itemTitle" type="SelectItemKey" default="'title'">
+  Property name or function to use for item titles.
+</ParamField>
+
+<ParamField path="itemValue" type="SelectItemKey" default="'value'">
+  Property name or function to use for item values.
+</ParamField>
+
+<ParamField path="itemProps" type="SelectItemKey" default="'props'">
+  Property name or function to extract additional props from items.
+</ParamField>
+
+<ParamField path="altLabels" type="boolean" default="false">
+  Places step labels below step icons instead of to the right.
+</ParamField>
+
+<ParamField path="editable" type="boolean" default="false">
+  Allows clicking on step headers to navigate to that step.
+</ParamField>
+
+<ParamField path="nonLinear" type="boolean" default="false">
+  Allows navigating to any step regardless of completion status.
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+  Removes the stepper's elevation and background.
+</ParamField>
+
+<ParamField path="hideActions" type="boolean" default="false">
+  Hides the default next/prev action buttons.
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the stepper.
+</ParamField>
+
+<ParamField path="completeIcon" type="IconValue">
+  Icon displayed for completed steps.
+</ParamField>
+
+<ParamField path="editIcon" type="IconValue">
+  Icon displayed for editable steps.
+</ParamField>
+
+<ParamField path="errorIcon" type="IconValue">
+  Icon displayed for steps with errors.
+</ParamField>
+
+<ParamField path="prevText" type="string">
+  Text for the previous button in actions.
+</ParamField>
+
+<ParamField path="nextText" type="string">
+  Text for the next button in actions.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color theme applied to the stepper.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disables navigation controls.
+</ParamField>
+
+<ParamField path="mobile" type="boolean">
+  Forces mobile layout.
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="'v-stepper-item--selected'">
+  CSS class applied to the selected step.
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="'force'">
+  Forces at least one step to be selected.
+</ParamField>
+
+## Step Item Object
+
+```typescript
+type StepperItem = {
+  title?: string
+  subtitle?: string
+  value?: any
+  complete?: boolean
+  error?: boolean
+  editable?: boolean
+  icon?: IconValue
+  rules?: ValidationRule[]
+}
+
+type ValidationRule = () => string | boolean
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the active step changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ prev: Function, next: Function }">
+  Main content slot. Receives navigation functions.
+</ParamField>
+
+<ParamField path="actions" type="{ prev: Function, next: Function }">
+  Slot to customize or replace the action buttons.
+</ParamField>
+
+<ParamField path="header" type="StepperItem">
+  Slot to customize the entire header for a step.
+</ParamField>
+
+<ParamField path="header-item" type="StepperItemSlot">
+  Slot to customize step header items.
+</ParamField>
+
+<ParamField path="icon" type="StepperItemSlot">
+  Slot to customize step icons.
+</ParamField>
+
+<ParamField path="title" type="StepperItemSlot">
+  Slot to customize step titles.
+</ParamField>
+
+<ParamField path="subtitle" type="StepperItemSlot">
+  Slot to customize step subtitles.
+</ParamField>
+
+<ParamField path="item" type="StepperItem">
+  Slot for step content.
+</ParamField>
+
+<ParamField path="prev">
+  Slot to customize the previous button.
+</ParamField>
+
+<ParamField path="next">
+  Slot to customize the next button.
+</ParamField>
+
+<ParamField path="header-item.{value}" type="StepperItemSlot">
+  Named slot for specific step header.
+</ParamField>
+
+<ParamField path="item.{value}" type="StepperItem">
+  Named slot for specific step content.
+</ParamField>
+
+## Navigation Patterns
+
+### Linear Stepper
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <template #item.1>
+      <v-card>
+        <v-card-text>Complete this step first</v-card-text>
+      </v-card>
+    </template>
+    <template #item.2>
+      <v-card>
+        <v-card-text>Then this step</v-card-text>
+      </v-card>
+    </template>
+  </v-stepper>
+</template>
+```
+
+### Non-Linear Stepper
+
+```vue
+<template>
+  <v-stepper 
+    v-model="step" 
+    :items="items"
+    non-linear
+    editable
+  >
+    <!-- Step content -->
+  </v-stepper>
+</template>
+```
+
+### With Validation
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <template #item.1>
+      <v-form v-model="valid">
+        <!-- Form fields -->
+      </v-form>
+    </template>
+  </v-stepper>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(1)
+const valid = ref(false)
+
+const items = [
+  {
+    title: 'Account Info',
+    value: 1,
+    rules: [() => valid.value || 'Please complete the form']
+  },
+  { title: 'Confirmation', value: 2 }
+]
+</script>
+```
+
+### Alternative Labels
+
+```vue
+<template>
+  <v-stepper 
+    v-model="step" 
+    :items="items"
+    alt-labels
+  >
+    <!-- Step content -->
+  </v-stepper>
+</template>
+```
+
+### Custom Actions
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items" hide-actions>
+    <template #item.1>
+      <v-card>
+        <v-card-text>Step content</v-card-text>
+        <v-card-actions>
+          <v-btn @click="step = 2">Continue</v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-stepper>
+</template>
+```
+
+## Examples
+
+### Step with Subtitle
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <template #item.1>
+      <h3>Personal Information</h3>
+    </template>
+  </v-stepper>
+</template>
+
+<script setup>
+const items = [
+  {
+    title: 'Account',
+    subtitle: 'Create your account',
+    value: 1
+  }
+]
+</script>
+```
+
+### Error State
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <!-- Step content -->
+  </v-stepper>
+</template>
+
+<script setup>
+const items = [
+  {
+    title: 'Step 1',
+    value: 1,
+    error: true
+  }
+]
+</script>
+```
+
+### Complete State
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <!-- Step content -->
+  </v-stepper>
+</template>
+
+<script setup>
+const items = [
+  {
+    title: 'Step 1',
+    value: 1,
+    complete: true
+  },
+  {
+    title: 'Step 2',
+    value: 2
+  }
+]
+</script>
+```
+
+### Custom Icons
+
+```vue
+<template>
+  <v-stepper 
+    v-model="step" 
+    :items="items"
+    complete-icon="mdi-check-circle"
+    error-icon="mdi-alert-circle"
+    edit-icon="mdi-pencil"
+  >
+    <!-- Step content -->
+  </v-stepper>
+</template>
+```
+
+### Programmatic Navigation
+
+```vue
+<template>
+  <v-stepper v-model="step" :items="items">
+    <template #default="{ prev, next }">
+      <v-btn @click="prev">Previous</v-btn>
+      <v-btn @click="next">Next</v-btn>
+    </template>
+  </v-stepper>
+</template>
+```
+
+## Accessibility
+
+- Step headers are clickable buttons when `editable` is true
+- Proper ARIA attributes for step states
+- Visual indicators for complete, error, and active states
+- Keyboard navigation support through standard button controls

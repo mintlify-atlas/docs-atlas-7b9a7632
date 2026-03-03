@@ -1,0 +1,162 @@
+---
+title: Parallax
+description: The VParallax component creates a parallax scrolling effect where the image moves at a different speed than the scroll.
+---
+
+# Parallax
+
+The VParallax component wraps VImg to create a parallax scrolling effect, providing depth and visual interest to your pages.
+
+## Usage
+
+```vue
+<template>
+  <v-parallax
+    src="https://picsum.photos/1920/1080"
+    height="500"
+  >
+    <div class="d-flex align-center justify-center fill-height">
+      <h1 class="text-h1 text-white">Parallax</h1>
+    </div>
+  </v-parallax>
+</template>
+```
+
+## API
+
+### Props
+
+<ParamField path="scale" type="number | string" default="0.5">
+  Parallax effect intensity. Value between 0 and 1, where 0 is no effect and 1 is maximum effect.
+</ParamField>
+
+The VParallax component also accepts all VImg props:
+
+<ParamField path="src" type="string">
+  The image source URL.
+</ParamField>
+
+<ParamField path="alt" type="string">
+  Alt text for the image.
+</ParamField>
+
+<ParamField path="gradient" type="string">
+  CSS gradient overlay applied on top of the image.
+</ParamField>
+
+<ParamField path="height" type="number | string">
+  Height of the parallax container.
+</ParamField>
+
+### Slots
+
+<ParamField path="default">
+  Content displayed over the parallax image.
+</ParamField>
+
+<ParamField path="placeholder">
+  Content displayed while the image is loading.
+</ParamField>
+
+<ParamField path="error">
+  Content displayed when the image fails to load.
+</ParamField>
+
+## Examples
+
+### Custom Scale
+
+```vue
+<template>
+  <v-parallax
+    src="https://picsum.photos/1920/1080"
+    height="500"
+    scale="0.8"
+  >
+    <h1>Stronger Parallax Effect</h1>
+  </v-parallax>
+</template>
+```
+
+### With Gradient Overlay
+
+```vue
+<template>
+  <v-parallax
+    src="https://picsum.photos/1920/1080"
+    gradient="to top, rgba(0,0,0,.5), rgba(0,0,0,.8)"
+    height="600"
+  >
+    <div class="d-flex flex-column align-center justify-center fill-height">
+      <h1 class="text-h1 text-white mb-4">Welcome</h1>
+      <p class="text-h5 text-white">Scroll down to see the effect</p>
+    </div>
+  </v-parallax>
+</template>
+```
+
+### Multiple Sections
+
+```vue
+<template>
+  <div>
+    <v-parallax
+      src="https://picsum.photos/1920/1080?random=1"
+      height="500"
+    >
+      <h1 class="text-white">Section 1</h1>
+    </v-parallax>
+
+    <v-container>
+      <v-row>
+        <v-col>
+          <p>Regular content between parallax sections...</p>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-parallax
+      src="https://picsum.photos/1920/1080?random=2"
+      height="500"
+      scale="0.3"
+    >
+      <h1 class="text-white">Section 2</h1>
+    </v-parallax>
+  </div>
+</template>
+```
+
+### With Content
+
+```vue
+<template>
+  <v-parallax
+    src="https://picsum.photos/1920/1080"
+    height="600"
+    gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.7)"
+  >
+    <v-container class="fill-height">
+      <v-row align="center" justify="center">
+        <v-col cols="12" md="8" class="text-center">
+          <h1 class="text-h2 text-white mb-4">
+            Beautiful Parallax Effect
+          </h1>
+          <p class="text-h6 text-white mb-8">
+            This content stays in place while the background moves
+          </p>
+          <v-btn color="white" variant="outlined" size="large">
+            Learn More
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-parallax>
+</template>
+```
+
+## Notes
+
+- The parallax effect requires the user to scroll the page
+- The component automatically handles performance optimization
+- The effect respects the user's reduced motion preferences
+- Works best with landscape-oriented images

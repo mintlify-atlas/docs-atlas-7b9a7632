@@ -1,0 +1,478 @@
+---
+title: Responsive Layout
+description: Master Vuetify's responsive breakpoint system and display utilities
+---
+
+# Responsive Layout
+
+Vuetify's responsive layout system provides a comprehensive set of tools for building adaptive interfaces. Built on a mobile-first breakpoint system with reactive utilities, it makes responsive design intuitive and powerful.
+
+## Breakpoint System
+
+Vuetify uses six breakpoints defined in `composables/display.ts:9`:
+
+```typescript
+const breakpoints = ['sm', 'md', 'lg', 'xl', 'xxl'] // xs is implicit
+```
+
+### Default Thresholds
+
+The default breakpoint values (`composables/display.ts:86-96`):
+
+```typescript
+thresholds: {
+  xs: 0,      // Extra small devices (phones)
+  sm: 600,    // Small devices (tablets, portrait)
+  md: 840,    // Medium devices (tablets, landscape)
+  lg: 1145,   // Large devices (desktops)
+  xl: 1545,   // Extra large devices (large desktops)
+  xxl: 2138,  // Extra extra large devices (4K displays)
+}
+```
+
+### Custom Breakpoints
+
+Customize breakpoints during Vuetify initialization:
+
+```typescript
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  display: {
+    thresholds: {
+      xs: 0,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+  },
+})
+```
+
+## Mobile Breakpoint
+
+The mobile breakpoint determines when the `mobile` property becomes true (`composables/display.ts:29-32`):
+
+```typescript
+display: {
+  mobileBreakpoint: 'lg',  // Mobile mode below 1145px
+}
+
+// Or use a specific pixel value
+display: {
+  mobileBreakpoint: 960,
+}
+```
+
+<Note>
+The `mobileBreakpoint` affects component behavior across Vuetify. Components like `VNavigationDrawer` use this to determine default temporary/permanent behavior.
+</Note>
+
+## useDisplay Composable
+
+The `useDisplay` composable provides reactive access to breakpoint information (`composables/display.ts:229-258`):
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { xs, sm, md, lg, xl, xxl, mobile, width, height, name } = useDisplay()
+</script>
+
+<template>
+  <div>
+    <p v-if="mobile">Mobile view</p>
+    <p v-else>Desktop view</p>
+    
+    <p>Current breakpoint: {{ name }}</p>
+    <p>Window size: {{ width }} x {{ height }}</p>
+  </div>
+</template>
+```
+
+### DisplayInstance API
+
+The display instance provides the following reactive properties (`composables/display.ts:55-82`):
+
+```typescript
+interface DisplayInstance {
+  // Exact breakpoint matches
+  xs: Ref<boolean>      // width < 600
+  sm: Ref<boolean>      // 600 ≤ width < 840
+  md: Ref<boolean>      // 840 ≤ width < 1145
+  lg: Ref<boolean>      // 1145 ≤ width < 1545
+  xl: Ref<boolean>      // 1545 ≤ width < 2138
+  xxl: Ref<boolean>     // width ≥ 2138
+
+  // Breakpoint ranges (inclusive)
+  smAndUp: Ref<boolean>    // width ≥ 600
+  mdAndUp: Ref<boolean>    // width ≥ 840
+  lgAndUp: Ref<boolean>    // width ≥ 1145
+  xlAndUp: Ref<boolean>    // width ≥ 1545
+  smAndDown: Ref<boolean>  // width < 1145
+  mdAndDown: Ref<boolean>  // width < 1545
+  lgAndDown: Ref<boolean>  // width < 2138
+  xlAndDown: Ref<boolean>  // width < 2138
+
+  // Current state
+  name: Ref<DisplayBreakpoint>  // 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+  height: Ref<number>           // Window height in pixels
+  width: Ref<number>            // Window width in pixels
+  mobile: Ref<boolean>          // Based on mobileBreakpoint
+  mobileBreakpoint: Ref<number | DisplayBreakpoint>
+  platform: Ref<DisplayPlatform>
+  thresholds: Ref<DisplayThresholds>
+
+  update(): void
+}
+```
+
+## Breakpoint Conditionals
+
+Use breakpoint properties for conditional rendering and logic:
+
+<Tabs>
+  <Tab title="Template Conditionals">
+    ```vue
+    <script setup>
+    import { useDisplay } from 'vuetify'
+
+    const { xs, smAndDown, mdAndUp } = useDisplay()
+    </script>
+
+    <template>
+      <!-- Mobile only -->
+      <v-navigation-drawer v-if="xs" temporary>
+        Mobile menu
+      </v-navigation-drawer>
+
+      <!-- Tablet and mobile -->
+      <v-container v-if="smAndDown" fluid>
+        Compact layout
+      </v-container>
+
+      <!-- Desktop and above -->
+      <v-container v-if="mdAndUp">
+        Full layout
+      </v-container>
+    </template>
+    ```
+  </Tab>
+
+  <Tab title="Computed Logic">
+    ```vue
+    <script setup>
+    import { computed } from 'vue'
+    import { useDisplay } from 'vuetify'
+
+    const { name, width, mobile } = useDisplay()
+
+    const columns = computed(() => {
+      switch (name.value) {
+        case 'xs': return 1
+        case 'sm': return 2
+        case 'md': return 3
+        case 'lg': return 4
+        case 'xl': 
+        case 'xxl': return 6
+      }
+    })
+
+    const containerClass = computed(() => 
+      mobile.value ? 'pa-2' : 'pa-6'
+    )
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="Watch Changes">
+    ```vue
+    <script setup>
+    import { watch } from 'vue'
+    import { useDisplay } from 'vuetify'
+
+    const { mobile, name } = useDisplay()
+
+    watch(mobile, (isMobile) => {
+      console.log('Mobile mode:', isMobile)
+      // Trigger responsive behavior
+    })
+
+    watch(name, (breakpoint) => {
+      console.log('Breakpoint changed to:', breakpoint)
+      // Track analytics, adjust layouts, etc.
+    })
+    </script>
+    ```
+  </Tab>
+</Tabs>
+
+## Platform Detection
+
+The display system includes comprehensive platform detection (`composables/display.ts:114-150`):
+
+```typescript
+interface DisplayPlatform {
+  android: boolean
+  ios: boolean
+  cordova: boolean
+  electron: boolean
+  chrome: boolean
+  edge: boolean
+  firefox: boolean
+  opera: boolean
+  win: boolean
+  mac: boolean
+  linux: boolean
+  touch: boolean
+  ssr: boolean
+}
+```
+
+Use platform detection for device-specific features:
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { platform } = useDisplay()
+
+if (platform.value.ios) {
+  // iOS-specific behavior
+}
+
+if (platform.value.touch) {
+  // Touch-enabled device
+}
+</script>
+
+<template>
+  <v-btn v-if="platform.android || platform.ios">
+    Download Mobile App
+  </v-btn>
+</template>
+```
+
+## Component Display Props
+
+Many Vuetify components accept display-related props (`composables/display.ts:19-22`):
+
+```typescript
+interface DisplayProps {
+  mobile?: boolean | null
+  mobileBreakpoint?: number | DisplayBreakpoint
+}
+```
+
+Use these to override display behavior per component:
+
+```vue
+<template>
+  <!-- Force mobile behavior -->
+  <v-navigation-drawer mobile>
+    Always renders in mobile mode
+  </v-navigation-drawer>
+
+  <!-- Custom mobile breakpoint -->
+  <v-navigation-drawer :mobile-breakpoint="1024">
+    Mobile below 1024px
+  </v-navigation-drawer>
+
+  <!-- Force desktop behavior -->
+  <v-navigation-drawer :mobile="false">
+    Never mobile mode
+  </v-navigation-drawer>
+</template>
+```
+
+## SSR Configuration
+
+For server-side rendering, provide initial viewport dimensions (`composables/display.ts:34-37`):
+
+```typescript
+type SSROptions = boolean | {
+  clientWidth: number
+  clientHeight?: number
+}
+```
+
+Configure SSR display settings:
+
+```typescript
+const vuetify = createVuetify({
+  ssr: {
+    clientWidth: 1920,
+    clientHeight: 1080,
+  },
+})
+```
+
+<Warning>
+Without SSR configuration, display values default to the smallest breakpoint (xs) during server-side rendering, which may cause layout shifts during hydration.
+</Warning>
+
+### SSR Example
+
+```typescript
+// Nuxt plugin
+export default defineNuxtPlugin((nuxtApp) => {
+  const vuetify = createVuetify({
+    ssr: true,
+    display: {
+      thresholds: {
+        xs: 0,
+        sm: 600,
+        md: 840,
+        lg: 1145,
+        xl: 1545,
+        xxl: 2138,
+      },
+    },
+  })
+
+  nuxtApp.vueApp.use(vuetify)
+})
+```
+
+## Responsive Grid System
+
+Combine display utilities with Vuetify's grid system:
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { name } = useDisplay()
+</script>
+
+<template>
+  <v-container>
+    <v-row>
+      <!-- Responsive column sizing -->
+      <v-col 
+        cols="12"      
+        sm="6"         
+        md="4"         
+        lg="3"         
+      >
+        Responsive card
+      </v-col>
+    </v-row>
+
+    <!-- Conditional columns -->
+    <v-row>
+      <v-col v-if="name === 'xs'" cols="12">
+        Full width on mobile
+      </v-col>
+      <v-col v-else cols="6">
+        Half width on larger screens
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+## Breakpoint Calculation Logic
+
+The breakpoint logic is calculated in a watchEffect (`composables/display.ts:170-208`):
+
+```typescript
+watchEffect(() => {
+  const xs = width.value < thresholds.sm
+  const sm = width.value < thresholds.md && !xs
+  const md = width.value < thresholds.lg && !(sm || xs)
+  const lg = width.value < thresholds.xl && !(md || sm || xs)
+  const xl = width.value < thresholds.xxl && !(lg || md || sm || xs)
+  const xxl = width.value >= thresholds.xxl
+
+  const name = 
+    xs ? 'xs' :
+    sm ? 'sm' :
+    md ? 'md' :
+    lg ? 'lg' :
+    xl ? 'xl' : 'xxl'
+
+  const breakpointValue = typeof mobileBreakpoint === 'number' 
+    ? mobileBreakpoint 
+    : thresholds[mobileBreakpoint]
+  const mobile = width.value < breakpointValue
+  
+  // ... state updates
+})
+```
+
+<Note>
+Only one breakpoint is active at a time (xs, sm, md, lg, xl, or xxl), while range properties (smAndUp, mdAndDown, etc.) can overlap.
+</Note>
+
+## Window Resize Handling
+
+The display system automatically tracks window resizes (`composables/display.ts:210-216`):
+
+```typescript
+if (IN_BROWSER) {
+  window.addEventListener('resize', updateSize, { passive: true })
+
+  onScopeDispose(() => {
+    window.removeEventListener('resize', updateSize)
+  }, true)
+}
+```
+
+The resize listener:
+- Uses passive event listeners for better performance
+- Automatically cleans up on component unmount
+- Updates width and height reactively
+
+## Best Practices
+
+1. **Use semantic breakpoints** - Use `mobile`, `smAndUp`, etc. instead of checking width directly
+2. **Mobile-first approach** - Design for mobile first, then enhance for larger screens
+3. **Test all breakpoints** - Verify your layout works at all breakpoint boundaries
+4. **Avoid exact matches** - Prefer range properties (`mdAndUp`) over exact matches (`md`)
+5. **Configure SSR properly** - Always set SSR options for server-rendered apps
+6. **Use component props** - Override display behavior per-component when needed
+7. **Minimize layout shifts** - Match SSR viewport to your most common client viewport
+
+## Performance Optimization
+
+1. **Passive listeners** - Resize events use passive listeners
+2. **Debouncing** - Consider debouncing expensive operations triggered by breakpoint changes
+3. **Lazy loading** - Conditionally load components based on breakpoint
+4. **Computed properties** - Use computed values for derived breakpoint logic
+
+```vue
+<script setup>
+import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const { mobile } = useDisplay()
+
+// Lazy load heavy component only on desktop
+const DesktopDashboard = computed(() => 
+  !mobile.value ? defineAsyncComponent(() => 
+    import('./DesktopDashboard.vue')
+  ) : null
+)
+</script>
+```
+
+## Display Classes
+
+Vuetify generates display classes for components that support responsive behavior:
+
+```html
+<!-- Component in mobile mode -->
+<div class="v-navigation-drawer--mobile">
+  <!-- ... -->
+</div>
+
+<!-- Component in desktop mode -->
+<div class="v-navigation-drawer">
+  <!-- ... -->
+</div>
+```
+
+These classes are generated automatically based on the component's mobile state (`composables/display.ts:251-255`).

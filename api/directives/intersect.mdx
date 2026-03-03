@@ -1,0 +1,489 @@
+---
+title: v-intersect
+description: Directive for detecting when an element enters or exits the viewport
+---
+
+## Overview
+
+The `v-intersect` directive uses the Intersection Observer API to detect when an element enters or exits the viewport. Perfect for lazy loading, infinite scroll, and scroll-based animations.
+
+## Import
+
+```typescript
+import { Intersect } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { Intersect } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('intersect', Intersect)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { Intersect } from 'vuetify/directives'
+
+const vIntersect = Intersect
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Simple handler -->
+<div v-intersect="handler"></div>
+
+<!-- With options -->
+<div v-intersect="{ handler, options }"></div>
+
+<!-- With modifiers -->
+<div v-intersect.once.quiet="handler"></div>
+```
+
+## Value Types
+
+### Function Handler
+
+```typescript
+v-intersect="(
+  isIntersecting: boolean,
+  entries: IntersectionObserverEntry[],
+  observer: IntersectionObserver
+) => void"
+```
+
+### Object Configuration
+
+```typescript
+v-intersect="{
+  handler: ObserveHandler
+  options?: IntersectionObserverInit
+}"
+```
+
+## Parameters
+
+<ParamField path="handler" type="ObserveHandler" required>
+  Function called when intersection state changes
+  
+  ```typescript
+  type ObserveHandler = (
+    isIntersecting: boolean,
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver
+  ) => void
+  ```
+</ParamField>
+
+<ParamField path="options" type="IntersectionObserverInit">
+  Intersection Observer options
+  
+  <ParamField path="options.root" type="Element | null">
+    Viewport element (defaults to browser viewport)
+  </ParamField>
+  
+  <ParamField path="options.rootMargin" type="string" default="'0px'">
+    Margin around root (e.g., '10px', '10px 20px')
+  </ParamField>
+  
+  <ParamField path="options.threshold" type="number | number[]" default="0">
+    Visibility threshold (0 to 1, or array of thresholds)
+  </ParamField>
+</ParamField>
+
+## Modifiers
+
+<ParamField path="once" type="boolean">
+  Trigger handler only once, then automatically unobserve
+</ParamField>
+
+<ParamField path="quiet" type="boolean">
+  Don't trigger handler on initial mount, only on actual intersection changes
+</ParamField>
+
+## Usage Examples
+
+### Basic Visibility Detection
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isVisible = ref(false)
+
+function onIntersect(isIntersecting: boolean) {
+  isVisible.value = isIntersecting
+}
+</script>
+
+<template>
+  <div>
+    <div style="height: 100vh">Scroll down</div>
+    
+    <div v-intersect="onIntersect">
+      <p v-if="isVisible">I'm visible!</p>
+      <p v-else>I'm hidden!</p>
+    </div>
+  </div>
+</template>
+```
+
+### Lazy Load Images
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const imageSrc = ref('')
+const actualSrc = 'https://example.com/image.jpg'
+
+function loadImage(isIntersecting: boolean) {
+  if (isIntersecting) {
+    imageSrc.value = actualSrc
+  }
+}
+</script>
+
+<template>
+  <img
+    v-intersect.once="loadImage"
+    :src="imageSrc || 'placeholder.jpg'"
+    alt="Lazy loaded image"
+  />
+</template>
+```
+
+### Infinite Scroll
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref(Array.from({ length: 20 }, (_, i) => i))
+const loading = ref(false)
+
+async function loadMore(isIntersecting: boolean) {
+  if (isIntersecting && !loading.value) {
+    loading.value = true
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    const newItems = Array.from(
+      { length: 20 }, 
+      (_, i) => items.value.length + i
+    )
+    items.value.push(...newItems)
+    
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <div>
+    <v-card v-for="item in items" :key="item">
+      Item {{ item }}
+    </v-card>
+    
+    <div v-intersect="loadMore" style="height: 100px">
+      <v-progress-circular v-if="loading" indeterminate />
+    </div>
+  </div>
+</template>
+```
+
+### Scroll-Based Animation
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const animated = ref(false)
+
+function onIntersect(isIntersecting: boolean) {
+  if (isIntersecting) {
+    animated.value = true
+  }
+}
+</script>
+
+<template>
+  <div
+    v-intersect.once="onIntersect"
+    :class="{ 'fade-in': animated }"
+  >
+    Animated content
+  </div>
+</template>
+
+<style scoped>
+.fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+```
+
+### With Custom Threshold
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const visibility = ref(0)
+
+function onIntersect(
+  isIntersecting: boolean,
+  entries: IntersectionObserverEntry[]
+) {
+  if (entries[0]) {
+    visibility.value = Math.round(entries[0].intersectionRatio * 100)
+  }
+}
+</script>
+
+<template>
+  <div
+    v-intersect="{
+      handler: onIntersect,
+      options: {
+        threshold: [0, 0.25, 0.5, 0.75, 1.0]
+      }
+    }"
+  >
+    Visible: {{ visibility }}%
+  </div>
+</template>
+```
+
+### Viewport Tracking
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const sections = ref([
+  { id: 'intro', visible: false },
+  { id: 'features', visible: false },
+  { id: 'pricing', visible: false },
+  { id: 'contact', visible: false }
+])
+
+function createHandler(id: string) {
+  return (isIntersecting: boolean) => {
+    const section = sections.value.find(s => s.id === id)
+    if (section) {
+      section.visible = isIntersecting
+    }
+  }
+}
+</script>
+
+<template>
+  <div>
+    <nav>
+      <a 
+        v-for="section in sections" 
+        :key="section.id"
+        :class="{ active: section.visible }"
+      >
+        {{ section.id }}
+      </a>
+    </nav>
+    
+    <div
+      v-for="section in sections"
+      :key="section.id"
+      v-intersect="createHandler(section.id)"
+      style="height: 100vh"
+    >
+      {{ section.id }}
+    </div>
+  </div>
+</template>
+```
+
+### With Root Margin
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isNear = ref(false)
+
+function onIntersect(isIntersecting: boolean) {
+  isNear.value = isIntersecting
+}
+</script>
+
+<template>
+  <!-- Triggers 200px before element enters viewport -->
+  <div
+    v-intersect="{
+      handler: onIntersect,
+      options: {
+        rootMargin: '200px'
+      }
+    }"
+  >
+    Content preloads early
+  </div>
+</template>
+```
+
+### Lazy Load Component
+
+```vue
+<script setup>
+import { ref, defineAsyncComponent } from 'vue'
+
+const shouldLoad = ref(false)
+
+const HeavyComponent = defineAsyncComponent(() =>
+  shouldLoad.value 
+    ? import('./HeavyComponent.vue')
+    : Promise.resolve({ template: '<div></div>' })
+)
+
+function onIntersect(isIntersecting: boolean) {
+  if (isIntersecting) {
+    shouldLoad.value = true
+  }
+}
+</script>
+
+<template>
+  <div v-intersect.once="onIntersect">
+    <HeavyComponent v-if="shouldLoad" />
+    <v-skeleton-loader v-else type="card" />
+  </div>
+</template>
+```
+
+### Video Autoplay on Scroll
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const videoRef = ref<HTMLVideoElement | null>(null)
+
+function onIntersect(isIntersecting: boolean) {
+  if (videoRef.value) {
+    if (isIntersecting) {
+      videoRef.value.play()
+    } else {
+      videoRef.value.pause()
+    }
+  }
+}
+</script>
+
+<template>
+  <video
+    ref="videoRef"
+    v-intersect="onIntersect"
+    src="video.mp4"
+    muted
+    loop
+  />
+</template>
+```
+
+### Progress Indicator
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const progress = ref(0)
+
+function updateProgress(
+  isIntersecting: boolean,
+  entries: IntersectionObserverEntry[]
+) {
+  progress.value = entries[0]?.intersectionRatio || 0
+}
+</script>
+
+<template>
+  <div>
+    <v-progress-linear :model-value="progress * 100" />
+    
+    <div
+      v-intersect="{
+        handler: updateProgress,
+        options: { threshold: Array.from({ length: 101 }, (_, i) => i / 100) }
+      }"
+      style="height: 200vh"
+    >
+      Tall content
+    </div>
+  </div>
+</template>
+```
+
+## Intersection Observer Entry
+
+The `entries` parameter provides detailed information:
+
+```typescript
+interface IntersectionObserverEntry {
+  boundingClientRect: DOMRectReadOnly
+  intersectionRatio: number // 0 to 1
+  intersectionRect: DOMRectReadOnly
+  isIntersecting: boolean
+  rootBounds: DOMRectReadOnly | null
+  target: Element
+  time: number
+}
+```
+
+## Browser Support
+
+The directive automatically checks for Intersection Observer support. If not available:
+- No error is thrown
+- Handler is never called
+- Element renders normally
+
+For older browsers, use a polyfill:
+
+```typescript
+import 'intersection-observer'
+```
+
+## Performance Tips
+
+1. Use `.once` modifier when appropriate
+2. Use higher thresholds for better performance
+3. Limit number of observed elements
+4. Use `rootMargin` to trigger early
+5. Debounce expensive handlers
+
+## Notes
+
+- Requires browser support for Intersection Observer API
+- Automatically cleans up on unmount
+- Works with conditional rendering (v-if)
+- Handler may be called immediately on mount (unless `.quiet`)
+- Multiple instances can observe the same element
+- Not triggered during SSR
+
+## See Also
+
+- [v-resize](/api/directives/resize)
+- [v-scroll](/api/directives/scroll)
+- [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)

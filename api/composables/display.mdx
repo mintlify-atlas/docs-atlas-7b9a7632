@@ -1,0 +1,310 @@
+---
+title: useDisplay()
+description: Composable for accessing responsive breakpoint information and device detection
+---
+
+## Overview
+
+The `useDisplay()` composable provides access to Vuetify's display system, offering reactive breakpoint information, viewport dimensions, and platform detection.
+
+## Import
+
+```typescript
+import { useDisplay } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useDisplay(
+  props?: DisplayProps,
+  name?: string
+): DisplayInstance & { mobile: Ref<boolean>, displayClasses: Ref<Record<string, boolean>> }
+
+interface DisplayProps {
+  mobile?: boolean | null
+  mobileBreakpoint?: number | DisplayBreakpoint
+}
+
+type DisplayBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+```
+
+## Parameters
+
+<ParamField path="props" type="DisplayProps" default="{ mobile: null }">
+  Optional display configuration
+  
+  <ParamField path="props.mobile" type="boolean | null">
+    Override mobile detection
+  </ParamField>
+  
+  <ParamField path="props.mobileBreakpoint" type="number | DisplayBreakpoint">
+    Custom mobile breakpoint threshold
+  </ParamField>
+</ParamField>
+
+<ParamField path="name" type="string">
+  Component name for CSS classes (auto-detected if not provided)
+</ParamField>
+
+## Return Value
+
+### Breakpoint Flags
+
+<ResponseField name="xs" type="Ref<boolean>">
+  Width < 600px
+</ResponseField>
+
+<ResponseField name="sm" type="Ref<boolean>">
+  600px ≤ width < 840px
+</ResponseField>
+
+<ResponseField name="md" type="Ref<boolean>">
+  840px ≤ width < 1145px
+</ResponseField>
+
+<ResponseField name="lg" type="Ref<boolean>">
+  1145px ≤ width < 1545px
+</ResponseField>
+
+<ResponseField name="xl" type="Ref<boolean>">
+  1545px ≤ width < 2138px
+</ResponseField>
+
+<ResponseField name="xxl" type="Ref<boolean>">
+  Width ≥ 2138px
+</ResponseField>
+
+### Range Flags
+
+<ResponseField name="smAndUp" type="Ref<boolean>">
+  Width ≥ 600px
+</ResponseField>
+
+<ResponseField name="mdAndUp" type="Ref<boolean>">
+  Width ≥ 840px
+</ResponseField>
+
+<ResponseField name="lgAndUp" type="Ref<boolean>">
+  Width ≥ 1145px
+</ResponseField>
+
+<ResponseField name="xlAndUp" type="Ref<boolean>">
+  Width ≥ 1545px
+</ResponseField>
+
+<ResponseField name="smAndDown" type="Ref<boolean>">
+  Width < 1145px
+</ResponseField>
+
+<ResponseField name="mdAndDown" type="Ref<boolean>">
+  Width < 1545px
+</ResponseField>
+
+<ResponseField name="lgAndDown" type="Ref<boolean>">
+  Width < 2138px
+</ResponseField>
+
+<ResponseField name="xlAndDown" type="Ref<boolean>">
+  Width < ∞
+</ResponseField>
+
+### Viewport Properties
+
+<ResponseField name="name" type="Ref<DisplayBreakpoint>">
+  Current breakpoint name ('xs', 'sm', 'md', 'lg', 'xl', or 'xxl')
+</ResponseField>
+
+<ResponseField name="width" type="Ref<number>">
+  Current viewport width in pixels
+</ResponseField>
+
+<ResponseField name="height" type="Ref<number>">
+  Current viewport height in pixels
+</ResponseField>
+
+<ResponseField name="mobile" type="Ref<boolean>">
+  Whether the current viewport is considered mobile (based on mobileBreakpoint)
+</ResponseField>
+
+<ResponseField name="mobileBreakpoint" type="Ref<number | DisplayBreakpoint>">
+  The current mobile breakpoint threshold
+</ResponseField>
+
+<ResponseField name="thresholds" type="Ref<DisplayThresholds>">
+  Object containing all breakpoint threshold values
+</ResponseField>
+
+### Platform Detection
+
+<ResponseField name="platform" type="Ref<DisplayPlatform>">
+  Object containing platform/browser detection flags:
+  
+  ```typescript
+  interface DisplayPlatform {
+    android: boolean
+    ios: boolean
+    cordova: boolean
+    electron: boolean
+    chrome: boolean
+    edge: boolean
+    firefox: boolean
+    opera: boolean
+    win: boolean
+    mac: boolean
+    linux: boolean
+    touch: boolean
+    ssr: boolean
+  }
+  ```
+</ResponseField>
+
+### Methods
+
+<ResponseField name="update" type="() => void">
+  Manually update display values (useful for testing)
+</ResponseField>
+
+## Default Thresholds
+
+```typescript
+{
+  xs: 0,
+  sm: 600,
+  md: 840,
+  lg: 1145,
+  xl: 1545,
+  xxl: 2138
+}
+```
+
+## Usage Examples
+
+### Basic Breakpoint Detection
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { xs, sm, md, lg, xl, xxl, mobile } = useDisplay()
+</script>
+
+<template>
+  <div>
+    <p v-if="mobile">Mobile view</p>
+    <p v-else>Desktop view</p>
+    
+    <div v-if="xs">Extra small screen</div>
+    <div v-else-if="sm">Small screen</div>
+    <div v-else-if="md">Medium screen</div>
+    <div v-else-if="lg">Large screen</div>
+    <div v-else-if="xl">Extra large screen</div>
+    <div v-else>Extra extra large screen</div>
+  </div>
+</template>
+```
+
+### Responsive Layout
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { mdAndUp, name } = useDisplay()
+</script>
+
+<template>
+  <v-container>
+    <v-row>
+      <v-col :cols="mdAndUp ? 6 : 12">
+        Column 1
+      </v-col>
+      <v-col :cols="mdAndUp ? 6 : 12">
+        Column 2
+      </v-col>
+    </v-row>
+    
+    <p>Current breakpoint: {{ name }}</p>
+  </v-container>
+</template>
+```
+
+### Platform Detection
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+const { platform } = useDisplay()
+
+function getDeviceInfo() {
+  if (platform.value.android) return 'Android device'
+  if (platform.value.ios) return 'iOS device'
+  if (platform.value.mac) return 'macOS'
+  if (platform.value.win) return 'Windows'
+  return 'Unknown device'
+}
+</script>
+
+<template>
+  <div>
+    <p>{{ getDeviceInfo() }}</p>
+    <p v-if="platform.touch">Touch device detected</p>
+    <p v-if="platform.chrome">Running in Chrome</p>
+  </div>
+</template>
+```
+
+### Custom Mobile Breakpoint
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+
+// Consider mobile when width < 1024px
+const { mobile } = useDisplay({ mobileBreakpoint: 1024 })
+</script>
+
+<template>
+  <v-app-bar :density="mobile ? 'compact' : 'default'">
+    <!-- App bar content -->
+  </v-app-bar>
+</template>
+```
+
+### Viewport Dimensions
+
+```vue
+<script setup>
+import { useDisplay } from 'vuetify'
+import { computed } from 'vue'
+
+const { width, height } = useDisplay()
+
+const aspectRatio = computed(() => 
+  (width.value / height.value).toFixed(2)
+)
+</script>
+
+<template>
+  <div>
+    <p>Width: {{ width }}px</p>
+    <p>Height: {{ height }}px</p>
+    <p>Aspect Ratio: {{ aspectRatio }}</p>
+  </div>
+</template>
+```
+
+## Notes
+
+- Automatically updates on window resize
+- Values are reactive and can be used in computed properties
+- Platform detection is based on user agent string
+- Touch support is detected via browser capabilities
+- In SSR context, defaults to mobile: false unless configured otherwise
+
+## See Also
+
+- [Display Configuration](/features/display)
+- [Breakpoints Guide](/features/breakpoints)
+- [Responsive Design](/features/responsive-design)

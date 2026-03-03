@@ -1,0 +1,256 @@
+---
+title: VFileInput
+description: File input component with drag-and-drop support and file validation
+---
+
+# VFileInput
+
+The `VFileInput` component provides a file input field with support for drag-and-drop, multiple files, file type filtering, and visual file size display.
+
+## Basic Usage
+
+```vue
+<template>
+  <VFileInput
+    v-model="files"
+    label="Upload file"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const files = ref(null)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="File | File[] | null">
+  The selected file(s). Single file when multiple is false, array when true.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allow multiple file selection.
+</ParamField>
+
+<ParamField path="chips" type="boolean" default="false">
+  Display selected files as chips.
+</ParamField>
+
+<ParamField path="counter" type="boolean" default="false">
+  Display a file counter.
+</ParamField>
+
+<ParamField path="counterString" type="string" default="$vuetify.fileInput.counter">
+  Text template for the counter (e.g., "{0} files").
+</ParamField>
+
+<ParamField path="counterSizeString" type="string" default="$vuetify.fileInput.counterSize">
+  Text template for the counter with size (e.g., "{0} files ({1} in total)").
+</ParamField>
+
+<ParamField path="showSize" type="boolean | 1000 | 1024" default="false">
+  Display file sizes. Use 1000 for decimal (KB) or 1024 for binary (KiB).
+</ParamField>
+
+<ParamField path="truncateLength" type="number | string" default="22">
+  Number of characters to display before truncating filename.
+</ParamField>
+
+<ParamField path="hideInput" type="boolean" default="false">
+  Hide the input field (useful for custom displays).
+</ParamField>
+
+<ParamField path="prependIcon" type="string" default="$file">
+  Icon to prepend to the input.
+</ParamField>
+
+<ParamField path="accept" type="string">
+  HTML accept attribute to filter file types (e.g., "image/*", ".pdf,.doc").
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default="true">
+  Add a clear icon to remove selected files.
+</ParamField>
+
+## Multiple Files
+
+```vue
+<template>
+  <VFileInput
+    v-model="files"
+    label="Select files"
+    multiple
+    chips
+    counter
+    show-size
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const files = ref([])
+</script>
+```
+
+## File Type Filtering
+
+```vue
+<template>
+  <div>
+    <VFileInput
+      v-model="images"
+      label="Images only"
+      accept="image/*"
+      prepend-icon="mdi-camera"
+    />
+    
+    <VFileInput
+      v-model="documents"
+      label="Documents only"
+      accept=".pdf,.doc,.docx"
+      prepend-icon="mdi-file-document"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const images = ref(null)
+const documents = ref(null)
+</script>
+```
+
+## With File Size Display
+
+```vue
+<template>
+  <VFileInput
+    v-model="files"
+    label="Upload files"
+    multiple
+    chips
+    counter
+    :show-size="1024"
+    hint="File sizes shown in KiB"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const files = ref([])
+</script>
+```
+
+## Custom Selection Display
+
+```vue
+<template>
+  <VFileInput
+    v-model="files"
+    label="Custom display"
+    multiple
+  >
+    <template #selection="{ fileNames, totalBytes, totalBytesReadable }">
+      <VChip
+        v-for="name in fileNames"
+        :key="name"
+        size="small"
+        label
+        color="primary"
+      >
+        {{ name }}
+      </VChip>
+      <div class="text-caption">
+        Total: {{ totalBytesReadable }}
+      </div>
+    </template>
+  </VFileInput>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const files = ref([])
+</script>
+```
+
+## Drag and Drop
+
+The file input automatically supports drag and drop:
+
+```vue
+<template>
+  <VFileInput
+    v-model="files"
+    label="Drag files here or click to browse"
+    multiple
+    chips
+    counter
+    show-size
+    hint="You can drag and drop files here"
+    persistent-hint
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const files = ref([])
+</script>
+```
+
+## Validation
+
+```vue
+<template>
+  <VFileInput
+    v-model="file"
+    label="Upload resume (PDF only)"
+    accept=".pdf"
+    :rules="[
+      v => !!v || 'File is required',
+      v => !v || v.size < 2000000 || 'File size should be less than 2 MB'
+    ]"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const file = ref(null)
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(files: File | File[]) => void">
+  Emitted when file selection changes.
+</ParamField>
+
+<ParamField path="rejected" type="(files: File[]) => void">
+  Emitted when files are rejected due to type filtering.
+</ParamField>
+
+<ParamField path="click:control" type="(e: MouseEvent) => void">
+  Emitted when the control area is clicked.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="selection" type="{ fileNames, totalBytes, totalBytesReadable }">
+  Customize how selected files are displayed.
+</ParamField>
+
+<ParamField path="counter" type="{ }">
+  Customize the counter display.
+</ParamField>

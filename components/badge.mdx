@@ -1,0 +1,188 @@
+---
+title: Badge
+description: The VBadge component displays a small badge typically used to show notifications, counts, or status on other components.
+---
+
+# Badge
+
+The `VBadge` component superscripts or subscripts an avatar-like icon or text onto content to highlight information to a user or to draw attention to a specific element.
+
+## Usage
+
+```vue
+<template>
+  <v-badge content="5" color="error">
+    <v-icon icon="mdi-bell" />
+  </v-badge>
+</template>
+```
+
+## Props
+
+<ParamField path="content" type="string | number">
+  Content to display in the badge (typically a number or short text)
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the badge
+</ParamField>
+
+<ParamField path="textColor" type="string">
+  Applies specified color to the badge text
+</ParamField>
+
+<ParamField path="bordered" type="boolean" default="false">
+  Applies a border around the badge
+</ParamField>
+
+<ParamField path="dot" type="boolean" default="false">
+  Displays the badge as a small dot instead of text content
+</ParamField>
+
+<ParamField path="dotSize" type="string | number">
+  Size of the badge when using dot mode
+</ParamField>
+
+<ParamField path="floating" type="boolean" default="false">
+  Makes the badge float over the content
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon to display in the badge
+</ParamField>
+
+<ParamField path="inline" type="boolean" default="false">
+  Displays the badge inline with the content
+</ParamField>
+
+<ParamField path="label" type="string" default="$vuetify.badge">
+  Accessibility label for the badge
+</ParamField>
+
+<ParamField path="max" type="string | number">
+  Maximum number to display. Shows `max+` when content exceeds this value
+</ParamField>
+
+<ParamField path="modelValue" type="boolean" default="true">
+  Controls the visibility of the badge
+</ParamField>
+
+<ParamField path="offsetX" type="string | number">
+  Horizontal offset of the badge position
+</ParamField>
+
+<ParamField path="offsetY" type="string | number">
+  Vertical offset of the badge position
+</ParamField>
+
+<ParamField path="location" type="string" default="top end">
+  Position of the badge. Options: combinations of `top`, `bottom`, `start`, `end`, `center`
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the badge
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+<ParamField path="transition" type="string" default="scale-rotate-transition">
+  Transition to use when showing/hiding the badge
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default slot for the element the badge is attached to
+</ParamField>
+
+<ParamField path="badge">
+  Slot for custom badge content
+</ParamField>
+
+## Examples
+
+### Notification Badge
+
+```vue
+<template>
+  <v-badge content="12" color="error">
+    <v-btn icon="mdi-email" />
+  </v-badge>
+</template>
+```
+
+### Dot Badge
+
+```vue
+<template>
+  <v-badge dot color="success">
+    <v-avatar image="/user.jpg" />
+  </v-badge>
+</template>
+```
+
+### Max Value
+
+```vue
+<template>
+  <v-badge content="150" max="99" color="primary">
+    <v-icon icon="mdi-message" />
+  </v-badge>
+</template>
+```
+
+### Custom Position
+
+```vue
+<template>
+  <v-badge 
+    content="New"
+    color="info"
+    location="bottom start"
+    offset-x="10"
+    offset-y="10"
+  >
+    <v-card width="200" height="100">
+      <v-card-text>Content with badge</v-card-text>
+    </v-card>
+  </v-badge>
+</template>
+```
+
+### Icon Badge
+
+```vue
+<template>
+  <v-badge icon="mdi-check" color="success">
+    <v-avatar color="grey" icon="mdi-account" />
+  </v-badge>
+</template>
+```
+
+### Dynamic Visibility
+
+```vue
+<template>
+  <div>
+    <v-badge 
+      :content="notifications"
+      :model-value="notifications > 0"
+      color="error"
+    >
+      <v-btn icon="mdi-bell" @click="clearNotifications" />
+    </v-badge>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const notifications = ref(5)
+
+function clearNotifications() {
+  notifications.value = 0
+}
+</script>
+```

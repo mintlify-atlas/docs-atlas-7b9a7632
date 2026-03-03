@@ -1,0 +1,337 @@
+---
+title: VBottomNavigation
+description: The VBottomNavigation component is a navigation element typically used on mobile devices, providing quick access to top-level destinations.
+---
+
+# VBottomNavigation
+
+The VBottomNavigation component is a material design bottom navigation bar that provides quick navigation between top-level views in an app. It's commonly used on mobile devices as an alternative to tabs or drawer navigation.
+
+## Usage
+
+```vue
+<template>
+  <v-bottom-navigation v-model="value">
+    <v-btn value="recent">
+      <v-icon>mdi-history</v-icon>
+      <span>Recent</span>
+    </v-btn>
+    
+    <v-btn value="favorites">
+      <v-icon>mdi-heart</v-icon>
+      <span>Favorites</span>
+    </v-btn>
+    
+    <v-btn value="nearby">
+      <v-icon>mdi-map-marker</v-icon>
+      <span>Nearby</span>
+    </v-btn>
+  </v-bottom-navigation>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('recent')
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+The selected value. Used with v-model.
+
+```vue
+<v-bottom-navigation v-model="selectedTab">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="active" type="boolean" default="true">
+Controls whether the bottom navigation is active and visible in the layout.
+
+```vue
+<v-bottom-navigation :active="showNavigation">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+Applies specified color to the background.
+
+```vue
+<v-bottom-navigation bg-color="primary">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="color" type="string">
+Applies specified color to selected button.
+
+```vue
+<v-bottom-navigation color="accent">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+Sets the color of component when not selected.
+</ParamField>
+
+<ParamField path="grow" type="boolean" default="false">
+Forces buttons to take up all available space.
+
+```vue
+<v-bottom-navigation grow>
+  <!-- Buttons expand to fill space -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="mode" type="'horizontal' | 'shift'">
+Changes the display mode of the navigation buttons.
+
+```vue
+<!-- Shift mode hides text on inactive buttons -->
+<v-bottom-navigation mode="shift">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+
+- `horizontal` - Icons and text are always visible
+- `shift` - Only active button shows text, inactive buttons show only icons
+</ParamField>
+
+<ParamField path="height" type="number | string" default="56">
+Sets the height of the bottom navigation in pixels.
+
+```vue
+<v-bottom-navigation :height="64">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'" default="'default'">
+Adjusts the vertical spacing within the component.
+</ParamField>
+
+<ParamField path="elevation" type="number | string">
+Sets the elevation (box-shadow) of the component.
+
+```vue
+<v-bottom-navigation elevation="8">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="rounded" type="boolean | string | number">
+Applies border radius to the component.
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+Applies a border to the component.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'header'">
+Specifies the custom tag to use for the root element.
+</ParamField>
+
+<ParamField path="name" type="string" default="'bottom-navigation'">
+Assigns a specific name for layout registration.
+</ParamField>
+
+<ParamField path="order" type="number | string" default="0">
+Adjusts the order of the component in the layout system.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+Applies position: absolute to the component.
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'">
+Forces at least one item to always be selected (inherited from group).
+</ParamField>
+
+<ParamField path="max" type="number">
+Sets the maximum number of selections that can be made (inherited from group).
+</ParamField>
+
+<ParamField path="multiple" type="boolean">
+Allows multiple selections (inherited from group).
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="'v-btn--selected'">
+The class applied to selected buttons.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+Emitted when the selected value changes.
+
+```vue
+<v-bottom-navigation @update:modelValue="onSelectionChange">
+  <!-- Buttons -->
+</v-bottom-navigation>
+```
+</ParamField>
+
+<ParamField path="update:active" type="(value: boolean) => void">
+Emitted when the active state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+The default slot for navigation buttons (typically VBtn components).
+</ParamField>
+
+## Examples
+
+### Basic Navigation
+
+```vue
+<template>
+  <v-bottom-navigation v-model="value" color="primary">
+    <v-btn value="home">
+      <v-icon>mdi-home</v-icon>
+      Home
+    </v-btn>
+    
+    <v-btn value="search">
+      <v-icon>mdi-magnify</v-icon>
+      Search
+    </v-btn>
+    
+    <v-btn value="profile">
+      <v-icon>mdi-account</v-icon>
+      Profile
+    </v-btn>
+  </v-bottom-navigation>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('home')
+</script>
+```
+
+### Shift Mode
+
+```vue
+<template>
+  <v-bottom-navigation v-model="value" mode="shift" color="accent">
+    <v-btn value="videos">
+      <v-icon>mdi-television-play</v-icon>
+      Videos
+    </v-btn>
+    
+    <v-btn value="music">
+      <v-icon>mdi-music</v-icon>
+      Music
+    </v-btn>
+    
+    <v-btn value="books">
+      <v-icon>mdi-book</v-icon>
+      Books
+    </v-btn>
+    
+    <v-btn value="photos">
+      <v-icon>mdi-image</v-icon>
+      Photos
+    </v-btn>
+  </v-bottom-navigation>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('videos')
+</script>
+```
+
+<Note>
+In shift mode, only the selected button displays text. This allows for more buttons in the navigation while maintaining a clean interface.
+</Note>
+
+### Grow Mode
+
+```vue
+<template>
+  <v-bottom-navigation v-model="value" grow bg-color="teal">
+    <v-btn value="recent">
+      <v-icon>mdi-history</v-icon>
+      Recent
+    </v-btn>
+    
+    <v-btn value="favorites">
+      <v-icon>mdi-heart</v-icon>
+      Favorites
+    </v-btn>
+    
+    <v-btn value="nearby">
+      <v-icon>mdi-map-marker</v-icon>
+      Nearby
+    </v-btn>
+  </v-bottom-navigation>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('recent')
+</script>
+```
+
+### With Custom Colors
+
+```vue
+<template>
+  <v-bottom-navigation 
+    v-model="value" 
+    bg-color="indigo-darken-3"
+    color="indigo-lighten-1"
+    base-color="grey"
+  >
+    <v-btn value="home">
+      <v-icon>mdi-home</v-icon>
+      Home
+    </v-btn>
+    
+    <v-btn value="explore">
+      <v-icon>mdi-compass</v-icon>
+      Explore
+    </v-btn>
+    
+    <v-btn value="settings">
+      <v-icon>mdi-cog</v-icon>
+      Settings
+    </v-btn>
+  </v-bottom-navigation>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('home')
+</script>
+```
+
+<Note>
+VBottomNavigation automatically integrates with VApp's layout system. The content area adjusts when the bottom navigation is active.
+</Note>
+
+## Best Practices
+
+- Use 3-5 navigation items for optimal usability
+- Each button should represent a distinct section of your app
+- Icons should be easily recognizable and consistent
+- Consider using shift mode when you have 4-5 items to save space
+- Use grow mode when you have exactly 3 items for balanced appearance

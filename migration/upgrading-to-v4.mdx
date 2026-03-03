@@ -1,0 +1,260 @@
+---
+title: Upgrading to v4
+description: Complete guide for migrating your Vuetify application from v3 to v4
+---
+
+# Upgrading to v4
+
+Vuetify 4.0.0 introduces significant improvements and optimizations while maintaining the core principles that make Vuetify powerful. This guide will help you migrate your application from Vuetify 3 to Vuetify 4.
+
+## Prerequisites
+
+Before starting the migration, ensure your project meets these requirements:
+
+- **Vue.js**: Version 3.5.0 or higher
+- **Node.js**: Version 24.11.1 or higher
+- **TypeScript**: Version 4.7 or higher (optional but recommended)
+- **Build Tool**: Vite or Webpack with the appropriate Vuetify plugin
+
+## Migration Steps
+
+<Steps>
+
+### Update Dependencies
+
+Update your `package.json` to use Vuetify 4:
+
+```json
+{
+  "dependencies": {
+    "vuetify": "^4.0.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "vite-plugin-vuetify": "^2.1.0"
+  }
+}
+```
+
+Then install the updated dependencies:
+
+```bash
+pnpm install
+# or
+npm install
+# or
+yarn install
+```
+
+### Update Plugin Configuration
+
+If you're using Vite, ensure your plugin configuration is up to date:
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    vuetify({
+      autoImport: true,
+      styles: {
+        configFile: 'src/styles/settings.scss',
+      },
+    }),
+  ],
+})
+```
+
+### Update Vuetify Instance
+
+Review your Vuetify instance creation. The basic structure remains the same, but verify your configuration:
+
+```typescript
+// src/plugins/vuetify.ts
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+export default createVuetify({
+  components,
+  directives,
+  theme: {
+    defaultTheme: 'light',
+  },
+})
+```
+
+### Update Module Imports
+
+Vuetify 4 uses ES modules exclusively. Update your imports to use the new export structure:
+
+**Component Imports:**
+
+```typescript
+// ✅ Recommended - Tree-shakable
+import { VBtn, VCard } from 'vuetify/components'
+
+// ✅ Also valid - Auto-import with plugin
+// Components automatically available when using vite-plugin-vuetify
+```
+
+**Style Imports:**
+
+```typescript
+// Main styles
+import 'vuetify/styles'
+
+// Or specific style bundles
+import 'vuetify/styles/core'
+import 'vuetify/styles/utilities'
+import 'vuetify/styles/colors'
+```
+
+**Utility Imports:**
+
+```typescript
+import { useTheme, useDisplay } from 'vuetify'
+import colors from 'vuetify/util/colors'
+```
+
+### Review Breaking Changes
+
+<Warning>
+  Vuetify 4 includes breaking changes that may require code updates in your application.
+</Warning>
+
+Common breaking changes to review:
+
+- **Component Props**: Some component props may have been renamed or removed
+- **SASS Variables**: Variable naming and structure may have changed
+- **Composables**: API updates in composable functions
+- **Theme Configuration**: Enhanced theme system with new options
+
+Use the ESLint plugin to help identify outdated patterns:
+
+```bash
+pnpm add -D eslint-plugin-vuetify
+```
+
+```javascript
+// .eslintrc.js
+module.exports = {
+  plugins: ['vuetify'],
+  rules: {
+    'vuetify/no-deprecated-components': 'error',
+    'vuetify/no-deprecated-props': 'error',
+  },
+}
+```
+
+### Update SASS/SCSS Variables
+
+If you're using custom SASS variables, update your settings file:
+
+```scss
+// src/styles/settings.scss
+@use 'vuetify/settings' with (
+  $utilities: (
+    'rounded': true,
+    'elevation': true,
+  ),
+);
+```
+
+### Test Your Application
+
+Thoroughly test your application after migration:
+
+1. **Component Rendering**: Verify all components render correctly
+2. **Responsive Layouts**: Test across different screen sizes
+3. **Theme Switching**: Ensure theme transitions work properly
+4. **Forms & Validation**: Test all form interactions
+5. **Navigation**: Verify routing and navigation components
+
+### Optimize Bundle Size
+
+Vuetify 4 includes improved tree-shaking. Verify your build configuration:
+
+```bash
+pnpm build
+```
+
+Review the bundle analysis to ensure optimal tree-shaking is occurring. With proper configuration, Vuetify 4 should produce smaller bundles than v3.
+
+</Steps>
+
+## Component-Specific Changes
+
+### Date & Time Components
+
+Date adapter imports have changed:
+
+```typescript
+// Before (v3)
+import { VuetifyDateAdapter } from 'vuetify/labs/date/adapters/vuetify'
+
+// After (v4)
+import { VuetifyDateAdapter } from 'vuetify/date/adapters/vuetify'
+```
+
+### Lab Components
+
+Some lab components may have graduated to stable:
+
+```typescript
+// Check if components have moved from labs to core
+import { VDataTable } from 'vuetify/components' // If stable
+import { VDataTable } from 'vuetify/labs/components' // If still in labs
+```
+
+## TypeScript Support
+
+Vuetify 4 includes enhanced TypeScript support. Update your type declarations:
+
+```typescript
+import type { ThemeDefinition } from 'vuetify'
+
+const customTheme: ThemeDefinition = {
+  dark: false,
+  colors: {
+    primary: '#1976D2',
+    secondary: '#424242',
+  },
+}
+```
+
+## Performance Optimizations
+
+Vuetify 4 includes several performance improvements:
+
+- **Automatic Tree-Shaking**: Components are automatically tree-shaken when using Vite
+- **Smaller Bundle Sizes**: Optimized component code reduces overall bundle size
+- **Improved SSR**: Better server-side rendering support
+- **CSS Optimization**: Enhanced CSS generation and minification
+
+## Getting Help
+
+If you encounter issues during migration:
+
+- **Discord Community**: Join the [Vuetify Discord](https://community.vuetifyjs.com) for community support
+- **Issue Tracker**: Report bugs at [issues.vuetifyjs.com](https://issues.vuetifyjs.com)
+- **Documentation**: Visit [vuetifyjs.com](https://vuetifyjs.com) for comprehensive guides
+- **GitHub Discussions**: Ask questions and share solutions
+
+## Next Steps
+
+After successfully migrating to Vuetify 4:
+
+- Explore new features and components
+- Review the [Release Notes](/getting-started/release-notes) for detailed changes
+- Optimize your bundle size using the build analysis tools
+- Consider adopting new patterns and best practices
+- Review the [Long-term Support](/migration/long-term-support) policy
+
+<Note>
+  Keep your dependencies up to date to receive bug fixes, security patches, and new features.
+</Note>

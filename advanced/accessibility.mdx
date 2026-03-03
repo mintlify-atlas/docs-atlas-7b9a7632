@@ -1,0 +1,556 @@
+---
+title: Accessibility
+description: Build inclusive applications with Vuetify's accessibility features and ARIA support
+---
+
+# Accessibility
+
+Vuetify is committed to providing accessible components that work seamlessly with assistive technologies. This guide covers best practices and built-in accessibility features.
+
+## Focus Management
+
+Vuetify provides composables for managing focus states across your application.
+
+### Focus Composable
+
+The `useFocus` composable tracks and manages focus state:
+
+```vue
+<script setup>
+import { useFocus } from 'vuetify'
+
+const { isFocused, focusClasses, focus, blur } = useFocus({
+  focused: false,
+  'onUpdate:focused': (value) => console.log('Focus changed:', value),
+})
+</script>
+
+<template>
+  <div :class="focusClasses">
+    <button @focus="focus" @blur="blur">
+      Focus me
+    </button>
+  </div>
+</template>
+```
+
+### Focus Trap
+
+The `useFocusTrap` composable keeps keyboard focus within a specific area:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import { useFocusTrap } from 'vuetify'
+
+const isActive = ref(false)
+const localTop = ref(true)
+const contentEl = ref<HTMLElement>()
+
+useFocusTrap(
+  {
+    retainFocus: true,
+    captureFocus: true,
+  },
+  {
+    isActive,
+    localTop,
+    contentEl,
+  }
+)
+</script>
+
+<template>
+  <div ref="contentEl" v-if="isActive">
+    <input placeholder="First focusable">
+    <button>Focus stays here</button>
+    <input placeholder="Last focusable">
+  </div>
+</template>
+```
+
+The focus trap implementation ensures:
+- Tab cycles through focusable elements
+- Shift+Tab reverses direction
+- Focus doesn't escape the container
+- Automatically focuses first element when activated
+
+<Tip>
+Use focus traps in modals, dialogs, and dropdown menus to improve keyboard navigation for users who rely on keyboard-only input.
+</Tip>
+
+## Keyboard Navigation
+
+Vuetify components support standard keyboard interactions:
+
+### Buttons
+
+- `Enter` or `Space`: Activate button
+- `Tab`: Move to next focusable element
+
+```vue
+<template>
+  <v-btn>Accessible Button</v-btn>
+</template>
+```
+
+Buttons automatically render with proper semantics:
+- `role="button"` for non-button elements
+- `tabindex="0"` for keyboard accessibility
+- Event handlers for Enter and Space keys
+
+### Form Controls
+
+```vue
+<template>
+  <v-text-field
+    label="Email"
+    type="email"
+    hint="Enter your email address"
+    persistent-hint
+  />
+</template>
+```
+
+Text fields include:
+- Associated `<label>` elements
+- ARIA attributes for hints and errors
+- Keyboard navigation support
+- Clear focus indicators
+
+### Lists and Menus
+
+```vue
+<template>
+  <v-list>
+    <v-list-item
+      v-for="item in items"
+      :key="item.id"
+      :value="item.id"
+      @click="selectItem(item)"
+    >
+      {{ item.title }}
+    </v-list-item>
+  </v-list>
+</template>
+```
+
+List navigation:
+- `Arrow Down`: Next item
+- `Arrow Up`: Previous item
+- `Home`: First item
+- `End`: Last item
+- `Enter`: Activate item
+
+## ARIA Support
+
+Vuetify components include appropriate ARIA attributes automatically.
+
+### Dynamic ARIA Labels
+
+```vue
+<template>
+  <v-btn
+    icon="mdi-delete"
+    aria-label="Delete item"
+  />
+  
+  <v-text-field
+    label="Search"
+    aria-describedby="search-hint"
+  />
+  <span id="search-hint">Enter keywords to search</span>
+</template>
+```
+
+### Live Regions
+
+Announce dynamic content changes:
+
+```vue
+<template>
+  <div
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    {{ statusMessage }}
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const statusMessage = ref('')
+
+function updateStatus(message: string) {
+  statusMessage.value = message
+}
+</script>
+```
+
+<Warning>
+Use `aria-live="assertive"` sparingly, only for critical alerts that require immediate attention. Most status updates should use `"polite"`.
+</Warning>
+
+### Form Validation
+
+```vue
+<template>
+  <v-form @submit.prevent="handleSubmit">
+    <v-text-field
+      v-model="email"
+      :rules="[rules.required, rules.email]"
+      :error-messages="errors.email"
+      aria-required="true"
+      aria-invalid="!!errors.email"
+      aria-errormessage="email-error"
+    />
+    <span id="email-error" role="alert">
+      {{ errors.email }}
+    </span>
+  </v-form>
+</template>
+```
+
+## Screen Reader Support
+
+Optimize content for screen readers:
+
+### Visually Hidden Content
+
+Provide context for screen reader users:
+
+```vue
+<template>
+  <v-btn icon>
+    <v-icon>mdi-menu</v-icon>
+    <span class="sr-only">Open navigation menu</span>
+  </v-btn>
+</template>
+
+<style scoped>
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+</style>
+```
+
+### Skip Links
+
+Allow users to skip repetitive navigation:
+
+```vue
+<template>
+  <div>
+    <a href="#main-content" class="skip-link">
+      Skip to main content
+    </a>
+    
+    <v-app-bar>
+      <!-- Navigation -->
+    </v-app-bar>
+    
+    <main id="main-content" tabindex="-1">
+      <!-- Main content -->
+    </main>
+  </div>
+</template>
+
+<style scoped>
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--v-theme-primary);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+</style>
+```
+
+## Color Contrast
+
+Ensure sufficient color contrast for readability.
+
+### WCAG Compliance
+
+Vuetify's default themes meet WCAG 2.1 AA standards:
+
+```ts
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#1867C0',    // Contrast ratio: 4.5:1
+          secondary: '#5CBBF6',  // Contrast ratio: 3:1
+          error: '#B71C1C',      // Contrast ratio: 7:1
+        },
+      },
+    },
+  },
+})
+```
+
+<Tip>
+Use online contrast checkers like WebAIM's Contrast Checker to verify your custom theme colors meet WCAG AA (4.5:1) or AAA (7:1) standards.
+</Tip>
+
+### High Contrast Mode
+
+Support Windows High Contrast Mode:
+
+```css
+@media (prefers-contrast: high) {
+  .v-btn {
+    border: 2px solid currentColor;
+  }
+}
+```
+
+## Reduced Motion
+
+Respect user preferences for reduced motion:
+
+```vue
+<template>
+  <v-dialog
+    v-model="dialog"
+    :transition="transition"
+  >
+    <!-- Dialog content -->
+  </v-dialog>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+const prefersReducedMotion = computed(() => {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+})
+
+const transition = computed(() => {
+  return prefersReducedMotion.value ? 'none' : 'dialog-transition'
+})
+</script>
+```
+
+Or use CSS:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .v-btn,
+  .v-card,
+  .v-dialog {
+    transition-duration: 0.001ms !important;
+  }
+}
+```
+
+## Semantic HTML
+
+Use appropriate HTML elements for better accessibility:
+
+```vue
+<template>
+  <!-- Good: Semantic structure -->
+  <header>
+    <v-app-bar>
+      <nav aria-label="Main navigation">
+        <!-- Navigation items -->
+      </nav>
+    </v-app-bar>
+  </header>
+  
+  <main>
+    <article>
+      <h1>Article Title</h1>
+      <p>Content...</p>
+    </article>
+  </main>
+  
+  <footer>
+    <p>&copy; 2024 Company Name</p>
+  </footer>
+</template>
+```
+
+### Landmark Regions
+
+Define page regions for navigation:
+
+```vue
+<template>
+  <div>
+    <header role="banner">
+      <v-app-bar />
+    </header>
+    
+    <nav role="navigation" aria-label="Main">
+      <v-list />
+    </nav>
+    
+    <main role="main">
+      <v-container />
+    </main>
+    
+    <aside role="complementary" aria-label="Sidebar">
+      <v-navigation-drawer />
+    </aside>
+    
+    <footer role="contentinfo">
+      <v-footer />
+    </footer>
+  </div>
+</template>
+```
+
+## Testing Accessibility
+
+### Automated Testing
+
+Use tools to catch common issues:
+
+```bash
+pnpm add -D @axe-core/vue vitest-axe
+```
+
+```ts
+import { mount } from '@vue/test-utils'
+import { axe } from 'vitest-axe'
+import MyComponent from './MyComponent.vue'
+
+test('should not have accessibility violations', async () => {
+  const wrapper = mount(MyComponent)
+  const results = await axe(wrapper.element)
+  expect(results).toHaveNoViolations()
+})
+```
+
+### Manual Testing
+
+Test with assistive technologies:
+
+1. **Keyboard Navigation**: Navigate using only Tab, Arrow keys, Enter, and Escape
+2. **Screen Readers**: Test with NVDA (Windows), JAWS (Windows), or VoiceOver (macOS/iOS)
+3. **Zoom**: Test at 200% and 400% zoom levels
+4. **High Contrast**: Enable Windows High Contrast mode
+5. **Voice Control**: Test with voice control software
+
+### Browser Extensions
+
+- **axe DevTools**: Comprehensive accessibility scanner
+- **WAVE**: Visual feedback about accessibility issues
+- **Lighthouse**: Built into Chrome DevTools
+
+## Best Practices
+
+### 1. Provide Text Alternatives
+
+```vue
+<template>
+  <!-- Images -->
+  <v-img
+    src="chart.png"
+    alt="Sales increased 25% in Q4 2024"
+  />
+  
+  <!-- Icons with meaning -->
+  <v-icon aria-label="Warning">mdi-alert</v-icon>
+  
+  <!-- Decorative icons -->
+  <v-icon aria-hidden="true">mdi-arrow-right</v-icon>
+</template>
+```
+
+### 2. Ensure Keyboard Accessibility
+
+```vue
+<template>
+  <!-- Don't do this -->
+  <div @click="handleClick">Click me</div>
+  
+  <!-- Do this instead -->
+  <v-btn @click="handleClick">Click me</v-btn>
+  
+  <!-- Or this for custom elements -->
+  <div
+    role="button"
+    tabindex="0"
+    @click="handleClick"
+    @keydown.enter="handleClick"
+    @keydown.space.prevent="handleClick"
+  >
+    Click me
+  </div>
+</template>
+```
+
+### 3. Form Labels and Instructions
+
+```vue
+<template>
+  <v-form>
+    <v-text-field
+      v-model="password"
+      label="Password"
+      type="password"
+      :rules="[rules.required, rules.minLength]"
+      hint="Must be at least 8 characters"
+      persistent-hint
+    />
+  </v-form>
+</template>
+```
+
+### 4. Error Identification
+
+```vue
+<template>
+  <v-alert
+    v-if="errors.length"
+    type="error"
+    role="alert"
+  >
+    <strong>Please correct the following errors:</strong>
+    <ul>
+      <li v-for="error in errors" :key="error">
+        {{ error }}
+      </li>
+    </ul>
+  </v-alert>
+</template>
+```
+
+### 5. Meaningful Link Text
+
+```vue
+<template>
+  <!-- Don't -->
+  <a href="/docs">Click here</a> for documentation
+  
+  <!-- Do -->
+  <a href="/docs">Read the documentation</a>
+</template>
+```
+
+<Warning>
+Avoid using "click here", "read more", or "learn more" without context. Screen reader users often navigate by links alone.
+</Warning>

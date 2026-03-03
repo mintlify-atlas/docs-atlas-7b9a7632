@@ -1,0 +1,464 @@
+---
+title: Transition Utilities
+description: Built-in transition components for animating element appearance and disappearance
+---
+
+## Overview
+
+Vuetify provides a set of reusable transition components for animating elements. These transitions follow Material Design motion principles and can be used with Vue's `<Transition>` and `<TransitionGroup>` components.
+
+## Import
+
+```typescript
+import {
+  VFadeTransition,
+  VScaleTransition,
+  VSlideXTransition,
+  VSlideYTransition,
+  VExpandTransition,
+  // ... and more
+} from 'vuetify/components'
+```
+
+## Available Transitions
+
+### Fade Transitions
+
+<ResponseField name="VFadeTransition">
+  Simple opacity fade in/out
+</ResponseField>
+
+### Scale Transitions
+
+<ResponseField name="VScaleTransition">
+  Scale from/to center with fade
+</ResponseField>
+
+<ResponseField name="VFabTransition">
+  Scale transition optimized for FAB buttons (from center, out-in mode)
+</ResponseField>
+
+### Slide Transitions
+
+<ResponseField name="VSlideXTransition">
+  Slide horizontally from left
+</ResponseField>
+
+<ResponseField name="VSlideXReverseTransition">
+  Slide horizontally from right
+</ResponseField>
+
+<ResponseField name="VSlideYTransition">
+  Slide vertically from top
+</ResponseField>
+
+<ResponseField name="VSlideYReverseTransition">
+  Slide vertically from bottom
+</ResponseField>
+
+### Scroll Transitions
+
+<ResponseField name="VScrollXTransition">
+  Scroll effect horizontally from left
+</ResponseField>
+
+<ResponseField name="VScrollXReverseTransition">
+  Scroll effect horizontally from right
+</ResponseField>
+
+<ResponseField name="VScrollYTransition">
+  Scroll effect vertically from top
+</ResponseField>
+
+<ResponseField name="VScrollYReverseTransition">
+  Scroll effect vertically from bottom
+</ResponseField>
+
+### Dialog Transitions
+
+<ResponseField name="VDialogTopTransition">
+  Dialog slide from top
+</ResponseField>
+
+<ResponseField name="VDialogBottomTransition">
+  Dialog slide from bottom
+</ResponseField>
+
+<ResponseField name="VDialogTransition">
+  Default dialog transition
+</ResponseField>
+
+### Expand Transitions
+
+<ResponseField name="VExpandTransition">
+  Vertical expand/collapse transition
+</ResponseField>
+
+<ResponseField name="VExpandXTransition">
+  Horizontal expand/collapse transition
+</ResponseField>
+
+## Shared Props
+
+All transition components support these props:
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the transition
+</ParamField>
+
+<ParamField path="group" type="boolean" default="false">
+  Use TransitionGroup instead of Transition (for lists)
+</ParamField>
+
+<ParamField path="hideOnLeave" type="boolean" default="false">
+  Hide element with `display: none` during leave transition
+</ParamField>
+
+<ParamField path="leaveAbsolute" type="boolean" default="false">
+  Position element absolutely during leave transition
+</ParamField>
+
+<ParamField path="mode" type="string">
+  Transition mode ('in-out', 'out-in', or 'default')
+</ParamField>
+
+<ParamField path="origin" type="string">
+  Transform origin for the transition
+</ParamField>
+
+## Usage Examples
+
+### Basic Fade
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+</script>
+
+<template>
+  <div>
+    <v-btn @click="show = !show">Toggle</v-btn>
+    
+    <v-fade-transition>
+      <v-card v-if="show">
+        Content fades in and out
+      </v-card>
+    </v-fade-transition>
+  </div>
+</template>
+```
+
+### Scale Transition
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+</script>
+
+<template>
+  <v-scale-transition>
+    <v-icon v-if="show" size="64">
+      mdi-check-circle
+    </v-icon>
+  </v-scale-transition>
+</template>
+```
+
+### Slide Transitions
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+</script>
+
+<template>
+  <div>
+    <v-slide-x-transition>
+      <v-card v-if="show">Slides from left</v-card>
+    </v-slide-x-transition>
+    
+    <v-slide-y-transition>
+      <v-card v-if="show">Slides from top</v-card>
+    </v-slide-y-transition>
+  </div>
+</template>
+```
+
+### List with TransitionGroup
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref(['Item 1', 'Item 2', 'Item 3'])
+
+function removeItem(index: number) {
+  items.value.splice(index, 1)
+}
+</script>
+
+<template>
+  <v-list>
+    <v-slide-y-transition group>
+      <v-list-item
+        v-for="(item, i) in items"
+        :key="item"
+      >
+        {{ item }}
+        <template #append>
+          <v-btn icon size="small" @click="removeItem(i)">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-list-item>
+    </v-slide-y-transition>
+  </v-list>
+</template>
+```
+
+### Expand Transition
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const expanded = ref(false)
+</script>
+
+<template>
+  <v-card>
+    <v-card-title @click="expanded = !expanded">
+      Click to expand
+      <v-icon>{{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+    </v-card-title>
+    
+    <v-expand-transition>
+      <div v-if="expanded">
+        <v-divider />
+        <v-card-text>
+          This content expands and collapses smoothly
+        </v-card-text>
+      </div>
+    </v-expand-transition>
+  </v-card>
+</template>
+```
+
+### Custom Origin
+
+```vue
+<template>
+  <v-scale-transition origin="top left">
+    <v-card v-if="show">
+      Scales from top left corner
+    </v-card>
+  </v-scale-transition>
+</template>
+```
+
+### Mode: Out-In
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const current = ref('first')
+</script>
+
+<template>
+  <div>
+    <v-btn @click="current = current === 'first' ? 'second' : 'first'">
+      Switch
+    </v-btn>
+    
+    <v-fade-transition mode="out-in">
+      <v-card v-if="current === 'first'" key="first">
+        First card
+      </v-card>
+      <v-card v-else key="second">
+        Second card
+      </v-card>
+    </v-fade-transition>
+  </div>
+</template>
+```
+
+### Staggered List Animation
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const items = ref(['Item 1', 'Item 2', 'Item 3', 'Item 4'])
+</script>
+
+<template>
+  <v-list>
+    <v-slide-x-transition 
+      group
+      hide-on-leave
+    >
+      <v-list-item
+        v-for="(item, i) in items"
+        :key="item"
+        :style="{ transitionDelay: `${i * 50}ms` }"
+      >
+        {{ item }}
+      </v-list-item>
+    </v-slide-x-transition>
+  </v-list>
+</template>
+```
+
+### FAB Button
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const show = ref(true)
+</script>
+
+<template>
+  <v-fab-transition>
+    <v-btn
+      v-if="show"
+      icon
+      color="primary"
+      size="large"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </v-fab-transition>
+</template>
+```
+
+### Carousel Transitions
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const current = ref(0)
+const images = ['/img1.jpg', '/img2.jpg', '/img3.jpg']
+</script>
+
+<template>
+  <div>
+    <v-slide-x-transition mode="out-in">
+      <v-img :key="current" :src="images[current]" />
+    </v-slide-x-transition>
+    
+    <v-btn @click="current = (current - 1 + images.length) % images.length">
+      Previous
+    </v-btn>
+    <v-btn @click="current = (current + 1) % images.length">
+      Next
+    </v-btn>
+  </div>
+</template>
+```
+
+### Conditional Messages
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const message = ref<string | null>(null)
+
+function showSuccess() {
+  message.value = 'Success!'
+  setTimeout(() => message.value = null, 3000)
+}
+
+function showError() {
+  message.value = 'Error!'
+  setTimeout(() => message.value = null, 3000)
+}
+</script>
+
+<template>
+  <div>
+    <v-slide-y-transition>
+      <v-alert v-if="message" :type="message.includes('Success') ? 'success' : 'error'">
+        {{ message }}
+      </v-alert>
+    </v-slide-y-transition>
+  </div>
+</template>
+```
+
+## Creating Custom Transitions
+
+### CSS Transition
+
+```typescript
+import { createCssTransition } from 'vuetify/components/transitions'
+
+export const VMyTransition = createCssTransition(
+  'my-transition',
+  'center center', // transform origin
+  'out-in'        // mode
+)
+```
+
+### JavaScript Transition
+
+```typescript
+import { createJavascriptTransition } from 'vuetify/components/transitions'
+
+export const VMyJsTransition = createJavascriptTransition(
+  'my-js-transition',
+  {
+    onBeforeEnter(el: HTMLElement) {
+      el.style.opacity = '0'
+    },
+    onEnter(el: HTMLElement, done: () => void) {
+      el.style.transition = 'opacity 0.3s'
+      el.style.opacity = '1'
+      setTimeout(done, 300)
+    },
+    onLeave(el: HTMLElement, done: () => void) {
+      el.style.transition = 'opacity 0.3s'
+      el.style.opacity = '0'
+      setTimeout(done, 300)
+    }
+  }
+)
+```
+
+## Accessibility
+
+- Transitions respect `prefers-reduced-motion` media query
+- Set `disabled` prop to disable transitions for accessibility
+- Use semantic HTML within transitions
+- Ensure content is accessible during transition
+
+## Performance Tips
+
+1. Use CSS transforms (translate, scale) instead of position changes
+2. Avoid animating layout properties (width, height, margin)
+3. Use `will-change` CSS property sparingly
+4. Prefer `v-show` over `v-if` for frequent toggles
+5. Use `hideOnLeave` for better performance with complex content
+
+## Notes
+
+- All transitions use CSS for smooth 60fps animations
+- Expand transitions use JavaScript for dynamic height calculation
+- Group mode requires unique `:key` on each item
+- Transition duration is typically 150-300ms
+- Origin affects scale and rotation transformations
+
+## See Also
+
+- [Vue Transition Documentation](https://vuejs.org/guide/built-ins/transition.html)
+- [Material Motion Guidelines](https://material.io/design/motion/)
+- [VDialog Component](/api/components/v-dialog)

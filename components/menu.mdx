@@ -1,0 +1,249 @@
+---
+title: VMenu
+description: Contextual overlay component for displaying options and actions.
+---
+
+# VMenu
+
+The `VMenu` component creates contextual menus that overlay content. It's built on top of `VOverlay` and provides keyboard navigation, nested menu support, and flexible positioning.
+
+## Basic Usage
+
+```vue
+<template>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Open Menu</v-btn>
+    </template>
+    <v-list>
+      <v-list-item>Option 1</v-list-item>
+      <v-list-item>Option 2</v-list-item>
+      <v-list-item>Option 3</v-list-item>
+    </v-list>
+  </v-menu>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean">
+  Controls the visibility of the menu. Use with v-model.
+</ParamField>
+
+<ParamField path="id" type="string">
+  Custom ID for the menu element. Auto-generated if not provided.
+</ParamField>
+
+<ParamField path="submenu" type="boolean" default="false">
+  Indicates this menu is a submenu of another menu. Changes arrow key behavior.
+</ParamField>
+
+<ParamField path="activator">
+  Element or selector string to use as the activator.
+</ParamField>
+
+<ParamField path="activatorProps" type="object">
+  Props to bind to the activator element.
+</ParamField>
+
+<ParamField path="openDelay" type="number" default="300">
+  Delay in milliseconds before the menu opens.
+</ParamField>
+
+<ParamField path="closeDelay" type="number" default="250">
+  Delay in milliseconds before the menu closes.
+</ParamField>
+
+<ParamField path="closeOnContentClick" type="boolean" default="true">
+  Whether to close the menu when clicking on its content.
+</ParamField>
+
+<ParamField path="location" type="string">
+  Position where the menu appears relative to activator. Default is 'bottom' for menus, 'end' for submenus.
+</ParamField>
+
+<ParamField path="locationStrategy" type="'static' | 'connected'" default="'connected'">
+  Strategy for positioning the menu.
+</ParamField>
+
+<ParamField path="scrollStrategy" type="'none' | 'close' | 'block' | 'reposition'" default="'reposition'">
+  How the menu behaves when the page is scrolled.
+</ParamField>
+
+<ParamField path="offset" type="number | string | number[]">
+  Offset of the menu from the activator.
+</ParamField>
+
+<ParamField path="scrim" type="boolean" default="false">
+  Whether to display an overlay scrim behind the menu.
+</ParamField>
+
+<ParamField path="transition" type="string | object">
+  Custom transition component for the menu appearance.
+</ParamField>
+
+<ParamField path="persistent" type="boolean" default="false">
+  Whether clicking outside the menu closes it.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the menu activator.
+</ParamField>
+
+<ParamField path="captureFocus" type="boolean" default="true">
+  Whether to trap focus within the menu when open.
+</ParamField>
+
+<ParamField path="retainFocus" type="boolean" default="true">
+  Whether to return focus to activator when menu closes.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the menu is opened or closed.
+</ParamField>
+
+## Slots
+
+<ParamField path="activator" type="{ props: object, isActive: boolean }">
+  Slot for the element that triggers the menu. The props must be bound to the activator element.
+</ParamField>
+
+<ParamField path="default">
+  Content displayed inside the menu overlay.
+</ParamField>
+
+## Navigation Patterns
+
+### Controlled Menu
+
+```vue
+<template>
+  <v-menu v-model="menu">
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Menu</v-btn>
+    </template>
+    <v-list>
+      <v-list-item @click="menu = false">Close</v-list-item>
+    </v-list>
+  </v-menu>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const menu = ref(false)
+</script>
+```
+
+### Nested Menus
+
+```vue
+<template>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Menu</v-btn>
+    </template>
+    <v-list>
+      <v-list-item>Option 1</v-list-item>
+      <v-menu submenu>
+        <template #activator="{ props }">
+          <v-list-item v-bind="props">More Options</v-list-item>
+        </template>
+        <v-list>
+          <v-list-item>Sub Option 1</v-list-item>
+          <v-list-item>Sub Option 2</v-list-item>
+        </v-list>
+      </v-menu>
+    </v-list>
+  </v-menu>
+</template>
+```
+
+### Custom Position
+
+```vue
+<template>
+  <v-menu location="end">
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Right Menu</v-btn>
+    </template>
+    <v-list>
+      <v-list-item>Option 1</v-list-item>
+    </v-list>
+  </v-menu>
+</template>
+```
+
+### Persistent Menu
+
+```vue
+<template>
+  <v-menu persistent :close-on-content-click="false">
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Persistent Menu</v-btn>
+    </template>
+    <v-card>
+      <v-card-text>
+        This menu won't close on outside clicks
+      </v-card-text>
+    </v-card>
+  </v-menu>
+</template>
+```
+
+## Keyboard Navigation
+
+The menu component includes built-in keyboard navigation:
+
+- **Arrow Down**: Focus next menu item
+- **Arrow Up**: Focus previous menu item
+- **Enter**: Activate focused item (when `closeOnContentClick` is false)
+- **Tab**: Move through focusable elements
+- **Escape**: Close menu
+- **Arrow Left/Right**: Navigate submenus (in RTL-aware manner)
+
+## Accessibility
+
+The menu automatically sets ARIA attributes:
+
+- `aria-haspopup="menu"` on the activator
+- `aria-expanded` reflects the open/closed state
+- `aria-controls` and `aria-owns` link to the menu ID
+- Focus management for keyboard navigation
+
+## Examples
+
+### Menu with Icons
+
+```vue
+<template>
+  <v-menu>
+    <template #activator="{ props }">
+      <v-btn icon v-bind="props">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </template>
+    <v-list>
+      <v-list-item prepend-icon="mdi-pencil">Edit</v-list-item>
+      <v-list-item prepend-icon="mdi-delete">Delete</v-list-item>
+    </v-list>
+  </v-menu>
+</template>
+```
+
+### Offset Menu
+
+```vue
+<template>
+  <v-menu :offset="[0, 10]">
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Menu</v-btn>
+    </template>
+    <v-list>
+      <v-list-item>Option 1</v-list-item>
+    </v-list>
+  </v-menu>
+</template>
+```

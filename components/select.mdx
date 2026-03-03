@@ -1,0 +1,291 @@
+---
+title: VSelect
+description: Select component for choosing from a list of options
+---
+
+# VSelect
+
+The `VSelect` component provides a dropdown menu for selecting one or more items from a list. It includes keyboard navigation, search filtering, and virtual scrolling for performance.
+
+## Basic Usage
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    :items="items"
+    label="Select an item"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = ['California', 'Colorado', 'Florida', 'Georgia', 'Texas']
+</script>
+```
+
+## Props
+
+<ParamField path="items" type="readonly any[]">
+  Array of items to display in the dropdown.
+</ParamField>
+
+<ParamField path="itemTitle" type="string | function">
+  Property name or function to determine the display text for each item.
+</ParamField>
+
+<ParamField path="itemValue" type="string | function">
+  Property name or function to determine the value for each item.
+</ParamField>
+
+<ParamField path="returnObject" type="boolean" default="false">
+  Return the entire item object as the value instead of just the item value.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allow multiple item selection.
+</ParamField>
+
+<ParamField path="chips" type="boolean" default="false">
+  Display selected items as chips.
+</ParamField>
+
+<ParamField path="closableChips" type="boolean" default="false">
+  Allow chips to be closed/removed.
+</ParamField>
+
+<ParamField path="hideSelected" type="boolean" default="false">
+  Hide selected items from the list.
+</ParamField>
+
+<ParamField path="hideNoData" type="boolean" default="false">
+  Hide the menu when there are no items to display.
+</ParamField>
+
+<ParamField path="menuIcon" type="string" default="$dropdown">
+  Icon to display for the dropdown menu indicator.
+</ParamField>
+
+<ParamField path="noDataText" type="string" default="$vuetify.noDataText">
+  Text to display when no items are available.
+</ParamField>
+
+<ParamField path="eager" type="boolean" default="false">
+  Render the menu content immediately instead of lazy loading.
+</ParamField>
+
+<ParamField path="openOnClear" type="boolean" default="false">
+  Open the menu when the clear icon is clicked.
+</ParamField>
+
+## Multiple Selection
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    :items="items"
+    label="Select multiple"
+    multiple
+    chips
+    closable-chips
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref([])
+const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']
+</script>
+```
+
+## Object Items
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    :items="items"
+    item-title="name"
+    item-value="id"
+    label="Select a user"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { id: 1, name: 'John Doe', role: 'Admin' },
+  { id: 2, name: 'Jane Smith', role: 'User' },
+  { id: 3, name: 'Bob Johnson', role: 'Manager' },
+]
+</script>
+```
+
+## Return Object
+
+```vue
+<template>
+  <div>
+    <VSelect
+      v-model="selected"
+      :items="items"
+      item-title="name"
+      item-value="id"
+      label="Select a user"
+      return-object
+    />
+    
+    <p v-if="selected">
+      Selected: {{ selected.name }} ({{ selected.role }})
+    </p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { id: 1, name: 'John Doe', role: 'Admin' },
+  { id: 2, name: 'Jane Smith', role: 'User' },
+]
+</script>
+```
+
+## Keyboard Navigation
+
+The select supports keyboard navigation:
+
+- **Enter/Space/ArrowDown**: Open menu
+- **Escape/Tab**: Close menu
+- **ArrowUp/ArrowDown**: Navigate items
+- **Home/End**: Jump to first/last item
+- **Type letters**: Jump to item starting with those letters
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    :items="['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']"
+    label="Try keyboard navigation"
+  />
+</template>
+```
+
+## Custom Item Display
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    :items="items"
+    item-title="name"
+    item-value="id"
+    label="Select a user"
+  >
+    <template #item="{ item, props }">
+      <VListItem v-bind="props">
+        <template #prepend>
+          <VAvatar :color="item.raw.color">
+            {{ item.raw.name[0] }}
+          </VAvatar>
+        </template>
+        <template #title>
+          {{ item.raw.name }}
+        </template>
+        <template #subtitle>
+          {{ item.raw.email }}
+        </template>
+      </VListItem>
+    </template>
+  </VSelect>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const selected = ref(null)
+const items = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', color: 'blue' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', color: 'green' },
+]
+</script>
+```
+
+## With Search
+
+```vue
+<template>
+  <VSelect
+    v-model="selected"
+    v-model:search="search"
+    :items="filteredItems"
+    label="Search and select"
+  />
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const selected = ref(null)
+const search = ref('')
+const allItems = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry']
+
+const filteredItems = computed(() => {
+  if (!search.value) return allItems
+  return allItems.filter(item => 
+    item.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: any) => void">
+  Emitted when the selected value changes.
+</ParamField>
+
+<ParamField path="update:menu" type="(value: boolean) => void">
+  Emitted when the menu opens or closes.
+</ParamField>
+
+<ParamField path="update:search" type="(value: string) => void">
+  Emitted when the search query changes.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the input focus state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="item" type="{ item, index, props }">
+  Customize the appearance of list items.
+</ParamField>
+
+<ParamField path="chip" type="{ item, index, props }">
+  Customize the appearance of selected chips.
+</ParamField>
+
+<ParamField path="selection" type="{ item, index }">
+  Customize how selected items are displayed.
+</ParamField>
+
+<ParamField path="no-data" type="{}">
+  Content to display when no items are available.
+</ParamField>
+
+<ParamField path="prepend-item" type="{}">
+  Content to display before the list items.
+</ParamField>
+
+<ParamField path="append-item" type="{}">
+  Content to display after the list items.
+</ParamField>

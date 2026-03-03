@@ -1,0 +1,189 @@
+---
+title: Divider
+description: The VDivider component displays a thin line to separate content sections.
+---
+
+# Divider
+
+The `VDivider` component is used to separate content sections both horizontally and vertically. It can include text or icons and supports various styling options.
+
+## Usage
+
+```vue
+<template>
+  <v-divider />
+</template>
+```
+
+## Props
+
+<ParamField path="vertical" type="boolean" default="false">
+  Displays the divider vertically
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Adds indentation to the divider
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the divider
+</ParamField>
+
+<ParamField path="thickness" type="string | number">
+  Sets the thickness of the divider line
+</ParamField>
+
+<ParamField path="length" type="string | number">
+  Sets the length of the divider (height for horizontal, width for vertical)
+</ParamField>
+
+<ParamField path="opacity" type="string | number">
+  Sets the opacity of the divider border
+</ParamField>
+
+<ParamField path="variant" type="string" default="solid">
+  Border style variant. Options: `solid`, `dashed`, `dotted`, `double`
+</ParamField>
+
+<ParamField path="gradient" type="boolean" default="false">
+  Applies a gradient effect to the divider
+</ParamField>
+
+<ParamField path="contentOffset" type="string | number | array">
+  Offset for divider content. Can be a single value or array of `[margin, shift]`
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  Slot for content to display in the middle of the divider
+</ParamField>
+
+## Examples
+
+### Basic Divider
+
+```vue
+<template>
+  <div>
+    <p>Content above</p>
+    <v-divider />
+    <p>Content below</p>
+  </div>
+</template>
+```
+
+### Vertical Divider
+
+```vue
+<template>
+  <div class="d-flex align-center" style="height: 100px;">
+    <div>Left content</div>
+    <v-divider vertical class="mx-4" />
+    <div>Right content</div>
+  </div>
+</template>
+```
+
+### Divider with Text
+
+```vue
+<template>
+  <div>
+    <v-divider>OR</v-divider>
+  </div>
+</template>
+```
+
+### Colored Dividers
+
+```vue
+<template>
+  <div>
+    <v-divider color="primary" thickness="2" />
+    <v-divider color="secondary" thickness="3" class="my-4" />
+    <v-divider color="error" thickness="4" />
+  </div>
+</template>
+```
+
+### Divider Variants
+
+```vue
+<template>
+  <div>
+    <p>Solid</p>
+    <v-divider variant="solid" />
+    
+    <p class="mt-4">Dashed</p>
+    <v-divider variant="dashed" />
+    
+    <p class="mt-4">Dotted</p>
+    <v-divider variant="dotted" />
+    
+    <p class="mt-4">Double</p>
+    <v-divider variant="double" thickness="4" />
+  </div>
+</template>
+```
+
+### Inset Divider
+
+```vue
+<template>
+  <v-list>
+    <v-list-item title="Item 1" />
+    <v-divider inset />
+    <v-list-item title="Item 2" />
+    <v-divider inset />
+    <v-list-item title="Item 3" />
+  </v-list>
+</template>
+```
+
+### Divider with Custom Length
+
+```vue
+<template>
+  <div>
+    <v-divider length="50%" />
+    <v-divider length="200" class="my-4" />
+  </div>
+</template>
+```
+
+### Gradient Divider
+
+```vue
+<template>
+  <div>
+    <v-divider gradient color="primary" />
+  </div>
+</template>
+```
+
+### Divider with Content Offset
+
+```vue
+<template>
+  <div>
+    <v-divider :content-offset="20">
+      Section Title
+    </v-divider>
+  </div>
+</template>
+```
+
+### Divider in Navigation
+
+```vue
+<template>
+  <v-list>
+    <v-list-item title="Home" prepend-icon="mdi-home" />
+    <v-list-item title="Profile" prepend-icon="mdi-account" />
+    <v-divider class="my-2" />
+    <v-list-item title="Settings" prepend-icon="mdi-cog" />
+    <v-list-item title="Logout" prepend-icon="mdi-logout" />
+  </v-list>
+</template>
+```

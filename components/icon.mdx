@@ -1,0 +1,286 @@
+---
+title: VIcon
+description: Icon component with support for multiple icon sets
+---
+
+# VIcon
+
+The `VIcon` component displays icons from various icon sets. It supports Material Design Icons, Font Awesome, custom SVGs, and more.
+
+## Basic Usage
+
+```vue
+<template>
+  <VIcon>mdi-home</VIcon>
+</template>
+```
+
+## Using Icon Prop
+
+```vue
+<template>
+  <VIcon icon="mdi-heart" />
+</template>
+```
+
+## Sizes
+
+```vue
+<template>
+  <VIcon size="x-small">mdi-home</VIcon>
+  <VIcon size="small">mdi-home</VIcon>
+  <VIcon size="default">mdi-home</VIcon>
+  <VIcon size="large">mdi-home</VIcon>
+  <VIcon size="x-large">mdi-home</VIcon>
+  
+  <!-- Custom size -->
+  <VIcon size="64">mdi-home</VIcon>
+</template>
+```
+
+## Colors
+
+```vue
+<template>
+  <VIcon color="primary">mdi-home</VIcon>
+  <VIcon color="secondary">mdi-account</VIcon>
+  <VIcon color="success">mdi-check-circle</VIcon>
+  <VIcon color="error">mdi-alert-circle</VIcon>
+  <VIcon color="warning">mdi-alert</VIcon>
+  <VIcon color="info">mdi-information</VIcon>
+  
+  <!-- Custom color -->
+  <VIcon color="#FF5733">mdi-heart</VIcon>
+</template>
+```
+
+## Props
+
+<ParamField path="icon" type="IconValue">
+  The icon to display. Can be a string (icon name) or IconValue object
+</ParamField>
+
+<ParamField path="color" type="string">
+  Icon color (supports theme colors and hex values)
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Icon size. Predefined: `x-small`, `small`, `default`, `large`, `x-large`, or custom number/string
+</ParamField>
+
+<ParamField path="opacity" type="string | number">
+  Icon opacity (0-1 or CSS opacity value)
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Applies disabled styling to the icon
+</ParamField>
+
+<ParamField path="start" type="boolean" default="false">
+  Applies margin to the end (useful when icon is at start of text)
+</ParamField>
+
+<ParamField path="end" type="boolean" default="false">
+  Applies margin to the start (useful when icon is at end of text)
+</ParamField>
+
+<ParamField path="tag" type="string" default="i">
+  HTML tag to use for root element
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Theme to apply to the icon
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  Icon content (icon name as text)
+</ParamField>
+
+## Examples
+
+### Material Design Icons
+
+```vue
+<template>
+  <VIcon>mdi-home</VIcon>
+  <VIcon>mdi-account</VIcon>
+  <VIcon>mdi-settings</VIcon>
+</template>
+```
+
+### Font Awesome
+
+```vue
+<template>
+  <VIcon>fas fa-user</VIcon>
+  <VIcon>fab fa-facebook</VIcon>
+  <VIcon>far fa-heart</VIcon>
+</template>
+```
+
+### With Opacity
+
+```vue
+<template>
+  <VIcon opacity="0.3">mdi-heart</VIcon>
+  <VIcon opacity="0.6">mdi-heart</VIcon>
+  <VIcon opacity="1">mdi-heart</VIcon>
+</template>
+```
+
+### Clickable Icon
+
+```vue
+<template>
+  <VIcon @click="handleClick" style="cursor: pointer">
+    mdi-delete
+  </VIcon>
+</template>
+
+<script setup>
+function handleClick() {
+  console.log('Icon clicked')
+}
+</script>
+```
+
+### Disabled State
+
+```vue
+<template>
+  <VIcon disabled>mdi-account</VIcon>
+</template>
+```
+
+### Start and End Positioning
+
+```vue
+<template>
+  <div>
+    <VIcon start>mdi-home</VIcon>
+    <span>Home</span>
+  </div>
+  
+  <div>
+    <span>Next</span>
+    <VIcon end>mdi-arrow-right</VIcon>
+  </div>
+</template>
+```
+
+### Custom SVG Icon
+
+```vue
+<template>
+  <VIcon>
+    <svg viewBox="0 0 24 24">
+      <path d="M12,2L2,22H22L12,2Z" />
+    </svg>
+  </VIcon>
+</template>
+```
+
+### Rotating Icon
+
+```vue
+<template>
+  <VIcon 
+    class="rotating-icon"
+    size="48"
+  >
+    mdi-loading
+  </VIcon>
+</template>
+
+<style scoped>
+.rotating-icon {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+```
+
+### Gradient Color
+
+```vue
+<template>
+  <VIcon 
+    size="64"
+    style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
+  >
+    mdi-heart
+  </VIcon>
+</template>
+```
+
+### Icon Button Pattern
+
+```vue
+<template>
+  <VBtn icon>
+    <VIcon>mdi-heart</VIcon>
+  </VBtn>
+</template>
+```
+
+### Different Icon Sets
+
+```vue
+<template>
+  <!-- Material Design Icons -->
+  <VIcon>mdi-home</VIcon>
+  
+  <!-- Font Awesome -->
+  <VIcon>fa-home</VIcon>
+  
+  <!-- Material Icons (outlined) -->
+  <VIcon>home</VIcon>
+  
+  <!-- Custom component icon -->
+  <VIcon :icon="CustomIconComponent" />
+</template>
+```
+
+## Icon Sets
+
+Vuetify supports multiple icon sets out of the box:
+
+### Material Design Icons (MDI)
+
+```vue
+<VIcon>mdi-account</VIcon>
+```
+
+Prefix: `mdi-`
+
+### Font Awesome
+
+```vue
+<VIcon>fas fa-user</VIcon>
+<VIcon>fab fa-facebook</VIcon>
+<VIcon>far fa-heart</VIcon>
+```
+
+Prefixes: `fas`, `fab`, `far`, `fal`, `fad`
+
+### Material Icons
+
+```vue
+<VIcon>home</VIcon>
+```
+
+No prefix required
+
+## Notes
+
+- Icons are not translated (have `notranslate` class)
+- Icons with click handlers automatically get `role="button"` and proper keyboard navigation
+- The icon size can be controlled globally through theme configuration
+- Disabled icons get reduced opacity and are not keyboard accessible
+- Custom icon components can be used by passing them to the `icon` prop

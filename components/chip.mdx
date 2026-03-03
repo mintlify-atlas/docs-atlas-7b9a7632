@@ -1,0 +1,312 @@
+---
+title: Chip
+description: The VChip component displays small, compact elements that represent an input, attribute, or action.
+---
+
+# Chip
+
+The `VChip` component is used to convey small pieces of information. Using the `closable` prop, chips can be interactive and used as filters or selections.
+
+## Usage
+
+```vue
+<template>
+  <v-chip>Default Chip</v-chip>
+</template>
+```
+
+## Props
+
+<ParamField path="text" type="string | number | boolean">
+  Text content displayed in the chip
+</ParamField>
+
+<ParamField path="label" type="boolean" default="false">
+  Removes the chip's border radius
+</ParamField>
+
+<ParamField path="pill" type="boolean" default="false">
+  Applies pill styling (maximum border radius)
+</ParamField>
+
+<ParamField path="closable" type="boolean" default="false">
+  Adds a close icon which emits the `click:close` event when clicked
+</ParamField>
+
+<ParamField path="closeIcon" type="IconValue" default="$delete">
+  Icon to use for the close button
+</ParamField>
+
+<ParamField path="closeLabel" type="string" default="$vuetify.close">
+  Accessibility label for the close button
+</ParamField>
+
+<ParamField path="filter" type="boolean" default="false">
+  Shows a check icon when selected (requires chip group)
+</ParamField>
+
+<ParamField path="filterIcon" type="IconValue" default="$complete">
+  Icon to display when filter is active
+</ParamField>
+
+<ParamField path="prependAvatar" type="string">
+  Avatar image URL displayed before the text
+</ParamField>
+
+<ParamField path="prependIcon" type="IconValue">
+  Icon displayed before the text
+</ParamField>
+
+<ParamField path="appendAvatar" type="string">
+  Avatar image URL displayed after the text
+</ParamField>
+
+<ParamField path="appendIcon" type="IconValue">
+  Icon displayed after the text
+</ParamField>
+
+<ParamField path="draggable" type="boolean" default="false">
+  Makes the chip draggable
+</ParamField>
+
+<ParamField path="link" type="boolean">
+  Makes the chip a link (automatically detected when using `to` or `href`)
+</ParamField>
+
+<ParamField path="to" type="string | object">
+  Vue Router location for the chip link
+</ParamField>
+
+<ParamField path="href" type="string">
+  Standard anchor href attribute
+</ParamField>
+
+<ParamField path="ripple" type="boolean | object" default="true">
+  Applies the ripple directive when clickable
+</ParamField>
+
+<ParamField path="modelValue" type="boolean" default="true">
+  Controls the visibility of the chip
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Removes the chip's interactivity
+</ParamField>
+
+<ParamField path="activeClass" type="string">
+  CSS class applied when the chip is active
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the chip
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color applied when chip is not selected
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts the vertical height. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation level (0-24)
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Sets the height and width. Options: `x-small`, `small`, `default`, `large`, `x-large`
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the chip
+</ParamField>
+
+<ParamField path="tag" type="string" default="span">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+<ParamField path="variant" type="string" default="tonal">
+  Applies a distinct style. Options: `flat`, `text`, `elevated`, `tonal`, `outlined`, `plain`
+</ParamField>
+
+## Events
+
+<ParamField path="click" type="(e: MouseEvent | KeyboardEvent) => void">
+  Emitted when the chip is clicked
+</ParamField>
+
+<ParamField path="click:close" type="(e: MouseEvent) => void">
+  Emitted when the close button is clicked
+</ParamField>
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+  Emitted when the chip visibility changes
+</ParamField>
+
+<ParamField path="group:selected" type="(val: { value: boolean }) => void">
+  Emitted when the chip selection state changes in a group
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default slot for chip content. Receives selection state props when in a group
+</ParamField>
+
+<ParamField path="prepend">
+  Slot for content before the text
+</ParamField>
+
+<ParamField path="append">
+  Slot for content after the text
+</ParamField>
+
+<ParamField path="close">
+  Slot for custom close button content
+</ParamField>
+
+<ParamField path="filter">
+  Slot for custom filter icon
+</ParamField>
+
+## Examples
+
+### Basic Chips
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip>Default</v-chip>
+    <v-chip color="primary">Primary</v-chip>
+    <v-chip color="secondary">Secondary</v-chip>
+    <v-chip color="success">Success</v-chip>
+  </div>
+</template>
+```
+
+### Closable Chips
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip 
+      v-for="tag in tags"
+      :key="tag"
+      closable
+      @click:close="removeTag(tag)"
+    >
+      {{ tag }}
+    </v-chip>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tags = ref(['Vue', 'Vuetify', 'JavaScript'])
+
+function removeTag(tag) {
+  tags.value = tags.value.filter(t => t !== tag)
+}
+</script>
+```
+
+### Chips with Icons
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip prepend-icon="mdi-account" color="primary">
+      User
+    </v-chip>
+    <v-chip prepend-icon="mdi-email" color="secondary">
+      Email
+    </v-chip>
+    <v-chip append-icon="mdi-chevron-right" color="success">
+      Next
+    </v-chip>
+  </div>
+</template>
+```
+
+### Chips with Avatars
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip prepend-avatar="/user1.jpg">
+      John Doe
+    </v-chip>
+    <v-chip prepend-avatar="/user2.jpg">
+      Jane Smith
+    </v-chip>
+  </div>
+</template>
+```
+
+### Chip Variants
+
+```vue
+<template>
+  <div class="d-flex flex-wrap gap-2">
+    <v-chip variant="elevated" color="primary">Elevated</v-chip>
+    <v-chip variant="flat" color="primary">Flat</v-chip>
+    <v-chip variant="tonal" color="primary">Tonal</v-chip>
+    <v-chip variant="outlined" color="primary">Outlined</v-chip>
+    <v-chip variant="text" color="primary">Text</v-chip>
+  </div>
+</template>
+```
+
+### Chip Shapes
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip>Default</v-chip>
+    <v-chip label>Label</v-chip>
+    <v-chip pill>Pill</v-chip>
+  </div>
+</template>
+```
+
+### Clickable Chips
+
+```vue
+<template>
+  <div class="d-flex gap-2">
+    <v-chip 
+      color="primary"
+      @click="handleClick"
+    >
+      Click Me
+    </v-chip>
+    <v-chip 
+      color="secondary"
+      to="/profile"
+    >
+      Profile Link
+    </v-chip>
+  </div>
+</template>
+
+<script setup>
+function handleClick() {
+  console.log('Chip clicked')
+}
+</script>
+```
+
+### Chip Sizes
+
+```vue
+<template>
+  <div class="d-flex align-center gap-2">
+    <v-chip size="x-small">X-Small</v-chip>
+    <v-chip size="small">Small</v-chip>
+    <v-chip>Default</v-chip>
+    <v-chip size="large">Large</v-chip>
+    <v-chip size="x-large">X-Large</v-chip>
+  </div>
+</template>
+```

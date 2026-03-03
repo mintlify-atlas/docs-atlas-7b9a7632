@@ -1,0 +1,488 @@
+---
+title: Blueprints
+description: Use Vuetify blueprints to quickly apply Material Design 1, 2, or 3 styling and component defaults.
+---
+
+# Blueprints
+
+Blueprints are preset configurations that apply consistent styling across your entire application. Vuetify includes three official blueprints based on different Material Design versions: MD1, MD2, and MD3.
+
+## What is a Blueprint?
+
+A blueprint is a complete Vuetify configuration object that includes:
+
+- Component defaults
+- Theme colors
+- Icon set configuration
+- Typography and spacing presets
+
+```ts
+interface Blueprint {
+  defaults?: DefaultsOptions
+  theme?: ThemeOptions
+  icons?: IconOptions
+  locale?: LocaleOptions
+  date?: DateOptions
+  display?: DisplayOptions
+  goTo?: GoToOptions
+}
+```
+
+## Using Blueprints
+
+Apply a blueprint when creating your Vuetify instance:
+
+<CodeGroup>
+```ts Material Design 3 (Default)
+import { createVuetify } from 'vuetify'
+import { md3 } from 'vuetify/blueprints'
+
+const vuetify = createVuetify({
+  blueprint: md3,
+})
+```
+
+```ts Material Design 2
+import { createVuetify } from 'vuetify'
+import { md2 } from 'vuetify/blueprints'
+
+const vuetify = createVuetify({
+  blueprint: md2,
+})
+```
+
+```ts Material Design 1
+import { createVuetify } from 'vuetify'
+import { md1 } from 'vuetify/blueprints'
+
+const vuetify = createVuetify({
+  blueprint: md1,
+})
+```
+</CodeGroup>
+
+## Material Design 3 (MD3)
+
+The latest Material Design specification with modern, rounded components.
+
+### Key Features
+
+- Large border radius on buttons (`rounded: 'xl'`)
+- Outlined variant for inputs
+- Flat app bars
+- Divided date picker
+- Rounded cards and chips
+
+### Component Defaults
+
+<Accordion title="View MD3 Configuration">
+```ts
+{
+  defaults: {
+    VAppBar: {
+      flat: true,
+    },
+    VAutocomplete: {
+      variant: 'outlined',
+    },
+    VBtn: {
+      color: 'primary',
+      rounded: 'xl',
+    },
+    VCard: {
+      rounded: 'lg',
+    },
+    VCheckbox: {
+      color: 'secondary',
+      inset: true,
+      indentDetails: true,
+    },
+    VChip: {
+      rounded: 'sm',
+    },
+    VCombobox: {
+      variant: 'outlined',
+    },
+    VDatePicker: {
+      controlHeight: 48,
+      color: 'primary',
+      divided: true,
+      elevation: 1,
+      rounded: 'xl',
+      VBtn: {
+        color: 'high-emphasis',
+        rounded: 'circle',
+      },
+    },
+    VSelect: {
+      variant: 'outlined',
+    },
+    VTextField: {
+      variant: 'outlined',
+    },
+    VTextarea: {
+      variant: 'outlined',
+    },
+  },
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#6750a4',
+          secondary: '#b4b0bb',
+          tertiary: '#7d5260',
+          error: '#b3261e',
+          surface: '#fffbfe',
+        },
+      },
+    },
+  },
+}
+```
+</Accordion>
+
+### Visual Style
+
+<CodeGroup>
+```vue Buttons
+<!-- MD3 buttons are highly rounded -->
+<v-btn>Default</v-btn>
+<!-- Renders with rounded="xl" (24px border radius) -->
+```
+
+```vue Text Fields
+<!-- MD3 uses outlined inputs -->
+<v-text-field label="Name" />
+<!-- Renders with variant="outlined" -->
+```
+
+```vue Cards
+<!-- MD3 cards have large rounded corners -->
+<v-card>
+  <v-card-title>Title</v-card-title>
+</v-card>
+<!-- Renders with rounded="lg" (16px border radius) -->
+```
+</CodeGroup>
+
+## Material Design 2 (MD2)
+
+Material Design 2 emphasizes filled inputs and moderate rounding.
+
+### Key Features
+
+- Filled variant for inputs
+- Medium border radius (`rounded: 'md'`)
+- Uppercase button text
+- Indented form field details
+
+### Component Defaults
+
+<Accordion title="View MD2 Configuration">
+```ts
+{
+  defaults: {
+    global: {
+      rounded: 'md',
+    },
+    VAutocomplete: {
+      variant: 'filled',
+    },
+    VBtn: {
+      class: 'text-uppercase',
+      color: 'primary',
+    },
+    VCheckbox: {
+      color: 'secondary',
+      indentDetails: true,
+    },
+    VCombobox: {
+      variant: 'filled',
+    },
+    VDatePicker: {
+      color: 'primary',
+      controlHeight: 56,
+      elevation: 2,
+      rounded: 'md',
+      VBtn: {
+        color: 'high-emphasis',
+        rounded: 'circle',
+      },
+    },
+    VSelect: {
+      variant: 'filled',
+    },
+    VTextField: {
+      variant: 'filled',
+    },
+    VTextarea: {
+      variant: 'filled',
+    },
+  },
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#6200EE',
+          'primary-darken-1': '#3700B3',
+          secondary: '#03DAC6',
+          'secondary-darken-1': '#018786',
+          error: '#B00020',
+        },
+      },
+    },
+  },
+}
+```
+</Accordion>
+
+### Visual Style
+
+```vue
+<!-- MD2 uses filled inputs by default -->
+<v-text-field label="Name" />
+<!-- Renders with variant="filled" -->
+
+<!-- Buttons have uppercase text -->
+<v-btn>Submit</v-btn>
+<!-- Renders as "SUBMIT" -->
+```
+
+## Material Design 1 (MD1)
+
+The original Material Design with sharp corners and underlined inputs.
+
+### Key Features
+
+- Underlined variant for inputs
+- Sharp corners (`rounded: 0` on buttons)
+- Uppercase button text
+- Small global border radius
+
+### Component Defaults
+
+<Accordion title="View MD1 Configuration">
+```ts
+{
+  defaults: {
+    global: {
+      rounded: 'sm',
+    },
+    VAvatar: {
+      rounded: 'circle',
+    },
+    VAutocomplete: {
+      variant: 'underlined',
+    },
+    VBtn: {
+      class: 'text-uppercase',
+      color: 'primary',
+      rounded: 0,  // Sharp corners
+    },
+    VCheckbox: {
+      color: 'secondary',
+      indentDetails: false,
+    },
+    VCombobox: {
+      variant: 'underlined',
+    },
+    VDatePicker: {
+      color: 'primary',
+      controlHeight: 44,
+      elevation: 1,
+      rounded: 0,
+      VBtn: {
+        color: 'high-emphasis',
+        rounded: 'circle',
+      },
+    },
+    VSelect: {
+      variant: 'underlined',
+    },
+    VTextField: {
+      variant: 'underlined',
+    },
+    VTextarea: {
+      variant: 'underlined',
+    },
+  },
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#3F51B5',
+          'primary-darken-1': '#303F9F',
+          'primary-lighten-1': '#C5CAE9',
+          secondary: '#FF4081',
+          'secondary-darken-1': '#F50057',
+          'secondary-lighten-1': '#FF80AB',
+          accent: '#009688',
+        },
+      },
+    },
+  },
+}
+```
+</Accordion>
+
+### Visual Style
+
+```vue
+<!-- MD1 uses underlined inputs -->
+<v-text-field label="Name" />
+<!-- Renders with variant="underlined" -->
+
+<!-- Buttons have no border radius -->
+<v-btn>Submit</v-btn>
+<!-- Renders with sharp corners -->
+```
+
+## Customizing Blueprints
+
+You can extend or override blueprint settings:
+
+<CodeGroup>
+```ts Extend Blueprint
+import { md3 } from 'vuetify/blueprints'
+
+const vuetify = createVuetify({
+  blueprint: md3,
+  // Override specific settings
+  theme: {
+    themes: {
+      light: {
+        colors: {
+          primary: '#FF5722',  // Custom primary color
+        },
+      },
+    },
+  },
+  defaults: {
+    VBtn: {
+      rounded: 'lg',  // Less rounded than MD3 default
+    },
+  },
+})
+```
+
+```ts Merge Blueprints
+import { md3 } from 'vuetify/blueprints'
+import { mergeDeep } from 'vuetify/util'
+
+const customBlueprint = mergeDeep(md3, {
+  defaults: {
+    VBtn: {
+      elevation: 2,
+      class: 'text-uppercase',
+    },
+  },
+})
+
+const vuetify = createVuetify({
+  blueprint: customBlueprint,
+})
+```
+</CodeGroup>
+
+## Creating Custom Blueprints
+
+Define your own blueprint for consistent styling:
+
+```ts
+import type { Blueprint } from 'vuetify'
+import { mdi } from 'vuetify/iconsets/mdi'
+
+export const myBrand: Blueprint = {
+  defaults: {
+    global: {
+      rounded: 'lg',
+    },
+    VBtn: {
+      color: 'primary',
+      rounded: 'pill',
+      elevation: 0,
+    },
+    VCard: {
+      elevation: 2,
+      rounded: 'xl',
+    },
+    VTextField: {
+      variant: 'outlined',
+      color: 'primary',
+    },
+  },
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        colors: {
+          primary: '#0066CC',
+          secondary: '#00CC66',
+          accent: '#FF6B35',
+          background: '#F8F9FA',
+          surface: '#FFFFFF',
+        },
+      },
+      dark: {
+        colors: {
+          primary: '#3399FF',
+          secondary: '#33FF99',
+          accent: '#FF9966',
+          background: '#1A1A1A',
+          surface: '#2D2D2D',
+        },
+      },
+    },
+  },
+  icons: {
+    defaultSet: 'mdi',
+    sets: { mdi },
+  },
+}
+```
+
+Use your custom blueprint:
+
+```ts
+import { myBrand } from './blueprints/my-brand'
+
+const vuetify = createVuetify({
+  blueprint: myBrand,
+})
+```
+
+## Blueprint Comparison
+
+| Feature | MD1 | MD2 | MD3 |
+|---------|-----|-----|-----|
+| Input Variant | Underlined | Filled | Outlined |
+| Button Radius | 0 (sharp) | md (8px) | xl (24px) |
+| Global Radius | sm (2px) | md (8px) | Default (4px) |
+| Button Text | Uppercase | Uppercase | Normal |
+| Date Picker Height | 44px | 56px | 48px |
+| App Bar | Default | Default | Flat |
+| Primary Color | #3F51B5 | #6200EE | #6750a4 |
+
+## Best Practices
+
+<Steps>
+  <Step title="Choose the right blueprint">
+    MD3 for modern apps, MD2 for Material Design compliance, MD1 for classic look.
+  </Step>
+  
+  <Step title="Customize sparingly">
+    Blueprints provide consistency. Only override what's necessary.
+  </Step>
+  
+  <Step title="Document customizations">
+    Keep track of blueprint overrides in your codebase.
+  </Step>
+  
+  <Step title="Test across components">
+    Blueprint changes affect all components, so test thoroughly.
+  </Step>
+</Steps>
+
+<Note>
+Blueprints are merged with your configuration. Custom settings take precedence over blueprint defaults.
+</Note>

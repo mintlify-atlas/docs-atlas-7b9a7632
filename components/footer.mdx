@@ -1,0 +1,348 @@
+---
+title: VFooter
+description: The VFooter component is used to display general information that a user might want to access from any page within your site.
+---
+
+# VFooter
+
+The VFooter component provides a container for displaying footer content at the bottom of your application. It can be a static footer or integrate with the app layout system.
+
+## Usage
+
+```vue
+<template>
+  <v-footer>
+    <v-row>
+      <v-col class="text-center" cols="12">
+        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+      </v-col>
+    </v-row>
+  </v-footer>
+</template>
+```
+
+## Basic Example
+
+```vue
+<template>
+  <v-footer color="grey-lighten-3">
+    <div class="px-4 py-2 text-center w-100">
+      © 2024 My Company. All rights reserved.
+    </div>
+  </v-footer>
+</template>
+```
+
+## Props
+
+<ParamField path="app" type="boolean" default="false">
+When true, the footer is positioned as part of the application layout and content is adjusted accordingly.
+
+```vue
+<!-- Footer is part of app layout -->
+<v-footer app>
+  <!-- Content -->
+</v-footer>
+```
+
+<Note>
+When `app` is true, the footer registers with VApp's layout system and the main content area is automatically adjusted.
+</Note>
+</ParamField>
+
+<ParamField path="color" type="string">
+Applies specified color to the footer background.
+
+```vue
+<v-footer color="primary">
+  <!-- Content -->
+</v-footer>
+```
+</ParamField>
+
+<ParamField path="height" type="number | string" default="'auto'">
+Sets the height of the footer. Use 'auto' for automatic sizing based on content.
+
+```vue
+<v-footer :height="80">
+  <!-- Content -->
+</v-footer>
+
+<!-- Auto height based on content -->
+<v-footer height="auto">
+  <!-- Content -->
+</v-footer>
+```
+</ParamField>
+
+<ParamField path="elevation" type="number | string">
+Sets the elevation (box-shadow) of the footer.
+
+```vue
+<v-footer elevation="4">
+  <!-- Content -->
+</v-footer>
+```
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+Applies a border to the footer.
+
+```vue
+<v-footer border="t">
+  <!-- Content with top border -->
+</v-footer>
+```
+</ParamField>
+
+<ParamField path="rounded" type="boolean | string | number">
+Applies border radius to the footer.
+</ParamField>
+
+<ParamField path="tag" type="string" default="'footer'">
+Specifies the custom tag to use for the root element.
+
+```vue
+<v-footer tag="div">
+  <!-- Content -->
+</v-footer>
+```
+</ParamField>
+
+<ParamField path="theme" type="string">
+Applies a specific theme to the footer.
+</ParamField>
+
+<ParamField path="name" type="string">
+Assigns a specific name for layout registration when using `app` prop.
+</ParamField>
+
+<ParamField path="order" type="number | string" default="0">
+Adjusts the order in which the footer appears in the layout system.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+Applies position: absolute to the footer.
+
+```vue
+<v-footer absolute>
+  <!-- Content -->
+</v-footer>
+```
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+The default slot for footer content.
+</ParamField>
+
+## Examples
+
+### Simple Footer
+
+```vue
+<template>
+  <v-footer class="text-center d-flex flex-column">
+    <div>
+      <v-btn
+        v-for="icon in icons"
+        :key="icon"
+        class="mx-4"
+        :icon="icon"
+        variant="text"
+      ></v-btn>
+    </div>
+
+    <div class="pt-0">
+      Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
+    </div>
+
+    <v-divider></v-divider>
+
+    <div>
+      {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+    </div>
+  </v-footer>
+</template>
+
+<script setup>
+const icons = [
+  'mdi-facebook',
+  'mdi-twitter',
+  'mdi-linkedin',
+  'mdi-instagram',
+]
+</script>
+```
+
+### App Footer
+
+```vue
+<template>
+  <v-app>
+    <v-app-bar>
+      <!-- App bar content -->
+    </v-app-bar>
+
+    <v-main>
+      <!-- Page content -->
+    </v-main>
+
+    <v-footer app color="primary" height="100">
+      <v-row justify="center" no-gutters>
+        <v-btn
+          v-for="link in links"
+          :key="link"
+          color="white"
+          variant="text"
+          class="mx-2"
+          rounded="xl"
+        >
+          {{ link }}
+        </v-btn>
+        <v-col class="text-center mt-4" cols="12">
+          {{ new Date().getFullYear() }} — <strong>My Company</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
+  </v-app>
+</template>
+
+<script setup>
+const links = [
+  'Home',
+  'About Us',
+  'Team',
+  'Services',
+  'Blog',
+  'Contact Us',
+]
+</script>
+```
+
+### Company Footer
+
+```vue
+<template>
+  <v-footer color="grey-lighten-4">
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="4">
+          <h3 class="mb-4">About</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Sed do eiusmod tempor incididunt ut labore.
+          </p>
+        </v-col>
+        
+        <v-col cols="12" md="4">
+          <h3 class="mb-4">Quick Links</h3>
+          <v-list density="compact" bg-color="transparent">
+            <v-list-item to="/home">Home</v-list-item>
+            <v-list-item to="/about">About</v-list-item>
+            <v-list-item to="/services">Services</v-list-item>
+            <v-list-item to="/contact">Contact</v-list-item>
+          </v-list>
+        </v-col>
+        
+        <v-col cols="12" md="4">
+          <h3 class="mb-4">Contact</h3>
+          <p>
+            123 Main Street<br>
+            City, State 12345<br>
+            Email: info@example.com<br>
+            Phone: (123) 456-7890
+          </p>
+        </v-col>
+      </v-row>
+      
+      <v-divider class="my-4"></v-divider>
+      
+      <v-row>
+        <v-col class="text-center" cols="12">
+          {{ new Date().getFullYear() }} © Copyright. All rights reserved.
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-footer>
+</template>
+```
+
+### Padless Footer
+
+```vue
+<template>
+  <v-footer
+    color="primary"
+    class="text-center"
+  >
+    <v-card
+      flat
+      tile
+      class="text-center"
+      color="primary"
+      width="100%"
+    >
+      <v-card-text>
+        <v-btn
+          v-for="icon in icons"
+          :key="icon"
+          class="mx-4 white--text"
+          icon
+          variant="text"
+        >
+          <v-icon size="24px">
+            {{ icon }}
+          </v-icon>
+        </v-btn>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-text class="white--text">
+        {{ new Date().getFullYear() }} — <strong>My Company</strong>
+      </v-card-text>
+    </v-card>
+  </v-footer>
+</template>
+
+<script setup>
+const icons = [
+  'mdi-home',
+  'mdi-email',
+  'mdi-calendar',
+  'mdi-delete',
+]
+</script>
+```
+
+<Note>
+When using `height="auto"`, the footer automatically adjusts its height based on the content. This is useful for responsive footers with varying content.
+</Note>
+
+## Fixed vs App Footer
+
+### Static Footer (default)
+
+By default, the footer is static and scrolls with the page content:
+
+```vue
+<v-footer>
+  <!-- Footer content -->
+</v-footer>
+```
+
+### App Footer
+
+Using the `app` prop integrates the footer into the application layout:
+
+```vue
+<v-footer app>
+  <!-- Footer content -->
+</v-footer>
+```
+
+<Note>
+The `app` prop makes the footer a persistent part of the layout. The main content area will be adjusted to account for the footer's height.
+</Note>

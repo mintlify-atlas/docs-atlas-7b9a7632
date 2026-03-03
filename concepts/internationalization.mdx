@@ -1,0 +1,614 @@
+---
+title: Internationalization
+description: Build multilingual applications with Vuetify's comprehensive i18n system supporting 43+ languages
+---
+
+# Internationalization
+
+Vuetify provides comprehensive internationalization (i18n) support with translations for 43+ languages, RTL (right-to-left) support, and flexible integration options. The locale system handles component text, date formatting, number formatting, and cultural conventions.
+
+## Supported Languages
+
+Vuetify includes built-in translations for 43 languages (`locale/index.ts`):
+
+- **European**: English, German, French, Spanish, Italian, Portuguese, Dutch, Danish, Swedish, Norwegian, Finnish, Polish, Czech, Slovak, Hungarian, Romanian, Bulgarian, Ukrainian, Russian
+- **Middle Eastern**: Arabic, Persian (Farsi), Hebrew, Central Kurdish (Sorani)
+- **Asian**: Chinese (Simplified & Traditional), Japanese, Korean, Thai, Vietnamese, Indonesian, Khmer
+- **Baltic**: Latvian, Lithuanian, Estonian
+- **Balkan**: Croatian, Serbian (Cyrillic & Latin), Slovenian, Greek
+- **Caucasian**: Azerbaijani
+- **African**: Afrikaans
+- **Other**: Catalan, Turkish
+
+## Basic Configuration
+
+Configure the locale during Vuetify initialization:
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { en, es, fr, de } from 'vuetify/locale'
+
+const vuetify = createVuetify({
+  locale: {
+    locale: 'en',
+    fallback: 'en',
+    messages: { en, es, fr, de },
+  },
+})
+```
+
+### LocaleOptions Interface
+
+The locale configuration accepts these options (`composables/locale.ts:12-18`):
+
+```typescript
+interface LocaleOptions {
+  decimalSeparator?: string
+  messages?: LocaleMessages
+  locale?: string
+  fallback?: string
+  adapter?: LocaleInstance
+}
+```
+
+## Translation Structure
+
+Each locale file defines translations for all Vuetify components (`locale/en.ts:1-185`):
+
+```typescript
+export default {
+  badge: 'Badge',
+  open: 'Open',
+  close: 'Close',
+  dismiss: 'Dismiss',
+  confirmEdit: {
+    ok: 'OK',
+    cancel: 'Cancel',
+  },
+  dataIterator: {
+    noResultsText: 'No matching records found',
+    loadingText: 'Loading items...',
+  },
+  dataTable: {
+    itemsPerPageText: 'Rows per page:',
+    ariaLabel: {
+      sortDescending: 'Sorted descending.',
+      sortAscending: 'Sorted ascending.',
+      sortNone: 'Not sorted.',
+      activateNone: 'Activate to remove sorting.',
+      activateDescending: 'Activate to sort descending.',
+      activateAscending: 'Activate to sort ascending.',
+    },
+    sortBy: 'Sort by',
+  },
+  datePicker: {
+    title: 'Select date',
+    header: 'Enter date',
+    input: {
+      placeholder: 'Enter date',
+    },
+  },
+  pagination: {
+    ariaLabel: {
+      root: 'Pagination Navigation',
+      next: 'Next page',
+      previous: 'Previous page',
+      page: 'Go to page {0}',
+      currentPage: 'Page {0}, Current page',
+    },
+  },
+  fileInput: {
+    counter: '{0} files',
+    counterSize: '{0} files ({1} in total)',
+  },
+  timePicker: {
+    am: 'AM',
+    pm: 'PM',
+  },
+  // ... and many more
+}
+```
+
+## useLocale Composable
+
+The `useLocale` composable provides access to the locale system (`composables/locale.ts:44-50`):
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { t, current, fallback, messages } = useLocale()
+
+// Translate a key
+const message = t('$vuetify.dataTable.sortBy')
+
+// Change locale
+current.value = 'es'
+</script>
+
+<template>
+  <div>
+    <p>{{ t('$vuetify.close') }}</p>
+    <p>Current locale: {{ current }}</p>
+  </div>
+</template>
+```
+
+### LocaleInstance API
+
+The locale instance provides the following interface (`composables/locale.ts:20-29`):
+
+```typescript
+interface LocaleInstance {
+  name: string
+  decimalSeparator: ShallowRef<string>
+  messages: Ref<LocaleMessages>
+  current: Ref<string>
+  fallback: Ref<string>
+  t: (key: string, ...params: unknown[]) => string
+  n: (value: number) => string
+  provide: (props: LocaleOptions) => LocaleInstance
+}
+```
+
+## Translation Function
+
+The `t()` function translates keys with parameter support (`locale/adapters/vuetify.ts:23-56`):
+
+### Basic Translation
+
+```typescript
+import { useLocale } from 'vuetify'
+
+const { t } = useLocale()
+
+// Simple translation
+t('$vuetify.close')  // "Close"
+
+// Nested translation
+t('$vuetify.dataTable.itemsPerPageText')  // "Rows per page:"
+```
+
+### Parameterized Translation
+
+Translations support parameter interpolation using `{0}`, `{1}`, etc.:
+
+```typescript
+// locale/en.ts
+export default {
+  pagination: {
+    ariaLabel: {
+      page: 'Go to page {0}',
+      currentPage: 'Page {0}, Current page',
+    },
+  },
+  dataFooter: {
+    pageText: '{0}-{1} of {2}',
+  },
+}
+
+// Usage
+t('$vuetify.pagination.ariaLabel.page', 5)  
+// "Go to page 5"
+
+t('$vuetify.dataFooter.pageText', 1, 10, 100)
+// "1-10 of 100"
+```
+
+### Fallback Behavior
+
+The translation system includes automatic fallback (`locale/adapters/vuetify.ts:28-54`):
+
+```typescript
+function translate(key: string, ...params: unknown[]) {
+  // Try current locale
+  let str = getObjectValueByPath(currentLocale, shortKey, null)
+  
+  if (!str) {
+    // Fallback to fallback locale
+    consoleWarn(`Translation key "${key}" not found in "${current.value}", trying fallback locale`)
+    str = getObjectValueByPath(fallbackLocale, shortKey, null)
+  }
+  
+  if (!str) {
+    consoleError(`Translation key "${key}" not found in fallback`)
+    str = key
+  }
+  
+  return replace(str, params)
+}
+```
+
+## Dynamic Locale Switching
+
+Change locale dynamically at runtime:
+
+<Tabs>
+  <Tab title="Simple Switch">
+    ```vue
+    <script setup>
+    import { useLocale } from 'vuetify'
+    import { ref } from 'vue'
+
+    const { current } = useLocale()
+    
+    const availableLocales = [
+      { code: 'en', title: 'English' },
+      { code: 'es', title: 'Español' },
+      { code: 'fr', title: 'Français' },
+      { code: 'de', title: 'Deutsch' },
+    ]
+
+    function changeLocale(code: string) {
+      current.value = code
+    }
+    </script>
+
+    <template>
+      <v-select
+        v-model="current"
+        :items="availableLocales"
+        item-value="code"
+        item-title="title"
+        label="Language"
+      />
+    </template>
+    ```
+  </Tab>
+
+  <Tab title="With Storage">
+    ```vue
+    <script setup>
+    import { useLocale } from 'vuetify'
+    import { watch } from 'vue'
+
+    const { current } = useLocale()
+
+    // Load saved locale
+    const savedLocale = localStorage.getItem('locale')
+    if (savedLocale) {
+      current.value = savedLocale
+    }
+
+    // Save locale changes
+    watch(current, (newLocale) => {
+      localStorage.setItem('locale', newLocale)
+    })
+    </script>
+    ```
+  </Tab>
+
+  <Tab title="Browser Detection">
+    ```typescript
+    import { createVuetify } from 'vuetify'
+    import { en, es, fr, de } from 'vuetify/locale'
+
+    // Detect browser language
+    const browserLang = navigator.language.split('-')[0]
+    const supportedLangs = ['en', 'es', 'fr', 'de']
+    const defaultLang = supportedLangs.includes(browserLang) 
+      ? browserLang 
+      : 'en'
+
+    const vuetify = createVuetify({
+      locale: {
+        locale: defaultLang,
+        fallback: 'en',
+        messages: { en, es, fr, de },
+      },
+    })
+    ```
+  </Tab>
+</Tabs>
+
+## RTL (Right-to-Left) Support
+
+Vuetify includes comprehensive RTL support for languages like Arabic, Hebrew, and Persian (`composables/locale.ts:85-130`):
+
+### RTL Configuration
+
+```typescript
+interface RtlOptions {
+  rtl?: Record<string, boolean>
+}
+```
+
+Default RTL settings:
+
+```typescript
+const rtlDefaults = {
+  ar: true,    // Arabic
+  fa: true,    // Persian (Farsi)
+  he: true,    // Hebrew
+  // All other languages default to false
+}
+```
+
+### Using RTL
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { ar, he, fa } from 'vuetify/locale'
+
+const vuetify = createVuetify({
+  locale: {
+    locale: 'ar',
+    messages: { ar, he, fa },
+    rtl: {
+      ar: true,
+      he: true,
+      fa: true,
+    },
+  },
+})
+```
+
+### useRtl Composable
+
+```vue
+<script setup>
+import { useRtl } from 'vuetify'
+
+const { isRtl, rtlClasses } = useRtl()
+</script>
+
+<template>
+  <div :class="rtlClasses">
+    <p v-if="isRtl">Right-to-left mode active</p>
+    <p v-else>Left-to-right mode active</p>
+  </div>
+</template>
+```
+
+The RTL system:
+- Automatically applies RTL classes based on current locale
+- Reverses layout direction
+- Flips icons and directional components
+- Adjusts padding and margins appropriately
+
+## Number Formatting
+
+The locale system includes number formatting using `Intl.NumberFormat` (`locale/adapters/vuetify.ts:58-64`):
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { n, current } = useLocale()
+
+// Format numbers according to locale
+const price = n(1234.56)  
+// en: "1,234.56"
+// de: "1.234,56"
+// fr: "1 234,56"
+
+const largeNumber = n(1000000)
+// en: "1,000,000"
+// de: "1.000.000"
+
+// With options
+const currency = n(1234.56, { 
+  style: 'currency', 
+  currency: 'USD' 
+})
+// "$1,234.56"
+</script>
+```
+
+### Decimal Separator
+
+The decimal separator is automatically inferred from the locale (`locale/adapters/vuetify.ts:66-69`):
+
+```typescript
+const { decimalSeparator } = useLocale()
+
+// en: "."
+// de: ","
+// fr: ","
+console.log(decimalSeparator.value)
+```
+
+## Custom Messages
+
+Extend or override default translations:
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { en } from 'vuetify/locale'
+
+const customMessages = {
+  en: {
+    ...en,
+    // Override default
+    dataTable: {
+      ...en.dataTable,
+      itemsPerPageText: 'Items per page:',
+    },
+    // Add custom translations
+    custom: {
+      welcome: 'Welcome to our app',
+      goodbye: 'Thank you for visiting',
+    },
+  },
+}
+
+const vuetify = createVuetify({
+  locale: {
+    locale: 'en',
+    messages: customMessages,
+  },
+})
+```
+
+Use custom translations:
+
+```vue
+<script setup>
+import { useLocale } from 'vuetify'
+
+const { t } = useLocale()
+</script>
+
+<template>
+  <h1>{{ t('$vuetify.custom.welcome') }}</h1>
+  <p>{{ t('$vuetify.custom.goodbye') }}</p>
+</template>
+```
+
+## Vue I18n Integration
+
+Integrate with Vue I18n for application-wide translations (`locale/adapters/vue-i18n.ts`):
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { createI18n, useI18n } from 'vue-i18n'
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
+
+// Create Vue I18n instance
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: {
+    en: {
+      $vuetify: {
+        // Vuetify translations
+      },
+      // Your app translations
+      app: {
+        title: 'My Application',
+      },
+    },
+  },
+})
+
+// Create Vuetify with Vue I18n adapter
+const vuetify = createVuetify({
+  locale: {
+    adapter: createVueI18nAdapter({ i18n, useI18n }),
+  },
+})
+
+app.use(i18n)
+app.use(vuetify)
+```
+
+## Component-Level Locale
+
+Provide different locales for specific component trees:
+
+```vue
+<script setup>
+import { provideLocale } from 'vuetify'
+import { es } from 'vuetify/locale'
+
+// Provide Spanish locale for this component and children
+provideLocale({
+  locale: 'es',
+  messages: { es },
+})
+</script>
+
+<template>
+  <div>
+    <!-- This section uses Spanish -->
+    <v-data-table :items="items" />
+  </div>
+</template>
+```
+
+## Accessibility Features
+
+Vuetify's locale system includes extensive ARIA labels and accessibility text:
+
+```typescript
+// locale/en.ts
+export default {
+  pagination: {
+    ariaLabel: {
+      root: 'Pagination Navigation',
+      next: 'Next page',
+      previous: 'Previous page',
+      page: 'Go to page {0}',
+      currentPage: 'Page {0}, Current page',
+    },
+  },
+  datePicker: {
+    ariaLabel: {
+      previousMonth: 'Previous month',
+      nextMonth: 'Next month',
+      selectYear: 'Select year',
+      selectDate: '{0}',
+      currentDate: 'Today, {0}',
+    },
+  },
+  carousel: {
+    ariaLabel: {
+      delimiter: 'Carousel slide {0} of {1}',
+    },
+  },
+}
+```
+
+## Best Practices
+
+1. **Always provide fallback** - Set a fallback locale to prevent missing translations
+2. **Load only needed locales** - Import only the locales your app uses
+3. **Use semantic keys** - Prefix Vuetify keys with `$vuetify.`
+4. **Test RTL layouts** - Verify your app works correctly in RTL mode
+5. **Consistent parameter format** - Use numbered placeholders `{0}`, `{1}` for parameters
+6. **Store user preference** - Save the selected locale to localStorage or user profile
+7. **Consider pluralization** - Some languages have complex plural rules
+8. **Provide context** - Add comments to translation files for translators
+
+## Performance Optimization
+
+### Lazy Loading Locales
+
+```typescript
+import { createVuetify } from 'vuetify'
+import { en } from 'vuetify/locale'
+
+const vuetify = createVuetify({
+  locale: {
+    locale: 'en',
+    fallback: 'en',
+    messages: { en },
+  },
+})
+
+// Lazy load additional locales
+async function loadLocale(code: string) {
+  const messages = await import(`vuetify/locale/${code}`)
+  vuetify.locale.messages.value[code] = messages.default
+  vuetify.locale.current.value = code
+}
+
+// Usage
+await loadLocale('fr')
+```
+
+### Tree Shaking
+
+Only import locales you need:
+
+```typescript
+// Good: Only imports needed locales
+import { en, es, fr } from 'vuetify/locale'
+
+// Avoid: Imports all locales
+import * as locales from 'vuetify/locale'
+```
+
+## Contributing Translations
+
+Vuetify uses Crowdin for translation management. To contribute:
+
+1. Visit the Vuetify Crowdin project
+2. Select your language
+3. Translate missing keys
+4. Submit for review
+
+<Note>
+All 43+ languages are community-maintained. Contributions are always welcome to improve translation quality and coverage.
+</Note>

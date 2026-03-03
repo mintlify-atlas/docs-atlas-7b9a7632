@@ -1,0 +1,504 @@
+---
+title: v-click-outside
+description: Directive for detecting clicks outside an element
+---
+
+## Overview
+
+The `v-click-outside` directive calls a handler function when a click event occurs outside the bound element. Useful for closing menus, dialogs, and dropdowns.
+
+## Import
+
+```typescript
+import { ClickOutside } from 'vuetify/directives'
+```
+
+## Registration
+
+### Global Registration
+
+```typescript
+import { createApp } from 'vue'
+import { ClickOutside } from 'vuetify/directives'
+
+const app = createApp({})
+app.directive('click-outside', ClickOutside)
+```
+
+### Local Registration
+
+```vue
+<script setup>
+import { ClickOutside } from 'vuetify/directives'
+
+const vClickOutside = ClickOutside
+</script>
+```
+
+## Syntax
+
+```vue
+<!-- Simple handler -->
+<div v-click-outside="handler"></div>
+
+<!-- With options -->
+<div v-click-outside="{ handler, closeConditional, include }"></div>
+```
+
+## Value Types
+
+### Function Handler
+
+```typescript
+v-click-outside="(e: MouseEvent) => void"
+```
+
+### Object Configuration
+
+```typescript
+v-click-outside="{
+  handler: (e: MouseEvent) => void
+  closeConditional?: (e: Event) => boolean
+  include?: () => HTMLElement[]
+}"
+```
+
+## Parameters
+
+<ParamField path="handler" type="(e: MouseEvent) => void" required>
+  Function called when click occurs outside the element
+</ParamField>
+
+<ParamField path="closeConditional" type="(e: Event) => boolean">
+  Function to determine if handler should be called. Return `true` to trigger handler, `false` to prevent it.
+</ParamField>
+
+<ParamField path="include" type="() => HTMLElement[]">
+  Function returning array of additional elements to include in the "inside" check. Clicks on these elements won't trigger the handler.
+</ParamField>
+
+## Usage Examples
+
+### Basic Usage
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isOpen = ref(false)
+
+function close() {
+  isOpen.value = false
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="isOpen = true">Open Menu</v-btn>
+    
+    <v-card v-if="isOpen" v-click-outside="close">
+      <v-card-text>
+        Click outside to close
+      </v-card-text>
+    </v-card>
+  </div>
+</template>
+```
+
+### Dropdown Menu
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const menuOpen = ref(false)
+
+function closeMenu() {
+  menuOpen.value = false
+}
+
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value
+}
+</script>
+
+<template>
+  <div class="menu-container">
+    <v-btn @click="toggleMenu">Menu</v-btn>
+    
+    <v-list 
+      v-if="menuOpen" 
+      v-click-outside="closeMenu"
+      class="menu-list"
+    >
+      <v-list-item>Item 1</v-list-item>
+      <v-list-item>Item 2</v-list-item>
+      <v-list-item>Item 3</v-list-item>
+    </v-list>
+  </div>
+</template>
+```
+
+### With Close Conditional
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isActive = ref(true)
+const isPinned = ref(false)
+
+function handleClickOutside() {
+  isActive.value = false
+}
+
+function shouldClose() {
+  // Only close if not pinned
+  return !isPinned.value
+}
+</script>
+
+<template>
+  <v-card
+    v-if="isActive"
+    v-click-outside="{
+      handler: handleClickOutside,
+      closeConditional: shouldClose
+    }"
+  >
+    <v-card-actions>
+      <v-btn @click="isPinned = !isPinned">
+        {{ isPinned ? 'Unpin' : 'Pin' }}
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+```
+
+### With Include Elements
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const dialogOpen = ref(false)
+const triggerButton = ref(null)
+
+function closeDialog() {
+  dialogOpen.value = false
+}
+
+function getIncludedElements() {
+  // Include trigger button in the "inside" check
+  return triggerButton.value ? [triggerButton.value] : []
+}
+</script>
+
+<template>
+  <div>
+    <v-btn ref="triggerButton" @click="dialogOpen = true">
+      Open Dialog
+    </v-btn>
+    
+    <v-dialog
+      v-if="dialogOpen"
+      v-click-outside="{
+        handler: closeDialog,
+        include: getIncludedElements
+      }"
+    >
+      Dialog content
+    </v-dialog>
+  </div>
+</template>
+```
+
+### User Settings Panel
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const showSettings = ref(false)
+const hasUnsavedChanges = ref(false)
+
+function closeSettings() {
+  if (hasUnsavedChanges.value) {
+    if (confirm('You have unsaved changes. Close anyway?')) {
+      showSettings.value = false
+      hasUnsavedChanges.value = false
+    }
+  } else {
+    showSettings.value = false
+  }
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="showSettings = true">Settings</v-btn>
+    
+    <v-card
+      v-if="showSettings"
+      v-click-outside="closeSettings"
+    >
+      <v-card-title>Settings</v-card-title>
+      <v-card-text>
+        <v-text-field 
+          label="Name" 
+          @input="hasUnsavedChanges = true"
+        />
+      </v-card-text>
+    </v-card>
+  </div>
+</template>
+```
+
+### Context Menu
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const contextMenu = ref(false)
+const menuPosition = ref({ x: 0, y: 0 })
+
+function showContextMenu(e: MouseEvent) {
+  e.preventDefault()
+  contextMenu.value = true
+  menuPosition.value = { x: e.clientX, y: e.clientY }
+}
+
+function closeContextMenu() {
+  contextMenu.value = false
+}
+</script>
+
+<template>
+  <div @contextmenu="showContextMenu">
+    Right click me
+    
+    <v-list
+      v-if="contextMenu"
+      v-click-outside="closeContextMenu"
+      :style="{
+        position: 'fixed',
+        left: `${menuPosition.x}px`,
+        top: `${menuPosition.y}px`
+      }"
+    >
+      <v-list-item>Copy</v-list-item>
+      <v-list-item>Paste</v-list-item>
+      <v-list-item>Delete</v-list-item>
+    </v-list>
+  </div>
+</template>
+```
+
+### Nested Menus
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const mainMenu = ref(false)
+const subMenu = ref(false)
+const subMenuButton = ref(null)
+
+function closeMainMenu() {
+  mainMenu.value = false
+  subMenu.value = false
+}
+
+function closeSubMenu() {
+  subMenu.value = false
+}
+
+function getSubMenuIncludes() {
+  return subMenuButton.value ? [subMenuButton.value] : []
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="mainMenu = true">Menu</v-btn>
+    
+    <v-list v-if="mainMenu" v-click-outside="closeMainMenu">
+      <v-list-item>Item 1</v-list-item>
+      <v-list-item ref="subMenuButton" @click="subMenu = true">
+        Submenu
+      </v-list-item>
+      
+      <v-list
+        v-if="subMenu"
+        v-click-outside="{
+          handler: closeSubMenu,
+          include: getSubMenuIncludes
+        }"
+      >
+        <v-list-item>Subitem 1</v-list-item>
+        <v-list-item>Subitem 2</v-list-item>
+      </v-list>
+    </v-list>
+  </div>
+</template>
+```
+
+### Search with Autocomplete
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+
+const search = ref('')
+const showSuggestions = ref(false)
+const suggestions = ['Apple', 'Banana', 'Cherry', 'Date']
+
+const filteredSuggestions = computed(() => 
+  suggestions.filter(s => 
+    s.toLowerCase().includes(search.value.toLowerCase())
+  )
+)
+
+function closeSuggestions() {
+  showSuggestions.value = false
+}
+
+function selectSuggestion(suggestion: string) {
+  search.value = suggestion
+  showSuggestions.value = false
+}
+</script>
+
+<template>
+  <div v-click-outside="closeSuggestions">
+    <v-text-field
+      v-model="search"
+      @focus="showSuggestions = true"
+      label="Search"
+    />
+    
+    <v-list v-if="showSuggestions && filteredSuggestions.length">
+      <v-list-item
+        v-for="suggestion in filteredSuggestions"
+        :key="suggestion"
+        @click="selectSuggestion(suggestion)"
+      >
+        {{ suggestion }}
+      </v-list-item>
+    </v-list>
+  </div>
+</template>
+```
+
+## Shadow DOM Support
+
+The directive properly handles clicks within Shadow DOM:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const isOpen = ref(false)
+
+function close() {
+  isOpen.value = false
+}
+</script>
+
+<template>
+  <!-- Works correctly even with Shadow DOM elements -->
+  <custom-element>
+    <div v-if="isOpen" v-click-outside="close">
+      Content
+    </div>
+  </custom-element>
+</template>
+```
+
+## Behavior Notes
+
+### Event Timing
+- Handler is called during the click's capture phase
+- Uses `mousedown` to detect when click starts outside
+- Uses `click` to trigger the handler
+- Slight delay (setTimeout) ensures correct behavior
+
+### What Counts as "Outside"
+- Clicks on the element itself don't trigger handler
+- Clicks on child elements don't trigger handler
+- Clicks on included elements don't trigger handler
+- All other clicks trigger the handler
+
+### Lifecycle
+- Attached on `mounted` hook
+- Cleaned up on `beforeUnmount` hook
+- Safe to use with conditional rendering (v-if)
+
+## Common Patterns
+
+### Modal Dialog
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const dialog = ref(false)
+
+function closeDialog() {
+  dialog.value = false
+}
+</script>
+
+<template>
+  <v-dialog v-model="dialog">
+    <template #activator="{ props }">
+      <v-btn v-bind="props">Open</v-btn>
+    </template>
+    
+    <v-card v-click-outside="closeDialog">
+      <v-card-text>Dialog content</v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+```
+
+### Tooltip
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const tooltip = ref(false)
+
+function hideTooltip() {
+  tooltip.value = false
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @mouseenter="tooltip = true">Hover me</v-btn>
+    
+    <v-card v-if="tooltip" v-click-outside="hideTooltip">
+      Tooltip content
+    </v-card>
+  </div>
+</template>
+```
+
+## Notes
+
+- Only active when element is mounted in DOM
+- Automatically handles Shadow DOM boundaries
+- Works with touch events on mobile devices
+- Multiple instances can be used simultaneously
+- Handler receives original MouseEvent object
+- Compatible with all Vuetify components
+
+## See Also
+
+- [v-intersect](/api/directives/intersect)
+- [v-resize](/api/directives/resize)
+- [VMenu Component](/api/components/v-menu)
+- [VDialog Component](/api/components/v-dialog)

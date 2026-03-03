@@ -1,0 +1,419 @@
+---
+title: useGoTo()
+description: Composable for programmatic scrolling with smooth animations
+---
+
+## Overview
+
+The `useGoTo()` composable provides programmatic scrolling functionality with smooth animations, easing functions, and RTL support.
+
+## Import
+
+```typescript
+import { useGoTo } from 'vuetify'
+```
+
+## Signature
+
+```typescript
+function useGoTo(options?: GoToOptions): GoToFunction
+
+interface GoToFunction {
+  (target: string | number | HTMLElement | ComponentPublicInstance, options?: GoToOptions): Promise<number>
+  horizontal(target: string | number | HTMLElement | ComponentPublicInstance, options?: GoToOptions): Promise<number>
+}
+```
+
+## Parameters
+
+<ParamField path="options" type="GoToOptions">
+  Default options for all scroll operations
+  
+  <ParamField path="options.duration" type="number" default="300">
+    Animation duration in milliseconds
+  </ParamField>
+  
+  <ParamField path="options.offset" type="number" default="0">
+    Offset from target position in pixels
+  </ParamField>
+  
+  <ParamField path="options.easing" type="string | EasingFunction" default="'easeInOutCubic'">
+    Easing function name or custom function
+  </ParamField>
+  
+  <ParamField path="options.container" type="string | HTMLElement | ComponentPublicInstance">
+    Scroll container (defaults to document body)
+  </ParamField>
+  
+  <ParamField path="options.layout" type="boolean" default="false">
+    Account for Vuetify layout offset (app bar, etc.)
+  </ParamField>
+</ParamField>
+
+## Return Value
+
+Returns a scroll function with both vertical and horizontal scroll capabilities.
+
+<ResponseField name="goTo" type="(target, options?) => Promise<number>">
+  Vertical scroll function
+  
+  **Parameters:**
+  - `target` - Scroll target (CSS selector, element, or pixel value)
+  - `options` - Override default options
+  
+  **Returns:** Promise resolving to final scroll position
+</ResponseField>
+
+<ResponseField name="goTo.horizontal" type="(target, options?) => Promise<number>">
+  Horizontal scroll function with same signature as vertical
+</ResponseField>
+
+## Scroll Targets
+
+### Number
+Absolute scroll position in pixels:
+```typescript
+goTo(500) // Scroll to 500px from top
+```
+
+### CSS Selector
+Scroll to element matching selector:
+```typescript
+goTo('#section-2')
+goTo('.my-element')
+```
+
+### Element Reference
+Scroll to element or component instance:
+```typescript
+goTo(elementRef.value)
+goTo(componentRef.value.$el)
+```
+
+## Easing Functions
+
+Built-in easing functions:
+
+- `linear`
+- `easeInQuad`
+- `easeOutQuad`
+- `easeInOutQuad`
+- `easeInCubic`
+- `easeOutCubic`
+- `easeInOutCubic` (default)
+- `easeInQuart`
+- `easeOutQuart`
+- `easeInOutQuart`
+- `easeInQuint`
+- `easeOutQuint`
+- `easeInOutQuint`
+
+## Usage Examples
+
+### Basic Vertical Scroll
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function scrollToTop() {
+  goTo(0)
+}
+
+function scrollToSection() {
+  goTo('#my-section')
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="scrollToTop">Top</v-btn>
+    <v-btn @click="scrollToSection">Section</v-btn>
+    
+    <div id="my-section" style="margin-top: 1000px">
+      Target Section
+    </div>
+  </div>
+</template>
+```
+
+### Horizontal Scroll
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function scrollRight() {
+  goTo.horizontal(500)
+}
+
+function scrollToElement() {
+  goTo.horizontal('#target-element')
+}
+</script>
+
+<template>
+  <div style="overflow-x: auto; white-space: nowrap">
+    <v-btn @click="scrollRight">Scroll Right</v-btn>
+    <div style="display: inline-block; width: 2000px">
+      <div id="target-element" style="margin-left: 800px">
+        Target
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### Custom Duration and Easing
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function slowScroll() {
+  goTo('#target', {
+    duration: 2000,
+    easing: 'easeInOutQuart'
+  })
+}
+
+function quickScroll() {
+  goTo('#target', {
+    duration: 100,
+    easing: 'linear'
+  })
+}
+</script>
+
+<template>
+  <div>
+    <v-btn @click="slowScroll">Slow Scroll</v-btn>
+    <v-btn @click="quickScroll">Quick Scroll</v-btn>
+  </div>
+</template>
+```
+
+### With Offset
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function scrollWithOffset() {
+  // Scroll to element with 100px offset from top
+  goTo('#section', { offset: -100 })
+}
+</script>
+
+<template>
+  <v-btn @click="scrollWithOffset">Scroll to Section</v-btn>
+</template>
+```
+
+### Account for App Bar
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function scrollToSection() {
+  // Automatically accounts for VAppBar height
+  goTo('#section', { layout: true })
+}
+</script>
+
+<template>
+  <v-app>
+    <v-app-bar>App Bar</v-app-bar>
+    <v-main>
+      <v-btn @click="scrollToSection">Go to Section</v-btn>
+      <div id="section" style="margin-top: 1000px">
+        Section Content
+      </div>
+    </v-main>
+  </v-app>
+</template>
+```
+
+### Custom Container
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+import { ref } from 'vue'
+
+const goTo = useGoTo()
+const scrollContainer = ref(null)
+
+function scrollInContainer() {
+  goTo('#inner-target', {
+    container: scrollContainer.value
+  })
+}
+</script>
+
+<template>
+  <div ref="scrollContainer" style="height: 300px; overflow-y: auto">
+    <v-btn @click="scrollInContainer">Scroll</v-btn>
+    <div style="height: 1000px">
+      <div id="inner-target" style="margin-top: 500px">
+        Target
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### Custom Easing Function
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+// Custom bounce easing
+function bounceEasing(t: number): number {
+  if (t < 0.5) {
+    return 8 * t * t * t * t
+  } else {
+    const f = t - 1
+    return 1 - 8 * f * f * f * f
+  }
+}
+
+function scrollWithBounce() {
+  goTo('#target', {
+    easing: bounceEasing,
+    duration: 1000
+  })
+}
+</script>
+
+<template>
+  <v-btn @click="scrollWithBounce">Bounce Scroll</v-btn>
+</template>
+```
+
+### Navigation Menu
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo({ duration: 500, offset: -64, layout: true })
+
+const sections = [
+  { id: 'about', label: 'About' },
+  { id: 'services', label: 'Services' },
+  { id: 'contact', label: 'Contact' }
+]
+
+function navigateTo(id: string) {
+  goTo(`#${id}`)
+}
+</script>
+
+<template>
+  <v-app-bar>
+    <v-btn 
+      v-for="section in sections" 
+      :key="section.id"
+      @click="navigateTo(section.id)"
+    >
+      {{ section.label }}
+    </v-btn>
+  </v-app-bar>
+</template>
+```
+
+### Await Scroll Completion
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+import { ref } from 'vue'
+
+const goTo = useGoTo()
+const isScrolling = ref(false)
+
+async function scrollAndExecute() {
+  isScrolling.value = true
+  
+  await goTo('#target')
+  
+  isScrolling.value = false
+  console.log('Scroll complete!')
+}
+</script>
+
+<template>
+  <v-btn 
+    :loading="isScrolling" 
+    @click="scrollAndExecute"
+  >
+    Scroll
+  </v-btn>
+</template>
+```
+
+### Parent Container Scroll
+
+```vue
+<script setup>
+import { useGoTo } from 'vuetify'
+
+const goTo = useGoTo()
+
+function scrollToChild() {
+  goTo('#child', {
+    container: 'parent' // Scrolls within parent element
+  })
+}
+</script>
+
+<template>
+  <div style="height: 300px; overflow-y: auto">
+    <v-btn @click="scrollToChild">Scroll</v-btn>
+    <div style="height: 1000px">
+      <div id="child" style="margin-top: 500px">
+        Child Element
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+## RTL Support
+
+The composable automatically handles RTL (right-to-left) layouts:
+
+- Horizontal scroll positions are automatically inverted in RTL mode
+- RTL state is derived from the current locale
+- No additional configuration needed
+
+## Notes
+
+- Must be called within a component setup function or composable
+- Throws an error if the Vuetify goto instance is not found
+- Returns a Promise that resolves when animation completes
+- Animation respects `prefers-reduced-motion` accessibility setting
+- Container defaults to `document.scrollingElement` or `document.body`
+- Target must be reachable (not beyond scroll bounds)
+- In SSR, scrolling is a no-op until hydration
+
+## See Also
+
+- [Scrolling Guide](/features/scrolling)
+- [v-scroll Directive](/api/directives/scroll)
+- [Easing Functions](/features/easing)

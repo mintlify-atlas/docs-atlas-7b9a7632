@@ -1,0 +1,226 @@
+---
+title: Tree-shaking
+description: Optimize your bundle size with automatic tree-shaking support in Vuetify 4
+---
+
+# Tree-shaking
+
+Vuetify 4 leverages modern build tools and package.json exports to provide automatic tree-shaking, ensuring you only bundle the components and features you actually use.
+
+## Automatic Tree-shaking with Vite
+
+Vuetify 4 is built with Vite and uses ESM modules throughout, enabling automatic tree-shaking without any additional configuration.
+
+### Package Exports
+
+Vuetify's `package.json` defines granular export paths that allow bundlers to understand exactly what code is being imported:
+
+```json
+{
+  "exports": {
+    ".": {
+      "sass": "./lib/styles/main.sass",
+      "style": "./lib/styles/main.css",
+      "types": "./lib/framework.d.ts",
+      "default": "./lib/framework.js"
+    },
+    "./components": "./lib/components/index.js",
+    "./components/*": "./lib/components/*/index.js",
+    "./directives": "./lib/directives/index.js",
+    "./directives/*": "./lib/directives/*/index.js",
+    "./locale": "./lib/locale/index.js",
+    "./locale/adapters/*": "./lib/locale/adapters/*.js",
+    "./iconsets/*": "./lib/iconsets/*.js",
+    "./date/adapters/*": "./lib/composables/date/adapters/*.js",
+    "./util/colors": "./lib/util/colors.js"
+  }
+}
+```
+
+This structure allows you to import specific components directly:
+
+```ts
+import { VBtn } from 'vuetify/components/VBtn'
+import { VCard } from 'vuetify/components/VCard'
+```
+
+## Side Effects Declaration
+
+Vuetify declares its side effects in package.json to help bundlers understand what code cannot be safely removed:
+
+```json
+{
+  "sideEffects": [
+    "*.sass",
+    "*.scss",
+    "*.css",
+    "*.vue"
+  ]
+}
+```
+
+This ensures that:
+- Styles are preserved when components are imported
+- CSS files are not removed during tree-shaking
+- Vue SFC files maintain their integrity
+
+## Import Strategies
+
+### Full Framework Import
+
+Importing the full framework is simple but includes all components:
+
+```ts
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+```
+
+### Selective Component Import
+
+For optimal bundle size, import only the components you need:
+
+```ts
+import { createVuetify } from 'vuetify'
+import { VApp, VMain, VContainer } from 'vuetify/components'
+import { VBtn } from 'vuetify/components/VBtn'
+import { VCard, VCardTitle, VCardText } from 'vuetify/components/VCard'
+
+const vuetify = createVuetify({
+  components: {
+    VApp,
+    VMain,
+    VContainer,
+    VBtn,
+    VCard,
+    VCardTitle,
+    VCardText,
+  },
+})
+```
+
+<Tip>
+With Vite's automatic tree-shaking, both approaches will only bundle the components you actually use in your code, but explicit imports make dependencies clearer.
+</Tip>
+
+### Direct Path Imports
+
+You can also import components using their direct paths:
+
+```ts
+import { VBtn } from 'vuetify/components/VBtn'
+import { VTextField } from 'vuetify/components/VTextField'
+import { Ripple } from 'vuetify/directives/Ripple'
+```
+
+## Build Configuration
+
+Vuetify's source code uses Babel with specific configurations for ESM output:
+
+```json
+{
+  "scripts": {
+    "build:lib": "NODE_ENV=lib babel src --out-dir lib --source-maps --extensions \".ts\",\".tsx\" --copy-files --no-copy-ignored --out-file-extension .js"
+  }
+}
+```
+
+This ensures:
+- TypeScript is transpiled to ESM JavaScript
+- Source maps are generated for debugging
+- All files maintain `.js` extension for maximum compatibility
+
+## Style Imports
+
+Vuetify provides multiple entry points for styles:
+
+```ts
+// Full styles
+import 'vuetify/styles'
+
+// Core styles only
+import 'vuetify/styles/core'
+
+// Individual style modules
+import 'vuetify/styles/colors'
+import 'vuetify/styles/utilities'
+```
+
+### Sass Variables
+
+If you're using Sass, you can import specific modules:
+
+```scss
+@use 'vuetify/lib/styles/core.scss';
+@use 'vuetify/lib/styles/colors.scss';
+```
+
+<Warning>
+When using individual style imports, ensure you include the core styles. They contain essential base styles and CSS variables that components depend on.
+</Warning>
+
+## Bundle Analysis
+
+To verify your tree-shaking is working correctly:
+
+```bash
+# Install rollup-plugin-visualizer
+pnpm add -D rollup-plugin-visualizer
+```
+
+```ts
+// vite.config.ts
+import { visualizer } from 'rollup-plugin-visualizer'
+
+export default {
+  plugins: [
+    visualizer({
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
+  ],
+}
+```
+
+This will generate a visual report showing exactly which Vuetify components are included in your bundle.
+
+## TypeScript Types
+
+Vuetify's package.json includes `typesVersions` configuration for proper TypeScript resolution:
+
+```json
+{
+  "typesVersions": {
+    "*": {
+      "*": [
+        "*",
+        "dist/*",
+        "lib/*",
+        "lib/*.d.ts",
+        "lib/*/index.d.ts"
+      ]
+    }
+  }
+}
+```
+
+This ensures TypeScript can resolve types for all import paths without additional configuration.
+
+## Labs Components
+
+Experimental components are available under a separate export:
+
+```ts
+import { VDataTable } from 'vuetify/labs/VDataTable'
+import { VDatePicker } from 'vuetify/labs/VDatePicker'
+```
+
+<Tip>
+Labs components are tree-shaken independently from stable components, allowing you to experiment with new features without bloating your production bundle.
+</Tip>

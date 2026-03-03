@@ -1,0 +1,296 @@
+---
+title: VAppBar
+description: The VAppBar component is a versatile toolbar that can be used for site navigation, with support for scroll behaviors, collapsing, and positioning.
+---
+
+# VAppBar
+
+The VAppBar component is a primary navigation toolbar that appears at the top or bottom of your application. It supports scroll behaviors, collapsing, elevation changes, and extends the VToolbar component.
+
+## Usage
+
+```vue
+<template>
+  <v-app>
+    <v-app-bar>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-toolbar-title>Application</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+    </v-app-bar>
+    
+    <v-main>
+      <!-- Content -->
+    </v-main>
+  </v-app>
+</template>
+```
+
+## Basic Example
+
+```vue
+<template>
+  <v-app-bar color="primary">
+    <v-toolbar-title>My App</v-toolbar-title>
+  </v-app-bar>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean" default="true">
+Controls the visibility of the app bar.
+
+```vue
+<v-app-bar v-model="showAppBar">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+<ParamField path="scrollBehavior" type="string">
+Defines how the app bar behaves on scroll. Can be one or more of: `hide`, `fully-hide`, `inverted`, `collapse`, `elevate`, `fade-image`.
+
+```vue
+<!-- Hide on scroll down, show on scroll up -->
+<v-app-bar scroll-behavior="hide">
+  <!-- Content -->
+</v-app-bar>
+
+<!-- Multiple behaviors -->
+<v-app-bar scroll-behavior="hide elevate">
+  <!-- Content -->
+</v-app-bar>
+```
+
+**Available behaviors:**
+- `hide` - Hides when scrolling down, shows when scrolling up
+- `fully-hide` - Completely hides including extension
+- `inverted` - Inverts the scroll behavior (hide when scrolling up)
+- `collapse` - Collapses to title bar only
+- `elevate` - Adds elevation when scrolled
+- `fade-image` - Fades background image on scroll
+</ParamField>
+
+<ParamField path="location" type="'top' | 'bottom'" default="'top'">
+Sets the position of the app bar.
+
+```vue
+<v-app-bar location="bottom">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+<ParamField path="height" type="number | string" default="64">
+Sets the height of the app bar in pixels.
+
+```vue
+<v-app-bar :height="80">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+<ParamField path="color" type="string">
+Applies specified color to the app bar.
+
+```vue
+<v-app-bar color="primary">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+<ParamField path="collapse" type="boolean" default="false">
+Puts the app bar into a collapsed state.
+</ParamField>
+
+<ParamField path="flat" type="boolean" default="false">
+Removes the app bar's box-shadow.
+</ParamField>
+
+<ParamField path="floating" type="boolean" default="false">
+Applies a floating style to the app bar.
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact' | 'prominent'" default="'default'">
+Adjusts the vertical spacing of the app bar.
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+Applies position: absolute to the app bar.
+</ParamField>
+
+<ParamField path="elevation" type="number | string">
+Sets the elevation (box-shadow) of the app bar.
+</ParamField>
+
+<ParamField path="image" type="string">
+Specifies a background image for the app bar.
+
+```vue
+<v-app-bar image="/path/to/image.jpg">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+<ParamField path="title" type="string">
+Specifies a title text for the toolbar.
+</ParamField>
+
+<ParamField path="scrollThreshold" type="number | string">
+The amount of scroll distance in pixels before the scroll behavior activates.
+</ParamField>
+
+<ParamField path="name" type="string">
+Assigns a specific name for layout registration.
+</ParamField>
+
+<ParamField path="order" type="number | string" default="0">
+Adjusts the order in which the app bar appears in the layout.
+</ParamField>
+
+<ParamField path="border" type="boolean | string | number">
+Applies a border to the app bar.
+</ParamField>
+
+<ParamField path="rounded" type="boolean | string | number">
+Applies border radius to the app bar.
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: boolean) => void">
+Emitted when the visibility state changes.
+
+```vue
+<v-app-bar @update:modelValue="onVisibilityChange">
+  <!-- Content -->
+</v-app-bar>
+```
+</ParamField>
+
+## Slots
+
+VAppBar inherits all slots from VToolbar:
+
+<ParamField path="default" type="slot">
+The default slot for toolbar content.
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+Slot for content at the start of the toolbar.
+</ParamField>
+
+<ParamField path="append" type="slot">
+Slot for content at the end of the toolbar.
+</ParamField>
+
+<ParamField path="title" type="slot">
+Slot for custom title content.
+</ParamField>
+
+<ParamField path="image" type="slot">
+Slot for custom image content.
+</ParamField>
+
+<ParamField path="extension" type="slot">
+Slot for extension content below the main toolbar.
+</ParamField>
+
+## Scroll Behaviors
+
+### Hide on Scroll
+
+```vue
+<v-app-bar scroll-behavior="hide">
+  <v-toolbar-title>Hidden on Scroll</v-toolbar-title>
+</v-app-bar>
+```
+
+<Note>
+The app bar hides when scrolling down and reappears when scrolling up. The behavior is disabled if there isn't enough scrollable space on the page.
+</Note>
+
+### Elevate on Scroll
+
+```vue
+<v-app-bar scroll-behavior="elevate" flat>
+  <v-toolbar-title>Elevates on Scroll</v-toolbar-title>
+</v-app-bar>
+```
+
+### Collapse on Scroll
+
+```vue
+<v-app-bar scroll-behavior="collapse">
+  <v-toolbar-title>Collapses on Scroll</v-toolbar-title>
+  <template v-slot:extension>
+    <v-tabs>
+      <v-tab>Tab 1</v-tab>
+      <v-tab>Tab 2</v-tab>
+    </v-tabs>
+  </template>
+</v-app-bar>
+```
+
+### Combined Behaviors
+
+```vue
+<v-app-bar scroll-behavior="hide elevate">
+  <v-toolbar-title>Multiple Behaviors</v-toolbar-title>
+</v-app-bar>
+```
+
+## Examples
+
+### With Navigation Icon
+
+```vue
+<template>
+  <v-app-bar color="primary">
+    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-toolbar-title>Application</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </v-app-bar>
+</template>
+```
+
+### With Extension
+
+```vue
+<template>
+  <v-app-bar color="primary">
+    <v-toolbar-title>Application</v-toolbar-title>
+    
+    <template v-slot:extension>
+      <v-tabs>
+        <v-tab>Tab 1</v-tab>
+        <v-tab>Tab 2</v-tab>
+        <v-tab>Tab 3</v-tab>
+      </v-tabs>
+    </template>
+  </v-app-bar>
+</template>
+```
+
+### Prominent
+
+```vue
+<template>
+  <v-app-bar density="prominent" color="primary">
+    <v-toolbar-title>Prominent App Bar</v-toolbar-title>
+  </v-app-bar>
+</template>
+```
+
+<Note>
+When using scroll behaviors, ensure your content has sufficient height to trigger scrolling. The scroll behavior may not activate on short pages.
+</Note>

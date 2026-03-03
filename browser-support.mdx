@@ -1,0 +1,187 @@
+---
+title: Browser support
+description: Learn about Vuetify's browser compatibility, including supported browsers, polyfills, and responsive design requirements.
+---
+
+# Browser support
+
+Vuetify is designed to work with modern browsers and provides excellent compatibility across all major platforms.
+
+## Supported browsers
+
+Vuetify supports all modern browsers out of the box:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari 13+
+- Edge (latest)
+- Opera (latest)
+
+### Safari requirements
+
+For Safari 13+, you may need to include polyfills for certain features. Vuetify works with Safari's modern rendering engine and supports all current Safari versions on both macOS and iOS.
+
+## Polyfills
+
+While Vuetify works with modern browsers without additional configuration, you may need polyfills for older browser versions or specific features.
+
+### When to use polyfills
+
+Polyfills are JavaScript code that replicate newer browser features in older browsers. You should consider adding polyfills if:
+
+- You need to support Safari 13 or 14
+- Your application uses advanced JavaScript features not supported in your target browsers
+- You're seeing console errors about missing features in certain browsers
+
+### Adding polyfills
+
+The most common approach is to use a service like Polyfill.io:
+
+```html index.html
+<script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver,ResizeObserver,WebAnimations"></script>
+```
+
+Alternatively, install polyfills directly:
+
+<CodeGroup>
+```bash pnpm
+pnpm add core-js intersection-observer resize-observer-polyfill
+```
+
+```bash yarn
+yarn add core-js intersection-observer resize-observer-polyfill
+```
+
+```bash npm
+npm install core-js intersection-observer resize-observer-polyfill
+```
+</CodeGroup>
+
+Then import them in your main entry file:
+
+```typescript main.ts
+import 'core-js/stable'
+import 'intersection-observer'
+import 'resize-observer-polyfill'
+```
+
+## Responsive design
+
+Vuetify components are built with responsive design in mind:
+
+### Minimum viewport width
+
+Components are designed for a minimum width of **320px**. This ensures your application works on all modern mobile devices, including:
+
+- iPhone SE (320px)
+- Small Android phones
+- All tablets and larger devices
+
+### Breakpoint system
+
+Vuetify uses a 12-point grid system with 5 breakpoints:
+
+| Breakpoint | Range | Typical Device |
+|------------|-------|----------------|
+| xs | < 600px | Phone |
+| sm | 600px - 960px | Tablet (portrait) |
+| md | 960px - 1280px | Tablet (landscape) |
+| lg | 1280px - 1920px | Desktop |
+| xl | > 1920px | Large desktop |
+
+### Responsive components
+
+All Vuetify components are responsive by default:
+
+```vue
+<template>
+  <v-container>
+    <v-row>
+      <!-- Full width on mobile, half width on tablet and up -->
+      <v-col cols="12" sm="6">
+        <v-card>Mobile-friendly card</v-card>
+      </v-col>
+
+      <!-- Full width on mobile, one-third on desktop -->
+      <v-col cols="12" md="4">
+        <v-card>Responsive layout</v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+```
+
+## Mobile considerations
+
+### Touch support
+
+Vuetify components include built-in touch support for mobile devices:
+
+- Swipe gestures on carousels and navigation
+- Touch-optimized button sizes
+- Mobile-friendly form inputs
+- Responsive navigation patterns
+
+### Performance
+
+For optimal mobile performance:
+
+- Use automatic tree-shaking with the Vite or Webpack plugin
+- Lazy load components when possible
+- Optimize images and assets
+- Enable component lazy loading for routes
+
+## Testing browser compatibility
+
+To ensure your Vuetify application works across all target browsers:
+
+<Steps>
+  <Step title="Use development tools">
+    Modern browsers include responsive design mode for testing different viewport sizes:
+
+    - Chrome: DevTools → Toggle device toolbar (Cmd/Ctrl + Shift + M)
+    - Firefox: Developer Tools → Responsive Design Mode
+    - Safari: Develop → Enter Responsive Design Mode
+  </Step>
+
+  <Step title="Test on real devices">
+    While emulators are helpful, testing on actual devices provides the most accurate results:
+
+    - iOS devices (iPhone, iPad)
+    - Android phones and tablets
+    - Desktop browsers (Chrome, Firefox, Safari, Edge)
+  </Step>
+
+  <Step title="Use automated testing">
+    Consider using services like BrowserStack or Sauce Labs for automated cross-browser testing across multiple platforms and versions.
+  </Step>
+</Steps>
+
+## Server-side rendering (SSR)
+
+Vuetify fully supports SSR with frameworks like Nuxt:
+
+```typescript
+const vuetify = createVuetify({
+  ssr: true,
+})
+```
+
+When `ssr: true` is enabled, Vuetify optimizes initialization for server-side rendering and handles client hydration properly.
+
+## Legacy browser support
+
+Vuetify 3 is built for modern browsers and Vue 3. If you need to support Internet Explorer or older browsers:
+
+- Consider using Vuetify 2, which supports IE11
+- Note that Vuetify 2 is now End of Life (EOL) and no longer receives updates
+- Commercial support for Vuetify 2 is available through HeroDevs
+
+## Reporting compatibility issues
+
+If you encounter browser compatibility issues:
+
+1. Check the [issue tracker](https://issues.vuetifyjs.com) for existing reports
+2. Verify your polyfills are correctly configured
+3. Test in the browser's latest version
+4. Report new issues with browser version, OS, and reproduction steps

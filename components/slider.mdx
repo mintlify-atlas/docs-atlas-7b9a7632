@@ -1,0 +1,329 @@
+---
+title: VSlider
+description: Slider component for selecting a numeric value from a range
+---
+
+# VSlider
+
+The `VSlider` component allows users to select a numeric value from a range using a draggable thumb along a track.
+
+## Basic Usage
+
+```vue
+<template>
+  <VSlider
+    v-model="value"
+    :min="0"
+    :max="100"
+    label="Volume"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(50)
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | string" default="0">
+  The current value of the slider.
+</ParamField>
+
+<ParamField path="min" type="number | string" default="0">
+  Minimum value of the slider.
+</ParamField>
+
+<ParamField path="max" type="number | string" default="100">
+  Maximum value of the slider.
+</ParamField>
+
+<ParamField path="step" type="number | string" default="0">
+  Step increment value. Set to 0 for any value.
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text for the slider.
+</ParamField>
+
+<ParamField path="thumbLabel" type="boolean | string" default="false">
+  Show a label on the thumb. Use 'always' to always display.
+</ParamField>
+
+<ParamField path="thumbColor" type="string">
+  Color of the slider thumb.
+</ParamField>
+
+<ParamField path="thumbSize" type="number" default="20">
+  Size of the slider thumb in pixels.
+</ParamField>
+
+<ParamField path="trackColor" type="string">
+  Color of the slider track (unfilled portion).
+</ParamField>
+
+<ParamField path="trackFillColor" type="string">
+  Color of the filled portion of the track.
+</ParamField>
+
+<ParamField path="trackSize" type="number" default="4">
+  Height of the slider track in pixels.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color theme for the slider.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable the slider.
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Make the slider readonly.
+</ParamField>
+
+<ParamField path="elevation" type="number | string">
+  Elevation of the slider thumb.
+</ParamField>
+
+<ParamField path="ticks" type="number[] | Record<string, string>">
+  Show tick marks on the track. Can be an array of values or an object mapping values to labels.
+</ParamField>
+
+<ParamField path="showTicks" type="boolean | 'always'" default="false">
+  Show tick marks. Use 'always' to show ticks even when not interacting.
+</ParamField>
+
+<ParamField path="tickSize" type="number" default="2">
+  Size of tick marks in pixels.
+</ParamField>
+
+## With Steps
+
+```vue
+<template>
+  <VSlider
+    v-model="value"
+    :min="0"
+    :max="100"
+    :step="10"
+    label="Step by 10"
+    thumb-label
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(50)
+</script>
+```
+
+## With Ticks
+
+```vue
+<template>
+  <div>
+    <!-- Basic ticks -->
+    <VSlider
+      v-model="value1"
+      :min="0"
+      :max="100"
+      :step="25"
+      show-ticks="always"
+      label="With ticks"
+    />
+    
+    <!-- Custom tick labels -->
+    <VSlider
+      v-model="value2"
+      :min="0"
+      :max="3"
+      :step="1"
+      :ticks="{
+        0: 'Low',
+        1: 'Medium',
+        2: 'High',
+        3: 'Very High'
+      }"
+      show-ticks="always"
+      label="Custom tick labels"
+    >
+      <template #tick-label="{ tick }">
+        <span class="text-caption">{{ tick.label }}</span>
+      </template>
+    </VSlider>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref(50)
+const value2 = ref(1)
+</script>
+```
+
+## Thumb Label
+
+```vue
+<template>
+  <div>
+    <!-- Show on hover -->
+    <VSlider
+      v-model="value1"
+      label="Hover to see value"
+      thumb-label
+    />
+    
+    <!-- Always visible -->
+    <VSlider
+      v-model="value2"
+      label="Always visible"
+      thumb-label="always"
+    />
+    
+    <!-- Custom thumb label -->
+    <VSlider
+      v-model="value3"
+      label="Custom label"
+      thumb-label
+    >
+      <template #thumb-label="{ modelValue }">
+        {{ modelValue }}%
+      </template>
+    </VSlider>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref(50)
+const value2 = ref(50)
+const value3 = ref(50)
+</script>
+```
+
+## Colors
+
+```vue
+<template>
+  <div>
+    <VSlider
+      v-model="value1"
+      label="Primary"
+      color="primary"
+    />
+    
+    <VSlider
+      v-model="value2"
+      label="Success"
+      color="success"
+    />
+    
+    <VSlider
+      v-model="value3"
+      label="Custom colors"
+      track-color="grey"
+      track-fill-color="purple"
+      thumb-color="purple"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref(50)
+const value2 = ref(50)
+const value3 = ref(50)
+</script>
+```
+
+## Disabled and Readonly
+
+```vue
+<template>
+  <div>
+    <VSlider
+      v-model="value1"
+      label="Disabled"
+      disabled
+    />
+    
+    <VSlider
+      v-model="value2"
+      label="Readonly"
+      readonly
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref(50)
+const value2 = ref(50)
+</script>
+```
+
+## Validation
+
+```vue
+<template>
+  <VForm>
+    <VSlider
+      v-model="value"
+      label="Select a value between 30 and 70"
+      :min="0"
+      :max="100"
+      :rules="[
+        v => v >= 30 || 'Value must be at least 30',
+        v => v <= 70 || 'Value must be at most 70'
+      ]"
+      thumb-label
+    />
+  </VForm>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(50)
+</script>
+```
+
+## Events
+
+<ParamField path="update:modelValue" type="(value: number) => void">
+  Emitted when the slider value changes.
+</ParamField>
+
+<ParamField path="start" type="(value: number) => void">
+  Emitted when the user starts dragging the slider.
+</ParamField>
+
+<ParamField path="end" type="(value: number) => void">
+  Emitted when the user stops dragging the slider.
+</ParamField>
+
+<ParamField path="update:focused" type="(focused: boolean) => void">
+  Emitted when the focus state changes.
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="{}">
+  Customize the label content.
+</ParamField>
+
+<ParamField path="thumb-label" type="{ modelValue }">
+  Customize the thumb label content.
+</ParamField>
+
+<ParamField path="tick-label" type="{ tick }">
+  Customize the tick label content.
+</ParamField>

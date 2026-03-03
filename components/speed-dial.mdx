@@ -1,0 +1,346 @@
+---
+title: VSpeedDial
+description: Speed dial component for contextual action menus
+---
+
+# VSpeedDial
+
+The `VSpeedDial` component is a floating action menu that reveals multiple related actions on hover or click. It's built on top of `VMenu`.
+
+## Basic Usage
+
+```vue
+<template>
+  <VSpeedDial>
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-plus" />
+    </template>
+    
+    <VBtn icon="mdi-pencil" />
+    <VBtn icon="mdi-delete" />
+    <VBtn icon="mdi-share" />
+  </VSpeedDial>
+</template>
+```
+
+## Controlled State
+
+```vue
+<template>
+  <VSpeedDial v-model="isOpen">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-plus" />
+    </template>
+    
+    <VBtn icon="mdi-file" @click="createFile" />
+    <VBtn icon="mdi-folder" @click="createFolder" />
+  </VSpeedDial>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const isOpen = ref(false)
+
+function createFile() {
+  console.log('Create file')
+  isOpen.value = false
+}
+
+function createFolder() {
+  console.log('Create folder')
+  isOpen.value = false
+}
+</script>
+```
+
+## Location
+
+```vue
+<template>
+  <!-- Top center (default) -->
+  <VSpeedDial location="top center">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-dots-vertical" />
+    </template>
+    <VBtn icon="mdi-pencil" />
+    <VBtn icon="mdi-delete" />
+  </VSpeedDial>
+  
+  <!-- Bottom center -->
+  <VSpeedDial location="bottom center">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-dots-vertical" />
+    </template>
+    <VBtn icon="mdi-pencil" />
+    <VBtn icon="mdi-delete" />
+  </VSpeedDial>
+  
+  <!-- Right -->
+  <VSpeedDial location="end">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-dots-horizontal" />
+    </template>
+    <VBtn icon="mdi-pencil" />
+    <VBtn icon="mdi-delete" />
+  </VSpeedDial>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean">
+  Controls the open/closed state of the speed dial
+</ParamField>
+
+<ParamField path="location" type="string" default="top center">
+  Position where actions appear. Format: `[top|bottom|start|end] [center]`
+</ParamField>
+
+<ParamField path="transition" type="string" default="scale-transition">
+  Transition animation for the action buttons
+</ParamField>
+
+<ParamField path="offset" type="string | number" default="8">
+  Offset from the activator
+</ParamField>
+
+<ParamField path="minWidth" type="string | number" default="0">
+  Minimum width of the speed dial content
+</ParamField>
+
+<ParamField path="openDelay" type="string | number" default="0">
+  Delay in ms before opening
+</ParamField>
+
+<ParamField path="closeDelay" type="string | number" default="100">
+  Delay in ms before closing
+</ParamField>
+
+<ParamField path="contentClass" type="string">
+  Custom class for the speed dial content container
+</ParamField>
+
+## VMenu Props
+
+The `VSpeedDial` component accepts all props from `VMenu`:
+
+- `openOnHover` - Open on hover instead of click
+- `openOnClick` - Open on click
+- `openOnFocus` - Open on focus
+- `closeOnContentClick` - Close when content is clicked
+- `persistent` - Don't close on outside click
+- `disabled` - Disable the speed dial
+- `theme` - Theme to apply
+
+And many more VMenu props...
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the speed dial opens or closes
+  
+  **Payload:** `boolean` - The new open/closed state
+</ParamField>
+
+## Slots
+
+<ParamField path="activator" type="slot">
+  The button that triggers the speed dial. Receives:
+  
+  - `props` - Props to bind to the activator button
+  - `isActive` - Whether the speed dial is open
+</ParamField>
+
+<ParamField path="default" type="slot">
+  Speed dial action buttons. Automatically receives default button size of `small`
+</ParamField>
+
+## Examples
+
+### Hover Activation
+
+```vue
+<template>
+  <VSpeedDial open-on-hover>
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-menu" color="primary" />
+    </template>
+    
+    <VBtn icon="mdi-home" />
+    <VBtn icon="mdi-account" />
+    <VBtn icon="mdi-settings" />
+  </VSpeedDial>
+</template>
+```
+
+### With Tooltips
+
+```vue
+<template>
+  <VSpeedDial>
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-plus" />
+    </template>
+    
+    <VTooltip location="start">
+      <template #activator="{ props }">
+        <VBtn v-bind="props" icon="mdi-pencil" />
+      </template>
+      Edit
+    </VTooltip>
+    
+    <VTooltip location="start">
+      <template #activator="{ props }">
+        <VBtn v-bind="props" icon="mdi-delete" />
+      </template>
+      Delete
+    </VTooltip>
+  </VSpeedDial>
+</template>
+```
+
+### Different Transitions
+
+```vue
+<template>
+  <VSpeedDial transition="slide-y-transition">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-dots-vertical" />
+    </template>
+    
+    <VBtn icon="mdi-share" />
+    <VBtn icon="mdi-bookmark" />
+    <VBtn icon="mdi-heart" />
+  </VSpeedDial>
+</template>
+```
+
+### With FAB
+
+```vue
+<template>
+  <VSpeedDial location="top center">
+    <template #activator="{ props }">
+      <VFab 
+        v-bind="props"
+        icon="mdi-plus"
+        location="bottom end"
+        app
+      />
+    </template>
+    
+    <VBtn icon="mdi-file" />
+    <VBtn icon="mdi-folder" />
+    <VBtn icon="mdi-upload" />
+  </VSpeedDial>
+</template>
+```
+
+### Custom Content
+
+```vue
+<template>
+  <VSpeedDial>
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-menu" />
+    </template>
+    
+    <VBtn 
+      v-for="action in actions" 
+      :key="action.icon"
+      :icon="action.icon"
+      :color="action.color"
+      @click="action.onClick"
+    />
+  </VSpeedDial>
+</template>
+
+<script setup>
+const actions = [
+  { 
+    icon: 'mdi-pencil', 
+    color: 'primary',
+    onClick: () => console.log('Edit') 
+  },
+  { 
+    icon: 'mdi-delete', 
+    color: 'error',
+    onClick: () => console.log('Delete') 
+  },
+  { 
+    icon: 'mdi-share', 
+    color: 'success',
+    onClick: () => console.log('Share') 
+  },
+]
+</script>
+```
+
+### Bottom Location
+
+```vue
+<template>
+  <VSpeedDial location="bottom center">
+    <template #activator="{ props }">
+      <VBtn 
+        v-bind="props" 
+        icon="mdi-plus"
+        color="secondary"
+        size="large"
+      />
+    </template>
+    
+    <VBtn icon="mdi-camera" color="primary" />
+    <VBtn icon="mdi-microphone" color="success" />
+    <VBtn icon="mdi-video" color="error" />
+  </VSpeedDial>
+</template>
+```
+
+### Horizontal Layout
+
+```vue
+<template>
+  <VSpeedDial location="end center">
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-dots-horizontal" />
+    </template>
+    
+    <VBtn icon="mdi-format-bold" />
+    <VBtn icon="mdi-format-italic" />
+    <VBtn icon="mdi-format-underline" />
+  </VSpeedDial>
+</template>
+```
+
+### Persistent Menu
+
+```vue
+<template>
+  <VSpeedDial persistent>
+    <template #activator="{ props }">
+      <VBtn v-bind="props" icon="mdi-menu" />
+    </template>
+    
+    <VBtn icon="mdi-home" @click="navigate('home')" />
+    <VBtn icon="mdi-account" @click="navigate('profile')" />
+    <VBtn icon="mdi-cog" @click="navigate('settings')" />
+  </VSpeedDial>
+</template>
+
+<script setup>
+function navigate(route) {
+  console.log('Navigate to:', route)
+}
+</script>
+```
+
+## Notes
+
+- The speed dial automatically sets button size to `small` for all child buttons
+- Actions appear with a staggered transition effect
+- The activator button should be bound with the `props` from the activator slot
+- Use `location` to control where actions appear relative to the activator
+- The component uses `VMenu` internally, so all menu props are available
+- Default transition is `scale-transition` for smooth scaling animation

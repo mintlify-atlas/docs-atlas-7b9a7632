@@ -1,0 +1,317 @@
+---
+title: VSkeletonLoader
+description: Skeleton loader component for placeholder content while loading
+---
+
+# VSkeletonLoader
+
+The `VSkeletonLoader` component is a versatile tool for providing a visual indicator that content is loading. It can be used as a placeholder while waiting for data or as a boilerplate for content structure.
+
+## Usage
+
+The skeleton loader can display various pre-defined bone structures.
+
+```vue
+<template>
+  <v-skeleton-loader type="card"></v-skeleton-loader>
+</template>
+```
+
+## Loading State
+
+Use the `loading` prop to switch between the skeleton and actual content.
+
+```vue
+<template>
+  <v-skeleton-loader :loading="loading" type="article">
+    <v-card>
+      <v-card-title>Actual Content</v-card-title>
+      <v-card-text>
+        This is the real content that appears when loading is false.
+      </v-card-text>
+    </v-card>
+  </v-skeleton-loader>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(true)
+
+setTimeout(() => {
+  loading.value = false
+}, 2000)
+</script>
+```
+
+<Note>
+When `loading` is `true`, the skeleton is displayed. When `false`, the slot content is shown.
+</Note>
+
+## Types
+
+The skeleton loader supports many pre-defined types that represent common UI patterns.
+
+```vue
+<template>
+  <div>
+    <v-skeleton-loader type="avatar"></v-skeleton-loader>
+    <v-skeleton-loader type="button"></v-skeleton-loader>
+    <v-skeleton-loader type="card"></v-skeleton-loader>
+    <v-skeleton-loader type="list-item"></v-skeleton-loader>
+    <v-skeleton-loader type="article"></v-skeleton-loader>
+    <v-skeleton-loader type="paragraph"></v-skeleton-loader>
+  </div>
+</template>
+```
+
+### Available Types
+
+- `actions` - Two buttons
+- `article` - Heading and paragraph
+- `avatar` - Avatar circle
+- `button` - Button shape
+- `card` - Image and heading
+- `card-avatar` - Image and list item with avatar
+- `chip` - Chip shape
+- `date-picker` - Full date picker structure
+- `heading` - Heading text
+- `image` - Rectangle image placeholder
+- `list-item` - Single line list item
+- `list-item-avatar` - List item with avatar
+- `list-item-two-line` - Two line list item
+- `list-item-avatar-two-line` - Two line list item with avatar
+- `list-item-three-line` - Three line list item
+- `list-item-avatar-three-line` - Three line list item with avatar
+- `paragraph` - Three text lines
+- `sentences` - Two text lines
+- `table` - Full table structure
+- `text` - Single text line
+
+## Multiple Types
+
+Combine multiple types using a comma-separated string or array.
+
+```vue
+<template>
+  <v-skeleton-loader type="avatar, list-item-two-line"></v-skeleton-loader>
+</template>
+```
+
+## Repeating Types
+
+Use the `@` syntax to repeat a type multiple times.
+
+```vue
+<template>
+  <v-skeleton-loader type="list-item@3"></v-skeleton-loader>
+</template>
+```
+
+This creates three list items in sequence.
+
+## Custom Combinations
+
+Create complex layouts by combining types and repetitions.
+
+```vue
+<template>
+  <v-skeleton-loader
+    type="card-avatar, article, actions"
+  ></v-skeleton-loader>
+</template>
+```
+
+## Color
+
+Customize the skeleton color with the `color` prop.
+
+```vue
+<template>
+  <v-skeleton-loader
+    type="card"
+    color="grey-lighten-3"
+  ></v-skeleton-loader>
+</template>
+```
+
+## Dimensions
+
+Control the size using `width`, `maxWidth`, `height`, and `maxHeight` props.
+
+```vue
+<template>
+  <v-skeleton-loader
+    type="card"
+    width="300"
+    height="200"
+  ></v-skeleton-loader>
+</template>
+```
+
+## Boilerplate
+
+The `boilerplate` prop removes the loading animation, making it suitable for wireframes and mockups.
+
+```vue
+<template>
+  <v-skeleton-loader
+    type="article"
+    boilerplate
+  ></v-skeleton-loader>
+</template>
+```
+
+<Note>
+When using the `boilerplate` prop, ARIA attributes for loading states are not applied, as it's meant for static placeholders rather than dynamic loading.
+</Note>
+
+## Elevation
+
+Add elevation to create depth.
+
+```vue
+<template>
+  <v-skeleton-loader
+    type="card"
+    elevation="4"
+  ></v-skeleton-loader>
+</template>
+```
+
+## Card Example
+
+A practical example showing a card with loading state.
+
+```vue
+<template>
+  <v-card>
+    <v-skeleton-loader :loading="loading" type="card">
+      <template v-slot:default>
+        <v-img src="/image.jpg"></v-img>
+        <v-card-title>Card Title</v-card-title>
+        <v-card-text>
+          This is the actual card content that appears after loading.
+        </v-card-text>
+      </template>
+    </v-skeleton-loader>
+  </v-card>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(true)
+</script>
+```
+
+## List Example
+
+Skeleton loader for a list of items.
+
+```vue
+<template>
+  <v-list>
+    <v-skeleton-loader
+      :loading="loading"
+      type="list-item-avatar-two-line@5"
+    >
+      <v-list-item
+        v-for="item in items"
+        :key="item.id"
+        :title="item.title"
+        :subtitle="item.subtitle"
+      >
+        <template v-slot:prepend>
+          <v-avatar :image="item.avatar"></v-avatar>
+        </template>
+      </v-list-item>
+    </v-skeleton-loader>
+  </v-list>
+</template>
+```
+
+## Props
+
+<ParamField path="type" type="string | string[]" default="ossein">
+  The type or types of skeleton bones to display. Can be a single type, comma-separated types, or an array. Supports `@` syntax for repetition (e.g., `text@3`).
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Controls whether to show the skeleton (true) or the slot content (false).
+</ParamField>
+
+<ParamField path="boilerplate" type="boolean" default="false">
+  Removes the loading animation. Useful for static wireframes and mockups.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the skeleton.
+</ParamField>
+
+<ParamField path="loadingText" type="string" default="$vuetify.loading">
+  The text used for the `aria-label` when loading.
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the skeleton loader.
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the skeleton loader.
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the skeleton loader.
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the skeleton loader.
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Designates an elevation applied to the component between 0 and 24.
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The actual content to display when `loading` is false.
+</ParamField>
+
+## Accessibility
+
+When loading (and not in boilerplate mode), the component includes:
+
+- `role="alert"`
+- `aria-live="polite"`
+- `aria-label` (based on the `loadingText` prop)
+
+These attributes ensure screen readers announce the loading state appropriately.
+
+## Type Reference
+
+Here's a comprehensive list of all available skeleton types and their structures:
+
+| Type | Structure |
+|------|----------|
+| `actions` | `button@2` |
+| `article` | `heading, paragraph` |
+| `avatar` | `avatar` |
+| `button` | `button` |
+| `card` | `image, heading` |
+| `card-avatar` | `image, list-item-avatar` |
+| `chip` | `chip` |
+| `date-picker` | `list-item, heading, divider, date-picker-options, date-picker-days, actions` |
+| `heading` | `heading` |
+| `image` | `image` |
+| `list-item` | `text` |
+| `list-item-avatar` | `avatar, text` |
+| `list-item-two-line` | `sentences` |
+| `list-item-avatar-two-line` | `avatar, sentences` |
+| `list-item-three-line` | `paragraph` |
+| `list-item-avatar-three-line` | `avatar, paragraph` |
+| `paragraph` | `text@3` |
+| `sentences` | `text@2` |
+| `table` | `table-heading, table-thead, table-tbody, table-tfoot` |
+| `text` | `text` |

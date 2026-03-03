@@ -1,0 +1,507 @@
+---
+title: Theme Configuration
+description: Configure Vuetify's theme system to customize colors, dark mode, and CSS variables at runtime.
+---
+
+# Theme Configuration
+
+Vuetify's theme system allows you to customize colors, enable dark mode, and configure CSS variables that can be changed at runtime. Unlike SASS variables, theme configuration is dynamic and can be modified after your application is built.
+
+## Basic Setup
+
+Configure themes when creating your Vuetify instance:
+
+```ts
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#1867C0',
+          secondary: '#48A9A6',
+          error: '#B00020',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FB8C00',
+        },
+      },
+    },
+  },
+})
+```
+
+## Theme Options
+
+### ThemeOptions Interface
+
+<CodeGroup>
+```ts Configuration
+interface ThemeOptions {
+  cspNonce?: string
+  defaultTheme?: 'light' | 'dark' | 'system' | string
+  variations?: false | VariationsOptions
+  themes?: Record<string, ThemeDefinition>
+  stylesheetId?: string
+  scope?: string
+  utilities?: boolean
+}
+```
+
+```ts Variations
+interface VariationsOptions {
+  colors: string[]    // Colors to generate variations for
+  lighten: number     // Number of lighten variations
+  darken: number      // Number of darken variations
+}
+```
+
+```ts Theme Definition
+interface ThemeDefinition {
+  dark: boolean
+  colors: Colors
+  variables: Record<string, string | number>
+}
+```
+</CodeGroup>
+
+### Default Theme
+
+Specify which theme to use by default:
+
+```ts
+createVuetify({
+  theme: {
+    defaultTheme: 'light',  // 'light' | 'dark' | 'system'
+  },
+})
+```
+
+<Accordion title="System Theme">
+Setting `defaultTheme: 'system'` automatically detects the user's OS preference:
+
+```ts
+theme: {
+  defaultTheme: 'system',  // Respects prefers-color-scheme
+}
+```
+
+Vuetify listens to changes in the system preference and updates automatically.
+</Accordion>
+
+## Color System
+
+### Base Colors
+
+Every theme must define these base colors:
+
+```ts
+colors: {
+  background: '#FFFFFF',
+  surface: '#FFFFFF',
+  primary: '#1867C0',
+  secondary: '#48A9A6',
+  success: '#4CAF50',
+  warning: '#FB8C00',
+  error: '#B00020',
+  info: '#2196F3',
+}
+```
+
+### On-Colors
+
+On-colors are automatically generated for text/icons on colored backgrounds:
+
+```ts
+colors: {
+  primary: '#1867C0',
+  'on-primary': '#FFFFFF',      // Auto-generated if not specified
+  
+  background: '#FFFFFF',
+  'on-background': '#000000',   // Auto-generated based on luminance
+}
+```
+
+<Note>
+Vuetify calculates on-colors automatically using luminance detection. Only override them if you need custom values.
+</Note>
+
+### Custom Colors
+
+Add custom colors beyond the base palette:
+
+```ts
+themes: {
+  light: {
+    colors: {
+      // Base colors
+      primary: '#1867C0',
+      secondary: '#48A9A6',
+      
+      // Custom colors
+      accent: '#82B1FF',
+      brand: '#FF6B9D',
+      'surface-variant': '#EEEEEE',
+      'surface-bright': '#FFFFFF',
+    },
+  },
+}
+```
+
+### Color Variations
+
+Automatically generate lighten/darken variations:
+
+```ts
+theme: {
+  variations: {
+    colors: ['primary', 'secondary'],
+    lighten: 3,  // Generates primary-lighten-1, primary-lighten-2, primary-lighten-3
+    darken: 3,   // Generates primary-darken-1, primary-darken-2, primary-darken-3
+  },
+  themes: {
+    light: {
+      colors: {
+        primary: '#1867C0',
+        secondary: '#48A9A6',
+      },
+    },
+  },
+}
+```
+
+Use generated variations in components:
+
+```vue
+<v-btn color="primary-darken-1">Darker Primary</v-btn>
+<v-card color="primary-lighten-2">Lighter Primary</v-card>
+```
+
+## Multiple Themes
+
+Define multiple themes and switch between them:
+
+<CodeGroup>
+```ts Configuration
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#1867C0',
+          secondary: '#48A9A6',
+        },
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: '#2196F3',
+          secondary: '#54B6B2',
+        },
+      },
+      custom: {
+        dark: false,
+        colors: {
+          primary: '#6200EE',
+          secondary: '#03DAC6',
+        },
+      },
+    },
+  },
+})
+```
+
+```vue Usage
+<template>
+  <v-app>
+    <v-btn @click="theme.change('light')">Light</v-btn>
+    <v-btn @click="theme.change('dark')">Dark</v-btn>
+    <v-btn @click="theme.change('custom')">Custom</v-btn>
+    
+    <!-- Toggle between two themes -->
+    <v-btn @click="theme.toggle()">Toggle Light/Dark</v-btn>
+    
+    <!-- Cycle through all themes -->
+    <v-btn @click="theme.cycle()">Next Theme</v-btn>
+  </v-app>
+</template>
+
+<script setup>
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
+</script>
+```
+</CodeGroup>
+
+## Theme Variables
+
+Customize CSS variables that control opacity, shadows, and other properties:
+
+```ts
+themes: {
+  light: {
+    dark: false,
+    colors: { /* ... */ },
+    variables: {
+      'border-color': '#000000',
+      'border-opacity': 0.12,
+      'shadow-color': '#000000',
+      'high-emphasis-opacity': 0.87,
+      'medium-emphasis-opacity': 0.60,
+      'disabled-opacity': 0.38,
+      'idle-opacity': 0.04,
+      'hover-opacity': 0.04,
+      'focus-opacity': 0.12,
+      'selected-opacity': 0.08,
+      'activated-opacity': 0.12,
+      'pressed-opacity': 0.12,
+      'dragged-opacity': 0.08,
+      'theme-kbd': '#EEEEEE',
+      'theme-on-kbd': '#000000',
+      'theme-code': '#F5F5F5',
+      'theme-on-code': '#000000',
+    },
+  },
+  dark: {
+    dark: true,
+    colors: { /* ... */ },
+    variables: {
+      'border-color': '#FFFFFF',
+      'border-opacity': 0.12,
+      'high-emphasis-opacity': 1,
+      'medium-emphasis-opacity': 0.70,
+      'disabled-opacity': 0.50,
+      'hover-opacity': 0.04,
+      'pressed-opacity': 0.16,
+    },
+  },
+}
+```
+
+## Advanced Configuration
+
+### CSP Nonce
+
+Add a nonce for Content Security Policy:
+
+```ts
+theme: {
+  cspNonce: 'your-nonce-here',
+}
+```
+
+### Scoped Themes
+
+Scope themes to specific containers:
+
+```ts
+theme: {
+  scope: '#app',  // Limit theme to elements within #app
+}
+```
+
+### Disable Utilities
+
+Disable automatic generation of utility classes:
+
+```ts
+theme: {
+  utilities: false,  // Don't generate .bg-primary, .text-secondary, etc.
+}
+```
+
+### Custom Stylesheet ID
+
+Change the ID of the injected style element:
+
+```ts
+theme: {
+  stylesheetId: 'my-custom-theme-stylesheet',
+}
+```
+
+## Using the Theme
+
+### In Components
+
+<CodeGroup>
+```vue Composition API
+<script setup>
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
+
+// Change theme
+function switchTheme(name) {
+  theme.change(name)
+}
+
+// Toggle between light and dark
+function toggleTheme() {
+  theme.toggle(['light', 'dark'])
+}
+
+// Cycle through all themes
+function cycleTheme() {
+  theme.cycle()
+}
+
+// Check current theme
+console.log(theme.name.value)        // Current theme name
+console.log(theme.current.value)     // Current theme definition
+console.log(theme.isSystem.value)    // Is using system theme?
+</script>
+```
+
+```vue Options API
+<script>
+export default {
+  computed: {
+    currentTheme() {
+      return this.$vuetify.theme.name.value
+    },
+  },
+  methods: {
+    switchTheme(name) {
+      this.$vuetify.theme.change(name)
+    },
+  },
+}
+</script>
+```
+</CodeGroup>
+
+### Theme Methods
+
+```ts
+const theme = useTheme()
+
+// Change to specific theme
+theme.change('dark')
+
+// Toggle between two themes
+theme.toggle(['light', 'dark'])  // Defaults to ['light', 'dark']
+
+// Cycle through themes
+theme.cycle()                              // All themes
+theme.cycle(['light', 'dark', 'custom'])   // Specific themes
+```
+
+### Theme Properties
+
+```ts
+theme.name           // Ref<string> - Current theme name
+theme.current        // DeepReadonly<Ref<ThemeDefinition>>
+theme.themes         // Ref<Record<string, ThemeDefinition>>
+theme.isSystem       // Readonly<Ref<boolean>>
+theme.isDisabled     // boolean
+theme.prefix         // string (default: 'v-')
+theme.themeClasses   // Readonly<Ref<string | undefined>>
+theme.styles         // Readonly<Ref<string>> - Generated CSS
+```
+
+## Default Themes
+
+Vuetify includes default light and dark themes:
+
+<Accordion title="Default Light Theme">
+```ts
+light: {
+  dark: false,
+  colors: {
+    background: '#FFFFFF',
+    surface: '#FFFFFF',
+    'surface-bright': '#FFFFFF',
+    'surface-light': '#EEEEEE',
+    'surface-variant': '#424242',
+    'on-surface-variant': '#EEEEEE',
+    primary: '#1867C0',
+    'primary-darken-1': '#1F5592',
+    secondary: '#48A9A6',
+    'secondary-darken-1': '#018786',
+    error: '#B00020',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+  },
+  variables: {
+    'border-color': '#000000',
+    'border-opacity': 0.12,
+    'high-emphasis-opacity': 0.87,
+    'medium-emphasis-opacity': 0.60,
+    'disabled-opacity': 0.38,
+    'hover-opacity': 0.04,
+    'focus-opacity': 0.12,
+    'selected-opacity': 0.08,
+    'activated-opacity': 0.12,
+    'pressed-opacity': 0.12,
+  },
+}
+```
+</Accordion>
+
+<Accordion title="Default Dark Theme">
+```ts
+dark: {
+  dark: true,
+  colors: {
+    background: '#121212',
+    surface: '#212121',
+    'surface-bright': '#ccbfd6',
+    'surface-light': '#424242',
+    'surface-variant': '#c8c8c8',
+    'on-surface-variant': '#000000',
+    primary: '#2196F3',
+    'primary-darken-1': '#277CC1',
+    secondary: '#54B6B2',
+    'secondary-darken-1': '#48A9A6',
+    error: '#CF6679',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+  },
+  variables: {
+    'border-color': '#FFFFFF',
+    'border-opacity': 0.12,
+    'high-emphasis-opacity': 1,
+    'medium-emphasis-opacity': 0.70,
+    'disabled-opacity': 0.50,
+    'hover-opacity': 0.04,
+    'focus-opacity': 0.12,
+    'selected-opacity': 0.08,
+    'activated-opacity': 0.12,
+    'pressed-opacity': 0.16,
+  },
+}
+```
+</Accordion>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use semantic color names">
+    Define colors by purpose (primary, secondary) rather than by appearance (blue, green).
+  </Step>
+  
+  <Step title="Provide both light and dark themes">
+    Most users expect dark mode support in modern applications.
+  </Step>
+  
+  <Step title="Let Vuetify generate on-colors">
+    The automatic luminance-based generation works well for most cases.
+  </Step>
+  
+  <Step title="Test color contrast">
+    Ensure sufficient contrast between colors and their on-colors for accessibility.
+  </Step>
+</Steps>
+
+<Warning>
+Theme colors are applied via CSS variables. If you need compile-time color modifications, use [SASS variables](/customization/sass-variables) instead.
+</Warning>

@@ -1,0 +1,149 @@
+---
+title: Avatar
+description: The VAvatar component displays a circular user representation with support for images, icons, text, and badges.
+---
+
+# Avatar
+
+The `VAvatar` component is used to display circular user profile images, icons, or text. It supports various sizes, colors, and can include badges for status indicators.
+
+## Usage
+
+```vue
+<template>
+  <v-avatar>
+    <v-img src="/avatar.jpg" alt="User" />
+  </v-avatar>
+</template>
+```
+
+## Props
+
+<ParamField path="image" type="string">
+  Image source URL for the avatar
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon to display in the avatar
+</ParamField>
+
+<ParamField path="text" type="string">
+  Text content to display (typically initials)
+</ParamField>
+
+<ParamField path="badge" type="boolean | object" default="false">
+  Show a badge on the avatar. Can be a boolean or an object with VBadge props
+</ParamField>
+
+<ParamField path="start" type="boolean" default="false">
+  Aligns the avatar to the start of its container
+</ParamField>
+
+<ParamField path="end" type="boolean" default="false">
+  Aligns the avatar to the end of its container
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Sets the height and width of the component. Supports predefined sizes: `x-small`, `small`, `default`, `large`, `x-large`
+</ParamField>
+
+<ParamField path="density" type="string">
+  Adjusts the vertical height. Options: `default`, `comfortable`, `compact`
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the avatar. Options: `0`, `xs`, `sm`, `md`, `lg`, `xl`, `pill`, `circle`
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies a specified color to the control
+</ParamField>
+
+<ParamField path="variant" type="string" default="flat">
+  Applies a distinct style to the component. Options: `flat`, `text`, `elevated`, `tonal`, `outlined`, `plain`
+</ParamField>
+
+<ParamField path="border" type="string | number | boolean">
+  Applies border styles to the component
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default">
+  The default slot for custom avatar content
+</ParamField>
+
+<ParamField path="badge">
+  Slot for custom badge content when badge prop is enabled
+</ParamField>
+
+## Examples
+
+### Image Avatar
+
+```vue
+<template>
+  <v-avatar size="48">
+    <v-img src="/user-avatar.jpg" alt="John Doe" />
+  </v-avatar>
+</template>
+```
+
+### Icon Avatar
+
+```vue
+<template>
+  <v-avatar color="primary" size="56">
+    <v-icon icon="mdi-account" />
+  </v-avatar>
+</template>
+```
+
+### Text Avatar
+
+```vue
+<template>
+  <v-avatar color="info" text="JD" />
+</template>
+```
+
+### Avatar with Badge
+
+```vue
+<template>
+  <v-avatar
+    image="/user-avatar.jpg"
+    :badge="{ color: 'success', content: '3', location: 'bottom end' }"
+  />
+</template>
+```
+
+### Different Sizes
+
+```vue
+<template>
+  <div class="d-flex align-center gap-4">
+    <v-avatar size="x-small" color="primary" />
+    <v-avatar size="small" color="secondary" />
+    <v-avatar color="success" />
+    <v-avatar size="large" color="warning" />
+    <v-avatar size="x-large" color="error" />
+  </div>
+</template>
+```
+
+### Variants
+
+```vue
+<template>
+  <div class="d-flex gap-4">
+    <v-avatar variant="flat" color="primary" icon="mdi-account" />
+    <v-avatar variant="tonal" color="secondary" icon="mdi-account" />
+    <v-avatar variant="outlined" color="success" icon="mdi-account" />
+  </div>
+</template>
+```

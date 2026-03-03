@@ -1,0 +1,333 @@
+---
+title: SASS Variables
+description: Customize Vuetify's global styles using SASS variables to control typography, spacing, borders, and more.
+---
+
+# SASS Variables
+
+Vuetify provides a comprehensive set of SASS variables that allow you to customize the framework's appearance at build time. These variables control everything from spacing and typography to borders and breakpoints.
+
+## Getting Started
+
+To customize SASS variables, create a SASS file that overrides the default values before importing Vuetify's main stylesheet:
+
+```scss
+// src/styles/settings.scss
+@use 'vuetify/settings' with (
+  $body-font-family: 'Inter, sans-serif',
+  $border-radius-root: 8px,
+  $spacer: 8px
+);
+```
+
+Then import this file in your main entry point before Vuetify:
+
+```js
+// main.js
+import './styles/settings.scss'
+import 'vuetify/styles'
+```
+
+## Core Variables
+
+### Typography
+
+Control font families, sizes, and text styles:
+
+<CodeGroup>
+```scss Font Family
+$body-font-family: var(--v-font-body, 'Roboto', sans-serif) !default;
+$heading-font-family: var(--v-font-heading, #{$body-font-family}) !default;
+$font-size-root: 1rem !default;
+$line-height-root: 1.5 !default;
+```
+
+```scss Font Weights
+$font-weights: (
+  'thin': 100,
+  'light': 300,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'black': 900
+) !default;
+```
+
+```scss Typography Scale
+$typography: (
+  'display-large': (
+    'size': 3.5625rem,
+    'weight': 400,
+    'line-height': 1.1228070175,
+    'letter-spacing': -.0043859649em,
+    'font-family': $heading-font-family
+  ),
+  'headline-large': (
+    'size': 2rem,
+    'weight': 400,
+    'line-height': 1.25,
+    'letter-spacing': normal,
+    'font-family': $heading-font-family
+  ),
+  'body-large': (
+    'size': 1rem,
+    'weight': 400,
+    'line-height': 1.5,
+    'letter-spacing': .03125em,
+    'font-family': $body-font-family
+  )
+) !default;
+```
+</CodeGroup>
+
+### Spacing
+
+Vuetify uses a 4px base spacer with 16 steps by default:
+
+```scss
+$spacer: 4px !default;
+$spacers-steps: 16 !default;
+
+// Generates: 0, 4px, 8px, 12px, 16px, 20px, 24px, 28px, 32px...
+```
+
+<Accordion title="Custom Spacing Example">
+To use an 8px spacing system:
+
+```scss
+@use 'vuetify/settings' with (
+  $spacer: 8px,
+  $spacers-steps: 12
+);
+```
+
+This generates utility classes like `ma-1` (8px), `ma-2` (16px), `ma-3` (24px), etc.
+</Accordion>
+
+### Borders
+
+Customize border styles, widths, and radii:
+
+<CodeGroup>
+```scss Border Basics
+$border-color-root: rgba(var(--v-border-color), var(--v-border-opacity)) !default;
+$border-radius-root: 4px !default;
+$border-style-root: solid !default;
+$border-width-root: thin !default;
+```
+
+```scss Border Radius Scale
+$rounded: (
+  0: 0,
+  'sm': $border-radius-root * .5,    // 2px
+  null: $border-radius-root,          // 4px
+  'lg': $border-radius-root * 2,      // 8px
+  'xl': $border-radius-root * 6,      // 24px
+  'pill': 9999px,
+  'circle': 50%,
+  'shaped': $border-radius-root * 6 0
+) !default;
+```
+
+```scss Border Widths
+$borders: (
+  0: 0,
+  null: $border-width-root,
+  thin: $border-width-root,
+  sm: 1px,
+  md: 2px,
+  lg: 4px,
+  xl: 8px
+) !default;
+```
+</CodeGroup>
+
+### Opacity & States
+
+Control opacity levels for interactive states:
+
+```scss
+$opacities: (
+  hover: var(--v-hover-opacity),
+  focus: var(--v-focus-opacity),
+  selected: var(--v-selected-opacity),
+  activated: var(--v-activated-opacity),
+  pressed: var(--v-pressed-opacity),
+  dragged: var(--v-dragged-opacity),
+  0: 0,
+  10: .1,
+  20: .2,
+  // ... up to 100
+) !default;
+
+$states: (
+  'hover': var(--v-hover-opacity),
+  'focus': var(--v-focus-opacity),
+  'selected': var(--v-selected-opacity),
+  'activated': var(--v-activated-opacity),
+  'pressed': var(--v-pressed-opacity),
+  'dragged': var(--v-dragged-opacity)
+) !default;
+```
+
+## Breakpoints & Grid
+
+### Responsive Breakpoints
+
+Define custom breakpoint values:
+
+```scss
+$grid-breakpoints: (
+  'xs': 0,
+  'sm': 600px,
+  'md': 840px,
+  'lg': 1145px,
+  'xl': 1545px,
+  'xxl': 2138px,
+) !default;
+```
+
+<Accordion title="Using Custom Breakpoints">
+```scss
+@use 'vuetify/settings' with (
+  $grid-breakpoints: (
+    'xs': 0,
+    'sm': 640px,
+    'md': 768px,
+    'lg': 1024px,
+    'xl': 1280px,
+    'xxl': 1536px
+  )
+);
+```
+
+This aligns with Tailwind CSS breakpoints for easier migration.
+</Accordion>
+
+### Grid System
+
+Customize grid behavior:
+
+```scss
+$grid-gutter: $spacer * 6 !default;        // 24px
+$grid-columns: 12 !default;
+$container-padding-x: $spacer * 4 !default; // 16px
+
+$grid-density: (
+  'default': 0,
+  'comfortable': -1,
+  'compact': -2
+) !default;
+```
+
+## Transitions & Animations
+
+Control timing functions and durations:
+
+<CodeGroup>
+```scss Easings
+$standard-easing: cubic-bezier(0.4, 0, 0.2, 1) !default;
+$decelerated-easing: cubic-bezier(0.0, 0, 0.2, 1) !default;  // Entering
+$accelerated-easing: cubic-bezier(0.4, 0, 1, 1) !default;     // Leaving
+```
+
+```scss Durations
+$transition-duration-root: 0.3s !default;
+$transition-move-duration-root: 0.5s !default;
+```
+</CodeGroup>
+
+## Component Sizing
+
+Define size scales for components:
+
+```scss
+$sizes: (
+  'x-small',
+  'small',
+  'default',
+  'large',
+  'x-large'
+) !default;
+
+$size-scale: $spacer * 2 !default;  // 8px
+
+$size-scales: (
+  'x-small': -2,   // -16px
+  'small': -1,     // -8px
+  'default': 0,    // 0px
+  'large': 1,      // +8px
+  'x-large': 2     // +16px
+) !default;
+```
+
+## Elevations
+
+Customize shadow definitions:
+
+```scss
+$shadow-key-color: rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)) !default;
+$shadow-ambient-color: rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15)) !default;
+
+$shadow-key: (
+  0: (0px 0px 0px 0px $shadow-key-color),
+  1: (0px 1px 2px 0px $shadow-key-color),
+  2: (0px 1px 2px 0px $shadow-key-color),
+  3: (0px 1px 3px 0px $shadow-key-color),
+  4: (0px 2px 3px 0px $shadow-key-color),
+  5: (0px 4px 4px 0px $shadow-key-color)
+) !default;
+```
+
+## Complete Example
+
+Here's a comprehensive example of customizing multiple variables:
+
+```scss
+// src/styles/settings.scss
+@use 'vuetify/settings' with (
+  // Typography
+  $body-font-family: 'Inter, system-ui, sans-serif',
+  $heading-font-family: 'Poppins, sans-serif',
+  $font-size-root: 1rem,
+  
+  // Spacing
+  $spacer: 8px,
+  $spacers-steps: 12,
+  
+  // Borders
+  $border-radius-root: 8px,
+  $border-width-root: 1px,
+  
+  // Transitions
+  $transition-duration-root: 0.2s,
+  
+  // Breakpoints
+  $grid-breakpoints: (
+    'xs': 0,
+    'sm': 640px,
+    'md': 768px,
+    'lg': 1024px,
+    'xl': 1280px,
+    'xxl': 1536px
+  ),
+  
+  // Grid
+  $grid-gutter: 32px,
+  $container-padding-x: 24px
+);
+```
+
+## Variable Reference
+
+All SASS variables are located in `/packages/vuetify/src/styles/settings/`:
+
+- `_variables.scss` - Core variables (spacing, typography, borders)
+- `_colors.scss` - Material color palette
+- `_elevations.scss` - Shadow definitions
+- `_utilities.scss` - Utility class configuration
+
+<Note>
+SASS variables are evaluated at build time. For runtime customization, use [theme configuration](/customization/theme-configuration) instead.
+</Note>

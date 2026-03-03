@@ -1,0 +1,249 @@
+---
+title: VProgressCircular
+description: Circular progress indicator for loading states
+---
+
+# VProgressCircular
+
+The `VProgressCircular` component is used to convey data circularly to users. It can be used to display determinate or indeterminate loading states.
+
+## Usage
+
+By default, the progress circular displays an indeterminate loading state.
+
+```vue
+<template>
+  <v-progress-circular indeterminate></v-progress-circular>
+</template>
+```
+
+## Determinate
+
+The progress circular can display a determinate state using the `modelValue` prop.
+
+```vue
+<template>
+  <v-progress-circular
+    :model-value="value"
+  ></v-progress-circular>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(75)
+</script>
+```
+
+## Color
+
+You can set the color of the progress indicator.
+
+```vue
+<template>
+  <div>
+    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    <v-progress-circular color="success" indeterminate></v-progress-circular>
+    <v-progress-circular color="warning" indeterminate></v-progress-circular>
+    <v-progress-circular color="error" indeterminate></v-progress-circular>
+  </div>
+</template>
+```
+
+## Size and Width
+
+Control the size of the component and the width of the progress stroke.
+
+```vue
+<template>
+  <div>
+    <v-progress-circular
+      size="50"
+      width="3"
+      indeterminate
+    ></v-progress-circular>
+    
+    <v-progress-circular
+      size="100"
+      width="8"
+      indeterminate
+    ></v-progress-circular>
+    
+    <v-progress-circular
+      size="150"
+      width="12"
+      indeterminate
+    ></v-progress-circular>
+  </div>
+</template>
+```
+
+## Rotate
+
+The `rotate` prop allows you to customize the origin of the progress.
+
+```vue
+<template>
+  <v-progress-circular
+    :model-value="75"
+    :rotate="-90"
+  ></v-progress-circular>
+</template>
+```
+
+<Note>
+The rotate value is in degrees. A value of -90 will start the progress from the top of the circle.
+</Note>
+
+## Rounded
+
+The `rounded` prop adds rounded line caps to the progress indicator.
+
+```vue
+<template>
+  <v-progress-circular
+    :model-value="75"
+    rounded
+  ></v-progress-circular>
+</template>
+```
+
+## Default Slot
+
+The default slot can be used to display content inside the circular progress.
+
+```vue
+<template>
+  <v-progress-circular
+    :model-value="value"
+    :size="100"
+    :width="10"
+    color="primary"
+  >
+    <template v-slot:default="{ value }">
+      {{ Math.ceil(value) }}%
+    </template>
+  </v-progress-circular>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(75)
+</script>
+```
+
+## Background Color
+
+Set a background color for the unfilled portion of the progress circle.
+
+```vue
+<template>
+  <v-progress-circular
+    :model-value="75"
+    bg-color="grey-lighten-2"
+    color="primary"
+    :size="100"
+    :width="10"
+  ></v-progress-circular>
+</template>
+```
+
+## Indeterminate Variants
+
+You can disable the shrink animation for indeterminate progress.
+
+```vue
+<template>
+  <div>
+    <!-- Standard indeterminate -->
+    <v-progress-circular indeterminate></v-progress-circular>
+    
+    <!-- Indeterminate without shrink -->
+    <v-progress-circular indeterminate="disable-shrink"></v-progress-circular>
+  </div>
+</template>
+```
+
+<Note>
+The `disable-shrink` variant maintains a constant stroke width during the animation, which can be preferable for reduced motion preferences.
+</Note>
+
+## Loading Button Example
+
+Combine with buttons to show loading states.
+
+```vue
+<template>
+  <v-btn :loading="loading" @click="load">
+    Submit
+    <template v-slot:loader>
+      <v-progress-circular indeterminate :size="20" :width="2"></v-progress-circular>
+    </template>
+  </v-btn>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(false)
+
+function load() {
+  loading.value = true
+  setTimeout(() => loading.value = false, 2000)
+}
+</script>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | string" default="0">
+  The percentage value for determinate progress (0-100).
+</ParamField>
+
+<ParamField path="indeterminate" type="boolean | 'disable-shrink'" default="false">
+  Displays circular progress in an indeterminate state. Use `disable-shrink` to disable the shrinking animation.
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the progress indicator.
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Applies specified color to the background (unfilled portion) of the progress circle.
+</ParamField>
+
+<ParamField path="size" type="number | string">
+  Sets the diameter of the circle in pixels.
+</ParamField>
+
+<ParamField path="width" type="number | string" default="4">
+  Sets the stroke width of the circle.
+</ParamField>
+
+<ParamField path="rotate" type="number | string" default="0">
+  Rotates the circle start point specified in degrees.
+</ParamField>
+
+<ParamField path="rounded" type="boolean" default="false">
+  Adds rounded ends to the progress indicator stroke.
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom HTML tag to use for the component.
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="{ value: number }">
+  The default Vue slot for content inside the circular progress. Receives the current value as a slot prop.
+</ParamField>
+
+## Accessibility
+
+The component automatically includes ARIA attributes:
+
+- `role="progressbar"`
+- `aria-valuemin="0"`
+- `aria-valuemax="100"`
+- `aria-valuenow` (only for determinate progress)

@@ -1,0 +1,488 @@
+---
+title: Presets & Defaults
+description: Configure component defaults and create reusable presets for consistent styling across your Vuetify application.
+---
+
+# Presets & Defaults
+
+Vuetify's defaults system allows you to set default prop values for components globally or within specific scopes. This eliminates repetitive prop declarations and ensures consistent styling throughout your application.
+
+## Component Defaults
+
+### Global Defaults
+
+Set default props for all instances of a component:
+
+```ts
+import { createVuetify } from 'vuetify'
+
+const vuetify = createVuetify({
+  defaults: {
+    global: {
+      ripple: false,
+      density: 'comfortable',
+    },
+    VBtn: {
+      color: 'primary',
+      variant: 'flat',
+      rounded: 'lg',
+    },
+    VCard: {
+      elevation: 2,
+      rounded: 'lg',
+    },
+    VTextField: {
+      variant: 'outlined',
+      density: 'compact',
+      color: 'primary',
+    },
+  },
+})
+```
+
+Now all buttons automatically inherit these defaults:
+
+```vue
+<!-- These are equivalent -->
+<v-btn>Click me</v-btn>
+<v-btn color="primary" variant="flat" rounded="lg">Click me</v-btn>
+```
+
+### Global Properties
+
+The `global` key sets defaults that apply to all components:
+
+```ts
+defaults: {
+  global: {
+    ripple: false,           // Disable ripple effects globally
+    density: 'comfortable',  // Set density for all components
+    rounded: 'lg',           // Set border radius for all components
+  },
+}
+```
+
+## Nested Defaults
+
+Define defaults for components nested within other components:
+
+```ts
+defaults: {
+  VCard: {
+    elevation: 2,
+    rounded: 'lg',
+    // Defaults for buttons inside cards
+    VBtn: {
+      variant: 'text',
+      color: 'primary',
+    },
+    // Defaults for card text
+    VCardText: {
+      class: 'text-body-1',
+    },
+  },
+  VToolbar: {
+    color: 'primary',
+    // Buttons in toolbars are different
+    VBtn: {
+      variant: 'text',
+      color: null,  // Inherit from toolbar
+    },
+  },
+}
+```
+
+<Accordion title="How Nested Defaults Work">
+When a component is nested inside another:
+
+1. Component-specific defaults apply first
+2. Parent component's nested defaults apply next
+3. Global defaults apply last
+4. Explicitly set props always take precedence
+
+```vue
+<v-card>
+  <!-- Uses VCard > VBtn defaults -->
+  <v-btn>Action</v-btn>
+</v-card>
+
+<v-toolbar>
+  <!-- Uses VToolbar > VBtn defaults -->
+  <v-btn>Menu</v-btn>
+</v-toolbar>
+```
+</Accordion>
+
+## Runtime Defaults
+
+Change defaults at runtime using the `useDefaults` composable:
+
+<CodeGroup>
+```vue Provide Defaults
+<template>
+  <div>
+    <!-- All buttons in this scope will be outlined -->
+    <v-btn>Button 1</v-btn>
+    <v-btn>Button 2</v-btn>
+  </div>
+</template>
+
+<script setup>
+import { provideDefaults } from 'vuetify'
+
+provideDefaults({
+  VBtn: {
+    variant: 'outlined',
+    color: 'secondary',
+  },
+})
+</script>
+```
+
+```vue Scoped Defaults
+<template>
+  <v-app>
+    <!-- Regular buttons -->
+    <v-btn>Normal</v-btn>
+    
+    <div class="admin-panel">
+      <!-- Admin-styled buttons -->
+      <v-btn>Admin Action</v-btn>
+    </div>
+  </v-app>
+</template>
+
+<script setup>
+import { provideDefaults } from 'vuetify'
+
+// Only affects components inside this component
+provideDefaults({
+  VBtn: {
+    color: 'error',
+    variant: 'elevated',
+    prependIcon: 'mdi-shield-account',
+  },
+}, {
+  scoped: true,
+})
+</script>
+```
+</CodeGroup>
+
+## Defaults Options
+
+The `provideDefaults` function accepts options to control inheritance:
+
+```ts
+provideDefaults(
+  {
+    VBtn: { color: 'primary' },
+  },
+  {
+    // Disable defaults entirely
+    disabled: false,
+    
+    // Scoped defaults don't merge with parent
+    scoped: false,
+    
+    // Reset to specific ancestor level
+    reset: 1,
+    
+    // Reset to specific root defaults
+    root: 'VCard',
+  }
+)
+```
+
+<Accordion title="Reset and Root Options">
+```vue
+<script setup>
+import { provideDefaults } from 'vuetify'
+
+// Reset 1 level up (ignore immediate parent defaults)
+provideDefaults({
+  VBtn: { variant: 'text' },
+}, { reset: 1 })
+
+// Reset to VCard's defaults (ignore intermediate defaults)
+provideDefaults({
+  VBtn: { variant: 'text' },
+}, { root: 'VCard' })
+</script>
+```
+</Accordion>
+
+## Creating Presets
+
+Create reusable preset configurations:
+
+<CodeGroup>
+```ts presets/material.ts
+import type { DefaultsOptions } from 'vuetify'
+
+export const materialPreset: DefaultsOptions = {
+  global: {
+    ripple: true,
+    density: 'default',
+  },
+  VBtn: {
+    color: 'primary',
+    variant: 'elevated',
+    rounded: 'md',
+    elevation: 2,
+  },
+  VCard: {
+    elevation: 2,
+    rounded: 'lg',
+  },
+  VTextField: {
+    variant: 'filled',
+    density: 'default',
+  },
+  VAppBar: {
+    elevation: 4,
+  },
+}
+```
+
+```ts presets/minimal.ts
+import type { DefaultsOptions } from 'vuetify'
+
+export const minimalPreset: DefaultsOptions = {
+  global: {
+    ripple: false,
+    density: 'comfortable',
+  },
+  VBtn: {
+    variant: 'text',
+    rounded: 'lg',
+    elevation: 0,
+  },
+  VCard: {
+    variant: 'outlined',
+    elevation: 0,
+    rounded: 'xl',
+  },
+  VTextField: {
+    variant: 'outlined',
+    density: 'compact',
+  },
+  VAppBar: {
+    flat: true,
+  },
+}
+```
+
+```ts main.ts
+import { createVuetify } from 'vuetify'
+import { minimalPreset } from './presets/minimal'
+
+const vuetify = createVuetify({
+  defaults: minimalPreset,
+})
+```
+</CodeGroup>
+
+## Common Preset Patterns
+
+### Admin Dashboard Preset
+
+```ts
+export const adminPreset: DefaultsOptions = {
+  global: {
+    density: 'comfortable',
+    rounded: 'md',
+  },
+  VBtn: {
+    variant: 'flat',
+    color: 'primary',
+  },
+  VCard: {
+    elevation: 1,
+    VCardActions: {
+      VBtn: {
+        variant: 'text',
+      },
+    },
+  },
+  VDataTable: {
+    density: 'compact',
+    itemsPerPage: 25,
+  },
+  VTextField: {
+    variant: 'outlined',
+    density: 'compact',
+  },
+  VSelect: {
+    variant: 'outlined',
+    density: 'compact',
+  },
+}
+```
+
+### Marketing Site Preset
+
+```ts
+export const marketingPreset: DefaultsOptions = {
+  global: {
+    ripple: true,
+    rounded: 'xl',
+  },
+  VBtn: {
+    size: 'large',
+    variant: 'flat',
+    rounded: 'pill',
+    elevation: 0,
+  },
+  VCard: {
+    elevation: 0,
+    variant: 'outlined',
+    rounded: 'xl',
+  },
+  VTextField: {
+    variant: 'solo',
+    rounded: 'pill',
+  },
+}
+```
+
+### Mobile App Preset
+
+```ts
+export const mobilePreset: DefaultsOptions = {
+  global: {
+    density: 'comfortable',
+    rounded: 'lg',
+  },
+  VBtn: {
+    size: 'large',
+    block: true,
+    rounded: 'lg',
+  },
+  VTextField: {
+    variant: 'outlined',
+    density: 'comfortable',
+  },
+  VBottomNavigation: {
+    grow: true,
+  },
+  VList: {
+    density: 'comfortable',
+  },
+}
+```
+
+## Merging Presets
+
+Combine multiple presets using `mergeDeep`:
+
+```ts
+import { mergeDeep } from 'vuetify/util'
+import { basePreset } from './presets/base'
+import { brandingPreset } from './presets/branding'
+
+const vuetify = createVuetify({
+  defaults: mergeDeep(basePreset, brandingPreset, {
+    // Additional overrides
+    VBtn: {
+      elevation: 2,
+    },
+  }),
+})
+```
+
+## Default Props Interface
+
+```ts
+export type DefaultsInstance = {
+  [key: string]: undefined | Record<string, unknown>
+  global?: Record<string, unknown>
+}
+
+export type DefaultsOptions = Partial<DefaultsInstance>
+```
+
+## Using Defaults
+
+### Accessing Current Defaults
+
+```vue
+<script setup>
+import { injectDefaults } from 'vuetify'
+
+const defaults = injectDefaults()
+
+// Access component defaults
+console.log(defaults.value.VBtn)
+console.log(defaults.value.global)
+</script>
+```
+
+### Internal Component Usage
+
+Vuetify components automatically use defaults:
+
+```ts
+// Inside a component
+import { useDefaults } from 'vuetify'
+
+const props = defineProps({ /* ... */ })
+const propsWithDefaults = useDefaults(props, 'VBtn')
+
+// propsWithDefaults includes both explicit props and defaults
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Start with global defaults">
+    Define common patterns in global defaults before creating component-specific ones.
+  </Step>
+  
+  <Step title="Use presets for themes">
+    Create presets for different app sections (admin, public, mobile).
+  </Step>
+  
+  <Step title="Document preset purpose">
+    Clearly explain what each preset is designed for.
+  </Step>
+  
+  <Step title="Avoid deep nesting">
+    Limit nested defaults to 2-3 levels for maintainability.
+  </Step>
+  
+  <Step title="Test thoroughly">
+    Defaults affect many components, so test changes across your app.
+  </Step>
+</Steps>
+
+## Priority Order
+
+Defaults are resolved in this order (highest to lowest priority):
+
+1. Explicitly set component props
+2. Scoped defaults from `provideDefaults`
+3. Parent component nested defaults
+4. Component-specific global defaults
+5. Global defaults (`global` key)
+
+```vue
+<template>
+  <!-- Priority demonstration -->
+  <v-btn color="error">     <!-- 1. Explicit prop wins -->
+    Error Button
+  </v-btn>
+  
+  <v-btn>                    <!-- Uses defaults cascade -->
+    Default Button
+  </v-btn>
+</template>
+```
+
+<Warning>
+Overriding defaults too extensively can make your codebase harder to understand. Use defaults for consistency, not to hide complexity.
+</Warning>
+
+<Note>
+Defaults are reactive. Changing them at runtime with `provideDefaults` immediately updates all affected components.
+</Note>
