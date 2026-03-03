@@ -1,0 +1,96 @@
+---
+title: Main
+description: The VMain component is the primary content area wrapper in Vuetify's layout system.
+---
+
+## Usage
+
+The `VMain` component is used to wrap the primary content of your application. It automatically adjusts its padding based on the layout system (app bars, navigation drawers, etc.).
+
+```vue
+<template>
+  <v-app>
+    <v-app-bar></v-app-bar>
+    <v-navigation-drawer></v-navigation-drawer>
+    
+    <v-main>
+      <!-- Your page content goes here -->
+    </v-main>
+  </v-app>
+</template>
+```
+
+## Scrollable
+
+Make the main content area independently scrollable:
+
+```vue
+<template>
+  <v-main scrollable>
+    <!-- Long content that scrolls independently -->
+  </v-main>
+</template>
+```
+
+## With Custom Dimensions
+
+Set custom width and height:
+
+```vue
+<template>
+  <v-main
+    width="1200"
+    height="600"
+  >
+    <!-- Content -->
+  </v-main>
+</template>
+```
+
+## Props
+
+<ParamField path="scrollable" type="boolean" default="false">
+  When enabled, wraps content in a scrollable container allowing independent scrolling of the main content area
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the component
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the component
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the component
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the component
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+  Sets the minimum width of the component
+</ParamField>
+
+<ParamField path="minHeight" type="string | number">
+  Sets the minimum height of the component
+</ParamField>
+
+<ParamField path="tag" type="string" default="main">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default Vue slot for main content
+</ParamField>
+
+<Note>
+  VMain should be used as a direct child of VApp to properly integrate with Vuetify's layout system. The component automatically calculates padding based on other layout components like VAppBar and VNavigationDrawer.
+</Note>
+
+<Note>
+  When using the `scrollable` prop, the content is wrapped in a `v-main__scroller` div that handles the scrolling behavior.
+</Note>

@@ -1,0 +1,227 @@
+---
+title: OTP Input
+description: The VOtpInput component provides a specialized input for one-time passwords and verification codes.
+---
+
+## Usage
+
+The `VOtpInput` component creates individual input fields for each character of a one-time password.
+
+```vue
+<template>
+  <v-otp-input v-model="otp" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const otp = ref('')
+</script>
+```
+
+## Custom Length
+
+Change the number of input fields:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    length="4"
+  />
+</template>
+```
+
+## With Divider
+
+Add separators between input fields:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    divider="-"
+  />
+</template>
+```
+
+## Masked Input
+
+Hide the entered values:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    masked
+  />
+</template>
+```
+
+## Text Type
+
+Accept alphabetic characters:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    type="text"
+  />
+</template>
+```
+
+## Loading State
+
+Show a loading indicator:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    loading
+  />
+</template>
+```
+
+## Custom Styling
+
+Customize the appearance:
+
+```vue
+<template>
+  <v-otp-input
+    v-model="otp"
+    variant="outlined"
+    color="primary"
+    bg-color="surface"
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | string">
+  The v-model value of the component
+</ParamField>
+
+<ParamField path="length" type="number | string" default="6">
+  The number of OTP input fields to display
+</ParamField>
+
+<ParamField path="type" type="'text' | 'password' | 'number'" default="number">
+  The input type for the fields
+</ParamField>
+
+<ParamField path="masked" type="boolean" default="false">
+  Masks the input values similar to a password field
+</ParamField>
+
+<ParamField path="divider" type="string">
+  Text or symbol to display between input fields
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text for empty input fields
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="false">
+  Automatically focuses the first input field on mount
+</ParamField>
+
+<ParamField path="focusAll" type="boolean" default="false">
+  Applies focused styling to all input fields when any field is focused
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all input fields
+</ParamField>
+
+<ParamField path="loading" type="boolean | string">
+  Displays a loading overlay. Pass a color string to customize the loader
+</ParamField>
+
+<ParamField path="error" type="boolean" default="false">
+  Puts the input in an error state
+</ParamField>
+
+<ParamField path="variant" type="'outlined' | 'filled' | 'solo' | 'plain' | 'underlined'" default="outlined">
+  Visual variant of the input fields
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the inputs when focused
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color applied to the inputs
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the input fields
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius applied to the input fields
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the component
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the component
+</ParamField>
+
+<ParamField path="label" type="string" default="$vuetify.input.otp">
+  Aria-label for the input fields (supports i18n)
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for additional content
+</ParamField>
+
+<ParamField path="loader" type="slot">
+  Slot to customize the loading indicator
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the OTP value changes
+</ParamField>
+
+<ParamField path="finish" type="event">
+  Emitted when all input fields are filled
+</ParamField>
+
+<ParamField path="update:focused" type="event">
+  Emitted when focus state changes
+</ParamField>
+
+## Methods
+
+<ParamField path="focus()" type="method">
+  Focuses the first input field
+</ParamField>
+
+<ParamField path="blur()" type="method">
+  Blurs all input fields
+</ParamField>
+
+<ParamField path="reset()" type="method">
+  Clears all input values
+</ParamField>
+
+<Note>
+  The component automatically handles paste events, allowing users to paste the complete OTP code which will be distributed across all fields.
+</Note>
+
+<Note>
+  Keyboard navigation is fully supported with arrow keys to move between fields and backspace to delete and move to the previous field.
+</Note>

@@ -1,0 +1,157 @@
+---
+title: Sheet
+description: The VSheet component is a flexible container with elevation, border, and positioning utilities.
+---
+
+## Usage
+
+The `VSheet` component is a versatile container that combines multiple composable props for creating styled surfaces.
+
+```vue
+<template>
+  <v-sheet
+    color="primary"
+    elevation="4"
+    rounded
+  >
+    Sheet content
+  </v-sheet>
+</template>
+```
+
+## Elevation
+
+Control the elevation depth:
+
+```vue
+<template>
+  <v-sheet elevation="12">
+    High elevation sheet
+  </v-sheet>
+</template>
+```
+
+## Borders
+
+Add borders to specific sides:
+
+```vue
+<template>
+  <v-sheet
+    border="top bottom"
+    border-color="primary"
+  >
+    Sheet with borders
+  </v-sheet>
+</template>
+```
+
+## Rounded Corners
+
+Customize border radius:
+
+```vue
+<template>
+  <v-sheet rounded="lg">
+    Large rounded corners
+  </v-sheet>
+</template>
+```
+
+## Positioning
+
+Use position and location props for absolute/fixed positioning:
+
+```vue
+<template>
+  <v-sheet
+    position="fixed"
+    location="bottom right"
+  >
+    Fixed position sheet
+  </v-sheet>
+</template>
+```
+
+## Dimensions
+
+Set width and height:
+
+```vue
+<template>
+  <v-sheet
+    width="300"
+    height="200"
+  >
+    Sized sheet
+  </v-sheet>
+</template>
+```
+
+## Props
+
+<ParamField path="color" type="string">
+  Applies specified color to the background
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Designates an elevation applied to the component (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component. Options: 0, xs, sm, md, lg, xl, pill, circle, shaped
+</ParamField>
+
+<ParamField path="border" type="string | number | boolean">
+  Applies border to the component. Can specify sides: 'top', 'bottom', 'left', 'right'
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the component
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the component
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the component
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the component
+</ParamField>
+
+<ParamField path="minWidth" type="string | number">
+  Sets the minimum width of the component
+</ParamField>
+
+<ParamField path="minHeight" type="string | number">
+  Sets the minimum height of the component
+</ParamField>
+
+<ParamField path="position" type="'static' | 'relative' | 'fixed' | 'absolute' | 'sticky'">
+  Sets the position CSS property
+</ParamField>
+
+<ParamField path="location" type="string">
+  Specifies the anchor point for positioning. Combines top/bottom with left/right/center
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default Vue slot for content
+</ParamField>
+
+<Note>
+  VSheet is a foundational component used internally by many other Vuetify components like VCard, VToolbar, and VNavigationDrawer.
+</Note>

@@ -1,0 +1,213 @@
+---
+title: Empty State
+description: The VEmptyState component displays helpful messaging when there is no content to show.
+---
+
+## Usage
+
+The `VEmptyState` component provides a user-friendly way to communicate when content is unavailable.
+
+```vue
+<template>
+  <v-empty-state
+    headline="No items found"
+    title="Get started"
+    text="Add your first item to get started with this feature"
+  />
+</template>
+```
+
+## With Icon
+
+Display an icon in the empty state:
+
+```vue
+<template>
+  <v-empty-state
+    icon="mdi-inbox"
+    title="Your inbox is empty"
+    text="When you receive messages, they will appear here"
+  />
+</template>
+```
+
+## With Image
+
+Use a custom image:
+
+```vue
+<template>
+  <v-empty-state
+    image="/path/to/image.svg"
+    title="No results"
+    text="Try adjusting your search or filters"
+  />
+</template>
+```
+
+## With Action
+
+Add a call-to-action button:
+
+```vue
+<template>
+  <v-empty-state
+    icon="mdi-cloud-upload"
+    title="No files uploaded"
+    text="Upload your first file to get started"
+    action-text="Upload File"
+    @click:action="handleUpload"
+  />
+</template>
+
+<script setup>
+const handleUpload = () => {
+  console.log('Upload clicked')
+}
+</script>
+```
+
+## With Link
+
+Make the action button navigate:
+
+```vue
+<template>
+  <v-empty-state
+    title="Page not found"
+    text="The page you're looking for doesn't exist"
+    action-text="Go Home"
+    to="/"
+  />
+</template>
+```
+
+## Justify Content
+
+Control the alignment:
+
+```vue
+<template>
+  <v-empty-state
+    justify="start"
+    title="Empty"
+    text="No content available"
+  />
+</template>
+```
+
+## Custom Size
+
+Adjust the icon/image size:
+
+```vue
+<template>
+  <v-empty-state
+    icon="mdi-magnify"
+    size="150"
+    title="No results"
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="headline" type="string">
+  Large text displayed at the top of the empty state
+</ParamField>
+
+<ParamField path="title" type="string">
+  Title text for the empty state
+</ParamField>
+
+<ParamField path="text" type="string">
+  Descriptive text providing context
+</ParamField>
+
+<ParamField path="icon" type="IconValue">
+  Icon to display in the empty state
+</ParamField>
+
+<ParamField path="image" type="string">
+  Image source URL to display instead of an icon
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to the icon and action button
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Background color of the empty state container
+</ParamField>
+
+<ParamField path="actionText" type="string">
+  Text for the action button
+</ParamField>
+
+<ParamField path="href" type="string">
+  Creates an anchor link for the action button
+</ParamField>
+
+<ParamField path="to" type="string">
+  Router link destination for the action button
+</ParamField>
+
+<ParamField path="justify" type="'start' | 'center' | 'end'" default="center">
+  Horizontal alignment of the content
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Size of the icon or image. Defaults to 96 for icons, 200 for images
+</ParamField>
+
+<ParamField path="textWidth" type="string | number" default="500">
+  Maximum width of the text content
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Width of the entire component
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Height of the entire component
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for custom content below the text
+</ParamField>
+
+<ParamField path="headline" type="slot">
+  Slot to customize the headline content
+</ParamField>
+
+<ParamField path="title" type="slot">
+  Slot to customize the title content
+</ParamField>
+
+<ParamField path="text" type="slot">
+  Slot to customize the text content
+</ParamField>
+
+<ParamField path="media" type="slot">
+  Slot to customize the icon/image area
+</ParamField>
+
+<ParamField path="actions" type="slot">
+  Slot to customize the action button area
+</ParamField>
+
+## Events
+
+<ParamField path="click:action" type="event">
+  Emitted when the action button is clicked
+</ParamField>
+
+<Note>
+  Empty states are crucial for good UX. They guide users on what to do next when there's no content, reducing confusion and improving engagement.
+</Note>

@@ -1,0 +1,194 @@
+---
+title: Rating
+description: The VRating component provides an interactive star rating interface.
+---
+
+## Usage
+
+The `VRating` component is used to gather user feedback through a star rating interface.
+
+```vue
+<template>
+  <v-rating v-model="rating" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const rating = ref(3)
+</script>
+```
+
+## Custom Length
+
+Change the number of rating items:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    length="10"
+  />
+</template>
+```
+
+## Half Increments
+
+Allow half-star ratings:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    half-increments
+  />
+</template>
+```
+
+## Custom Icons
+
+Use custom icons for empty and filled states:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    empty-icon="mdi-heart-outline"
+    full-icon="mdi-heart"
+    color="red"
+  />
+</template>
+```
+
+## Hover Effect
+
+Show preview on hover:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    hover
+  />
+</template>
+```
+
+## Item Labels
+
+Add labels to rating items:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    :item-labels="['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']"
+  />
+</template>
+```
+
+## Size and Density
+
+Adjust the size:
+
+```vue
+<template>
+  <v-rating
+    v-model="rating"
+    size="large"
+    density="compact"
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number | string" default="0">
+  The v-model value of the component
+</ParamField>
+
+<ParamField path="length" type="number | string" default="5">
+  The number of rating items to display
+</ParamField>
+
+<ParamField path="emptyIcon" type="IconValue" default="$ratingEmpty">
+  The icon to display for empty rating items
+</ParamField>
+
+<ParamField path="fullIcon" type="IconValue" default="$ratingFull">
+  The icon to display for filled rating items
+</ParamField>
+
+<ParamField path="halfIncrements" type="boolean" default="false">
+  Allows half-star rating values
+</ParamField>
+
+<ParamField path="hover" type="boolean" default="false">
+  Shows a hover preview of the rating
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default="false">
+  Clicking the current rating value will reset it to 0
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the control
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  The color used for filled/active rating items
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Removes the ability to click or change the rating
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the rating read-only
+</ParamField>
+
+<ParamField path="ripple" type="boolean" default="false">
+  Applies the ripple directive
+</ParamField>
+
+<ParamField path="size" type="string | number">
+  Sets the size of the rating icons
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing within the component
+</ParamField>
+
+<ParamField path="itemLabels" type="string[]">
+  Array of labels to display above or below each rating item
+</ParamField>
+
+<ParamField path="itemLabelPosition" type="'top' | 'bottom'" default="top">
+  Position of the item labels relative to the rating icons
+</ParamField>
+
+<ParamField path="itemAriaLabel" type="string" default="$vuetify.rating.ariaLabel.item">
+  Aria label template for rating items
+</ParamField>
+
+<ParamField path="name" type="string">
+  Sets the name attribute on the internal input elements
+</ParamField>
+
+## Slots
+
+<ParamField path="item" type="slot">
+  Slot to customize individual rating item rendering
+</ParamField>
+
+<ParamField path="item-label" type="slot">
+  Slot to customize item label content
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the rating value changes
+</ParamField>
+
+<Note>
+  The rating component supports keyboard navigation using arrow keys to increment or decrement the rating value.
+</Note>

@@ -78,9 +78,13 @@
               "components/app",
               "components/app-bar",
               "components/bottom-navigation",
+              "components/bottom-sheet",
               "components/footer",
               "components/grid",
+              "components/main",
               "components/navigation-drawer",
+              "components/sheet",
+              "components/system-bar",
               "components/toolbar"
             ]
           },
@@ -92,7 +96,11 @@
               "components/combobox",
               "components/file-input",
               "components/forms",
+              "components/number-input",
+              "components/otp-input",
               "components/radio",
+              "components/range-slider",
+              "components/rating",
               "components/select",
               "components/slider",
               "components/switch",
@@ -119,11 +127,17 @@
               "components/banner",
               "components/card",
               "components/chip",
+              "components/chip-group",
               "components/data-table",
               "components/divider",
+              "components/empty-state",
+              "components/expansion-panel",
               "components/list",
+              "components/slide-group",
+              "components/table",
+              "components/timeline",
               "components/tooltip",
-              "components/timeline"
+              "components/treeview"
             ]
           },
           {
@@ -133,7 +147,8 @@
               "components/menu",
               "components/pagination",
               "components/stepper",
-              "components/tabs"
+              "components/tabs",
+              "components/window"
             ]
           },
           {

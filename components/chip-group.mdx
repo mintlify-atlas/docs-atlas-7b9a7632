@@ -1,0 +1,207 @@
+---
+title: Chip Group
+description: The VChipGroup component groups multiple chips together for filtering or selection.
+---
+
+## Usage
+
+The `VChipGroup` component provides a container for organizing VChip components with selection functionality.
+
+```vue
+<template>
+  <v-chip-group v-model="selection">
+    <v-chip>Option 1</v-chip>
+    <v-chip>Option 2</v-chip>
+    <v-chip>Option 3</v-chip>
+  </v-chip-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const selection = ref(null)
+</script>
+```
+
+## Multiple Selection
+
+Allow selecting multiple chips:
+
+```vue
+<template>
+  <v-chip-group
+    v-model="selection"
+    multiple
+  >
+    <v-chip>Red</v-chip>
+    <v-chip>Green</v-chip>
+    <v-chip>Blue</v-chip>
+    <v-chip>Yellow</v-chip>
+  </v-chip-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const selection = ref([])
+</script>
+```
+
+## Mandatory Selection
+
+Require at least one chip to be selected:
+
+```vue
+<template>
+  <v-chip-group
+    v-model="selection"
+    mandatory
+  >
+    <v-chip>Small</v-chip>
+    <v-chip>Medium</v-chip>
+    <v-chip>Large</v-chip>
+  </v-chip-group>
+</template>
+```
+
+## Filter Style
+
+Use filter chips with checkmark icons:
+
+```vue
+<template>
+  <v-chip-group
+    v-model="selection"
+    filter
+    multiple
+  >
+    <v-chip>Red</v-chip>
+    <v-chip>Green</v-chip>
+    <v-chip>Blue</v-chip>
+  </v-chip-group>
+</template>
+```
+
+## Column Layout
+
+Stack chips vertically:
+
+```vue
+<template>
+  <v-chip-group column>
+    <v-chip>Chip 1</v-chip>
+    <v-chip>Chip 2</v-chip>
+    <v-chip>Chip 3</v-chip>
+  </v-chip-group>
+</template>
+```
+
+## Custom Colors
+
+Apply colors to all chips in the group:
+
+```vue
+<template>
+  <v-chip-group
+    v-model="selection"
+    color="primary"
+    variant="elevated"
+  >
+    <v-chip>Chip 1</v-chip>
+    <v-chip>Chip 2</v-chip>
+    <v-chip>Chip 3</v-chip>
+  </v-chip-group>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The v-model value of the selected chip(s)
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allows multiple chip selections
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="false">
+  Forces at least one chip to always be selected
+</ParamField>
+
+<ParamField path="max" type="number">
+  Maximum number of chips that can be selected (when multiple is enabled)
+</ParamField>
+
+<ParamField path="filter" type="boolean" default="false">
+  Displays a checkmark icon on selected filter chips
+</ParamField>
+
+<ParamField path="column" type="boolean" default="false">
+  Displays chips in a vertical column instead of horizontal row
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to selected chips
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color applied to all chips in the group
+</ParamField>
+
+<ParamField path="variant" type="string" default="tonal">
+  Visual variant applied to chips. Options: elevated, flat, tonal, outlined, text, plain
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all chips in the group
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="v-chip--selected">
+  CSS class applied to selected chips
+</ParamField>
+
+<ParamField path="showArrows" type="boolean | string">
+  Shows navigation arrows when chips overflow. Values: true, false, 'always', 'desktop', 'mobile'
+</ParamField>
+
+<ParamField path="centerActive" type="boolean" default="false">
+  Centers the active chip when selected
+</ParamField>
+
+<ParamField path="scrollToActive" type="boolean" default="false">
+  Automatically scrolls to the active chip
+</ParamField>
+
+<ParamField path="nextIcon" type="IconValue" default="$next">
+  Icon for next navigation arrow
+</ParamField>
+
+<ParamField path="prevIcon" type="IconValue" default="$prev">
+  Icon for previous navigation arrow
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for chip components
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the selection changes
+</ParamField>
+
+<Note>
+  VChipGroup extends VSlideGroup, providing scrolling and overflow behavior when chips don't fit in the container.
+</Note>
+
+<Note>
+  When using the `filter` prop with `multiple` selection, selected chips display a checkmark icon to indicate their selected state.
+</Note>

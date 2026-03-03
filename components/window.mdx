@@ -1,0 +1,186 @@
+---
+title: Window
+description: The VWindow component provides a slideshow-like interface for cycling through content.
+---
+
+## Usage
+
+The `VWindow` component creates a container for transitioning between content using `VWindowItem` children.
+
+```vue
+<template>
+  <v-window v-model="window">
+    <v-window-item value="1">
+      First window content
+    </v-window-item>
+    <v-window-item value="2">
+      Second window content
+    </v-window-item>
+    <v-window-item value="3">
+      Third window content
+    </v-window-item>
+  </v-window>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const window = ref('1')
+</script>
+```
+
+## With Arrows
+
+Display navigation arrows for moving between items:
+
+```vue
+<template>
+  <v-window
+    v-model="window"
+    show-arrows
+  >
+    <v-window-item
+      v-for="n in 3"
+      :key="n"
+      :value="n"
+    >
+      Window {{ n }}
+    </v-window-item>
+  </v-window>
+</template>
+```
+
+## Vertical Direction
+
+Transition items vertically instead of horizontally:
+
+```vue
+<template>
+  <v-window
+    v-model="window"
+    direction="vertical"
+  >
+    <!-- window items -->
+  </v-window>
+</template>
+```
+
+## Continuous
+
+Enable continuous looping:
+
+```vue
+<template>
+  <v-window
+    v-model="window"
+    continuous
+    show-arrows
+  >
+    <!-- window items -->
+  </v-window>
+</template>
+```
+
+## Touch Support
+
+The window supports touch gestures by default. You can disable or customize touch behavior:
+
+```vue
+<template>
+  <v-window
+    v-model="window"
+    :touch="false"
+  >
+    <!-- window items -->
+  </v-window>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The v-model value of the currently active window item
+</ParamField>
+
+<ParamField path="continuous" type="boolean" default="false">
+  Allows continuous cycling from the last item to the first and vice versa
+</ParamField>
+
+<ParamField path="nextIcon" type="IconValue" default="$next">
+  Icon used for the next button
+</ParamField>
+
+<ParamField path="prevIcon" type="IconValue" default="$prev">
+  Icon used for the previous button
+</ParamField>
+
+<ParamField path="reverse" type="boolean" default="false">
+  Reverses the normal transition direction
+</ParamField>
+
+<ParamField path="showArrows" type="boolean | 'hover'">
+  Displays navigation arrows. Use 'hover' to show arrows only on hover
+</ParamField>
+
+<ParamField path="verticalArrows" type="boolean | 'left' | 'right'">
+  Positions arrows vertically on the left or right side
+</ParamField>
+
+<ParamField path="touch" type="boolean | object">
+  Enable/disable touch support or provide custom touch handlers
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  The direction of the transition
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables window navigation
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="v-window-item--active">
+  CSS class applied to the selected item
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="force">
+  Forces at least one item to always be selected
+</ParamField>
+
+<ParamField path="crossfade" type="boolean" default="false">
+  Uses a crossfade transition instead of the default slide transition
+</ParamField>
+
+<ParamField path="transitionDuration" type="number">
+  Custom transition duration in milliseconds
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for window items
+</ParamField>
+
+<ParamField path="additional" type="slot">
+  Slot for additional content outside the window container
+</ParamField>
+
+<ParamField path="prev" type="slot">
+  Slot to customize the previous button
+</ParamField>
+
+<ParamField path="next" type="slot">
+  Slot to customize the next button
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the active window item changes
+</ParamField>
+
+<Note>
+  The window component supports keyboard navigation using arrow keys when focused.
+</Note>

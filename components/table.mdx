@@ -1,0 +1,146 @@
+---
+title: Table
+description: The VTable component provides a simple wrapper for creating HTML tables with Vuetify styling.
+---
+
+## Usage
+
+The `VTable` component is a wrapper for the standard HTML `<table>` element with Vuetify theming support.
+
+```vue
+<template>
+  <v-table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Frozen Yogurt</td>
+        <td>159</td>
+      </tr>
+      <tr>
+        <td>Ice cream sandwich</td>
+        <td>237</td>
+      </tr>
+    </tbody>
+  </v-table>
+</template>
+```
+
+## Fixed Header
+
+Create a table with a fixed header and scrollable body:
+
+```vue
+<template>
+  <v-table
+    fixed-header
+    height="300px"
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Calories</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- table rows -->
+    </tbody>
+  </v-table>
+</template>
+```
+
+## Density
+
+Adjust the row spacing with the `density` prop:
+
+```vue
+<template>
+  <v-table density="compact">
+    <!-- table content -->
+  </v-table>
+</template>
+```
+
+## Striped Rows
+
+Alternate row colors for better readability:
+
+```vue
+<template>
+  <v-table striped="even">
+    <!-- table content -->
+  </v-table>
+</template>
+```
+
+## Hover Effect
+
+Highlight rows on hover:
+
+```vue
+<template>
+  <v-table hover>
+    <!-- table content -->
+  </v-table>
+</template>
+```
+
+## Props
+
+<ParamField path="fixedHeader" type="boolean" default="false">
+  Fixes the table header to the top while scrolling
+</ParamField>
+
+<ParamField path="fixedFooter" type="boolean" default="false">
+  Fixes the table footer to the bottom while scrolling
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the table. Required for fixed header/footer functionality
+</ParamField>
+
+<ParamField path="hover" type="boolean" default="false">
+  Adds a hover effect to table rows
+</ParamField>
+
+<ParamField path="striped" type="'even' | 'odd'">
+  Applies striped background to alternating rows. Use 'even' or 'odd' to specify which rows
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'" default="default">
+  Adjusts the vertical spacing within the table
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for table content (wraps in table element automatically)
+</ParamField>
+
+<ParamField path="top" type="slot">
+  Slot for content above the table
+</ParamField>
+
+<ParamField path="bottom" type="slot">
+  Slot for content below the table
+</ParamField>
+
+<ParamField path="wrapper" type="slot">
+  Slot to replace the default table wrapper. Use this for complete control over the table structure
+</ParamField>
+
+<Note>
+  When using `fixedHeader` or `fixedFooter`, you must also specify the `height` prop for proper functionality.
+</Note>

@@ -1,0 +1,145 @@
+---
+title: Expansion Panel
+description: The VExpansionPanel component provides a collapsible content area for organizing information.
+---
+
+## Usage
+
+The `VExpansionPanel` component is used to hide content until expanded. It must be used within a `VExpansionPanels` component.
+
+```vue
+<template>
+  <v-expansion-panels>
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        Panel Title
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        Panel content goes here
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
+</template>
+```
+
+## Simple Panels
+
+Use the `title` and `text` props for basic content:
+
+```vue
+<template>
+  <v-expansion-panels>
+    <v-expansion-panel
+      title="Panel 1"
+      text="This is the content of panel 1"
+    />
+    <v-expansion-panel
+      title="Panel 2"
+      text="This is the content of panel 2"
+    />
+  </v-expansion-panels>
+</template>
+```
+
+## Styling
+
+Customize the appearance with color, elevation, and rounded props:
+
+```vue
+<template>
+  <v-expansion-panel
+    bg-color="primary"
+    elevation="4"
+    rounded="lg"
+  >
+    <v-expansion-panel-title>
+      Styled Panel
+    </v-expansion-panel-title>
+    <v-expansion-panel-text>
+      Content
+    </v-expansion-panel-text>
+  </v-expansion-panel>
+</template>
+```
+
+## Props
+
+<ParamField path="title" type="string">
+  Text content for the panel title
+</ParamField>
+
+<ParamField path="text" type="string">
+  Text content for the panel body
+</ParamField>
+
+<ParamField path="bgColor" type="string">
+  Applies specified color to the background
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Designates an elevation applied to the component (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disables the expansion panel
+</ParamField>
+
+<ParamField path="readonly" type="boolean">
+  Makes the expansion panel read-only
+</ParamField>
+
+<ParamField path="expandIcon" type="IconValue" default="$expand">
+  Icon to display when panel is collapsed
+</ParamField>
+
+<ParamField path="collapseIcon" type="IconValue" default="$collapse">
+  Icon to display when panel is expanded
+</ParamField>
+
+<ParamField path="hideActions" type="boolean">
+  Hides the expand/collapse icon
+</ParamField>
+
+<ParamField path="ripple" type="boolean | object" default="false">
+  Applies the ripple directive
+</ParamField>
+
+<ParamField path="static" type="boolean">
+  Removes the icon animation when expanding
+</ParamField>
+
+<ParamField path="focusable" type="boolean">
+  Makes the panel title focusable
+</ParamField>
+
+<ParamField path="eager" type="boolean">
+  Forces the component's content to render on mount
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for custom content
+</ParamField>
+
+<ParamField path="title" type="slot">
+  Slot for custom title content
+</ParamField>
+
+<ParamField path="text" type="slot">
+  Slot for custom text content
+</ParamField>
+
+## Events
+
+<ParamField path="group:selected" type="event">
+  Emitted when the panel selection state changes
+</ParamField>
+
+<Note>
+  VExpansionPanel must be used as a child of VExpansionPanels component to function properly.
+</Note>

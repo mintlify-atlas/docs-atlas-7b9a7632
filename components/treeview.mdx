@@ -1,0 +1,280 @@
+---
+title: Treeview
+description: The VTreeview component displays hierarchical data in an expandable tree structure.
+---
+
+## Usage
+
+The `VTreeview` component is used to display hierarchical data with expandable nodes.
+
+```vue
+<template>
+  <v-treeview
+    :items="items"
+  />
+</template>
+
+<script setup>
+const items = [
+  {
+    title: 'Root',
+    value: 'root',
+    children: [
+      { title: 'Child 1', value: 'child-1' },
+      { title: 'Child 2', value: 'child-2' },
+    ],
+  },
+]
+</script>
+```
+
+## Selectable Items
+
+Make items selectable:
+
+```vue
+<template>
+  <v-treeview
+    v-model:selected="selected"
+    :items="items"
+    selectable
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const selected = ref([])
+</script>
+```
+
+## Open All
+
+Expand all nodes by default:
+
+```vue
+<template>
+  <v-treeview
+    :items="items"
+    open-all
+  />
+</template>
+```
+
+## Search
+
+Filter tree items:
+
+```vue
+<template>
+  <v-text-field
+    v-model="search"
+    label="Search"
+  />
+  
+  <v-treeview
+    :items="items"
+    :search="search"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const search = ref('')
+</script>
+```
+
+## Indent Lines
+
+Show visual indentation guides:
+
+```vue
+<template>
+  <v-treeview
+    :items="items"
+    indent-lines
+  />
+</template>
+```
+
+## Custom Icons
+
+Customize expand/collapse icons:
+
+```vue
+<template>
+  <v-treeview
+    :items="items"
+    expand-icon="mdi-plus"
+    collapse-icon="mdi-minus"
+  />
+</template>
+```
+
+## Activatable
+
+Highlight active items:
+
+```vue
+<template>
+  <v-treeview
+    v-model:activated="activated"
+    :items="items"
+    activatable
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const activated = ref([])
+</script>
+```
+
+## Props
+
+<ParamField path="items" type="array">
+  Array of items to display in the tree. Each item should have a `title` and optionally `children`
+</ParamField>
+
+<ParamField path="modelValue" type="array">
+  The v-model value (alias for selected)
+</ParamField>
+
+<ParamField path="selected" type="array">
+  Array of selected item values
+</ParamField>
+
+<ParamField path="opened" type="array">
+  Array of opened (expanded) item values
+</ParamField>
+
+<ParamField path="activated" type="array">
+  Array of activated item values
+</ParamField>
+
+<ParamField path="openAll" type="boolean" default="false">
+  Opens all tree nodes by default
+</ParamField>
+
+<ParamField path="search" type="string">
+  Search query to filter tree items
+</ParamField>
+
+<ParamField path="indentLines" type="boolean | string">
+  Shows indent guide lines. Use 'default' or true for standard lines
+</ParamField>
+
+<ParamField path="indentLinesColor" type="string">
+  Color of the indent guide lines
+</ParamField>
+
+<ParamField path="indentLinesOpacity" type="string | number">
+  Opacity of the indent guide lines
+</ParamField>
+
+<ParamField path="hideNoData" type="boolean" default="false">
+  Hides the "no data" message when search returns no results
+</ParamField>
+
+<ParamField path="noDataText" type="string" default="$vuetify.noDataText">
+  Text to display when no items match the search
+</ParamField>
+
+<ParamField path="expandIcon" type="IconValue" default="$treeviewExpand">
+  Icon used for expandable nodes
+</ParamField>
+
+<ParamField path="collapseIcon" type="IconValue" default="$treeviewCollapse">
+  Icon used for collapsible nodes
+</ParamField>
+
+<ParamField path="selectable" type="boolean" default="false">
+  Enables item selection with checkboxes
+</ParamField>
+
+<ParamField path="activatable" type="boolean" default="false">
+  Enables item activation (highlighting)
+</ParamField>
+
+<ParamField path="returnObject" type="boolean" default="false">
+  Returns the entire item object instead of just the value
+</ParamField>
+
+<ParamField path="filterKeys" type="string[]" default="['title']">
+  Properties to search when filtering items
+</ParamField>
+
+<ParamField path="slim" type="boolean" default="true">
+  Reduces the width of the expand icon area
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing of items
+</ParamField>
+
+<ParamField path="activeColor" type="string">
+  Color applied to active items
+</ParamField>
+
+<ParamField path="baseColor" type="string">
+  Base color for items
+</ParamField>
+
+<ParamField path="color" type="string">
+  Color applied to selected items
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disables all tree items
+</ParamField>
+
+<ParamField path="variant" type="string">
+  Visual variant for tree items
+</ParamField>
+
+## Slots
+
+<ParamField path="title" type="slot">
+  Slot to customize item title rendering
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+  Slot for content before the item title
+</ParamField>
+
+<ParamField path="append" type="slot">
+  Slot for content after the item title
+</ParamField>
+
+<ParamField path="no-data" type="slot">
+  Slot to customize the "no data" message
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when selected items change
+</ParamField>
+
+<ParamField path="update:selected" type="event">
+  Emitted when selected items change
+</ParamField>
+
+<ParamField path="update:opened" type="event">
+  Emitted when opened items change
+</ParamField>
+
+<ParamField path="update:activated" type="event">
+  Emitted when activated items change
+</ParamField>
+
+<ParamField path="click:open" type="event">
+  Emitted when an item is opened/closed
+</ParamField>
+
+<ParamField path="click:select" type="event">
+  Emitted when an item is selected/deselected
+</ParamField>
+
+<Note>
+  When using search functionality, the treeview automatically expands parent nodes to show matching children.
+</Note>

@@ -1,0 +1,191 @@
+---
+title: Bottom Sheet
+description: The VBottomSheet component displays a sheet that slides up from the bottom of the screen.
+---
+
+## Usage
+
+The `VBottomSheet` component is a modified VDialog that slides from the bottom of the viewport.
+
+```vue
+<template>
+  <v-btn @click="sheet = true">
+    Open Bottom Sheet
+  </v-btn>
+  
+  <v-bottom-sheet v-model="sheet">
+    <v-card>
+      <v-card-title>Bottom Sheet</v-card-title>
+      <v-card-text>
+        This content slides up from the bottom
+      </v-card-text>
+    </v-card>
+  </v-bottom-sheet>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const sheet = ref(false)
+</script>
+```
+
+## Inset
+
+Create an inset bottom sheet with margins:
+
+```vue
+<template>
+  <v-bottom-sheet
+    v-model="sheet"
+    inset
+  >
+    <v-card>
+      <v-card-text>
+        Inset bottom sheet with margins
+      </v-card-text>
+    </v-card>
+  </v-bottom-sheet>
+</template>
+```
+
+## Persistent
+
+Prevent closing when clicking outside:
+
+```vue
+<template>
+  <v-bottom-sheet
+    v-model="sheet"
+    persistent
+  >
+    <v-card>
+      <v-card-text>
+        This sheet requires explicit close action
+      </v-card-text>
+      <v-card-actions>
+        <v-btn @click="sheet = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-bottom-sheet>
+</template>
+```
+
+## Full Width
+
+Make the bottom sheet full width:
+
+```vue
+<template>
+  <v-bottom-sheet
+    v-model="sheet"
+    width="100%"
+  >
+    <!-- content -->
+  </v-bottom-sheet>
+</template>
+```
+
+## Custom Height
+
+Control the sheet height:
+
+```vue
+<template>
+  <v-bottom-sheet
+    v-model="sheet"
+    height="400"
+  >
+    <!-- content -->
+  </v-bottom-sheet>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="boolean">
+  The v-model value controlling the sheet's visibility
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Reduces the width of the sheet and adds margin on the sides
+</ParamField>
+
+<ParamField path="width" type="string | number">
+  Sets the width of the sheet
+</ParamField>
+
+<ParamField path="maxWidth" type="string | number">
+  Sets the maximum width of the sheet
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the sheet
+</ParamField>
+
+<ParamField path="maxHeight" type="string | number">
+  Sets the maximum height of the sheet
+</ParamField>
+
+<ParamField path="persistent" type="boolean" default="false">
+  Prevents closing when clicking outside the sheet
+</ParamField>
+
+<ParamField path="scrim" type="boolean | string" default="true">
+  Controls the scrim (overlay) behind the sheet. Pass a color string to customize
+</ParamField>
+
+<ParamField path="transition" type="string" default="bottom-sheet-transition">
+  The transition to use when opening/closing
+</ParamField>
+
+<ParamField path="closeOnBack" type="boolean" default="true">
+  Closes the sheet when the browser back button is pressed
+</ParamField>
+
+<ParamField path="closeOnContentClick" type="boolean" default="false">
+  Closes the sheet when clicking on its content
+</ParamField>
+
+<ParamField path="noClickAnimation" type="boolean" default="false">
+  Disables the bounce animation when clicking outside a persistent sheet
+</ParamField>
+
+<ParamField path="scrollable" type="boolean" default="false">
+  Makes the sheet content scrollable
+</ParamField>
+
+<ParamField path="fullscreen" type="boolean" default="false">
+  Makes the sheet fullscreen
+</ParamField>
+
+<ParamField path="eager" type="boolean" default="false">
+  Forces the component's content to render on mount
+</ParamField>
+
+<ParamField path="contentClass" type="string">
+  CSS class to apply to the sheet content
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for sheet content
+</ParamField>
+
+<ParamField path="activator" type="slot">
+  Slot for the element that activates the sheet
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the sheet visibility changes
+</ParamField>
+
+<Note>
+  VBottomSheet extends VDialog, so it inherits all dialog functionality while adding the bottom-sheet-specific transition and positioning.
+</Note>
+
+<Note>
+  For mobile-optimized experiences, bottom sheets are often preferred over traditional dialogs as they're easier to reach with one hand.
+</Note>

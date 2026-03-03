@@ -1,0 +1,254 @@
+---
+title: Range Slider
+description: The VRangeSlider component provides a dual-handle slider for selecting a range of values.
+---
+
+## Usage
+
+The `VRangeSlider` component allows users to select a range between two values using dual thumb controls.
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    :min="0"
+    :max="100"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const range = ref([20, 80])
+</script>
+```
+
+## With Label
+
+Add a label to the slider:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    label="Price Range"
+    :min="0"
+    :max="1000"
+  />
+</template>
+```
+
+## Step Increments
+
+Define step increments for precise values:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    :min="0"
+    :max="100"
+    :step="5"
+  />
+</template>
+```
+
+## Thumb Labels
+
+Show labels on the thumb controls:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    thumb-label
+  />
+</template>
+```
+
+## Strict Mode
+
+Prevent thumbs from crossing:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    strict
+  />
+</template>
+```
+
+## Vertical Orientation
+
+Display the slider vertically:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    direction="vertical"
+    style="height: 300px"
+  />
+</template>
+```
+
+## Custom Colors
+
+Customize track and thumb colors:
+
+```vue
+<template>
+  <v-range-slider
+    v-model="range"
+    color="primary"
+    track-color="grey"
+    thumb-color="primary"
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="[number, number]" default="[0, 0]">
+  The v-model value of the component as an array of two numbers representing the range
+</ParamField>
+
+<ParamField path="min" type="number | string" default="0">
+  The minimum allowed value
+</ParamField>
+
+<ParamField path="max" type="number | string" default="100">
+  The maximum allowed value
+</ParamField>
+
+<ParamField path="step" type="number | string" default="0">
+  The step increment when moving the slider. 0 means no step restriction
+</ParamField>
+
+<ParamField path="strict" type="boolean" default="false">
+  When enabled, prevents the range thumbs from crossing each other
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the slider
+</ParamField>
+
+<ParamField path="readonly" type="boolean" default="false">
+  Makes the slider read-only
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text for the slider
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  The orientation of the slider
+</ParamField>
+
+<ParamField path="thumbLabel" type="boolean | string">
+  Show labels on the thumb controls. Use 'always' to keep labels visible
+</ParamField>
+
+<ParamField path="thumbSize" type="number" default="20">
+  Size of the thumb controls
+</ParamField>
+
+<ParamField path="showTicks" type="boolean | 'always'">
+  Show tick marks along the slider track
+</ParamField>
+
+<ParamField path="ticks" type="number[] | Record<string, string>">
+  Custom tick positions and labels
+</ParamField>
+
+<ParamField path="tickSize" type="number" default="2">
+  Size of the tick marks
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the control
+</ParamField>
+
+<ParamField path="trackColor" type="string">
+  Color of the slider track
+</ParamField>
+
+<ParamField path="trackFillColor" type="string">
+  Color of the filled portion of the track
+</ParamField>
+
+<ParamField path="thumbColor" type="string">
+  Color of the thumb controls
+</ParamField>
+
+<ParamField path="trackSize" type="number" default="4">
+  Height/width of the track
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Elevation of the thumb controls
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Border radius of the thumb controls
+</ParamField>
+
+<ParamField path="error" type="boolean">
+  Puts the slider in an error state
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Hint text to display below the slider
+</ParamField>
+
+<ParamField path="persistentHint" type="boolean">
+  Forces hint to always be visible
+</ParamField>
+
+<ParamField path="messages" type="string | string[]">
+  Displays a list of messages or a single message
+</ParamField>
+
+## Slots
+
+<ParamField path="label" type="slot">
+  Slot for custom label content
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+  Slot for content before the slider
+</ParamField>
+
+<ParamField path="append" type="slot">
+  Slot for content after the slider
+</ParamField>
+
+<ParamField path="thumb-label" type="slot">
+  Slot to customize the thumb label content
+</ParamField>
+
+<ParamField path="tick-label" type="slot">
+  Slot to customize tick label rendering
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the range value changes
+</ParamField>
+
+<ParamField path="start" type="event">
+  Emitted when the user starts interacting with the slider
+</ParamField>
+
+<ParamField path="end" type="event">
+  Emitted when the user stops interacting with the slider
+</ParamField>
+
+<ParamField path="update:focused" type="event">
+  Emitted when focus state changes
+</ParamField>
+
+<Note>
+  In non-strict mode, the thumbs can cross each other and their order will automatically adjust to maintain the proper min/max relationship.
+</Note>

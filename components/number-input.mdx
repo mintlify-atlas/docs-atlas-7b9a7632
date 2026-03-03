@@ -1,0 +1,260 @@
+---
+title: Number Input
+description: The VNumberInput component provides a specialized text field with increment/decrement controls for numeric values.
+---
+
+## Usage
+
+The `VNumberInput` component extends VTextField with number-specific controls and validation.
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    label="Quantity"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const number = ref(0)
+</script>
+```
+
+## Min and Max
+
+Constrain values to a specific range:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    :min="0"
+    :max="100"
+  />
+</template>
+```
+
+## Step Increments
+
+Define the increment/decrement step:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    :step="5"
+  />
+</template>
+```
+
+## Control Variants
+
+Choose different control layouts:
+
+```vue
+<template>
+  <!-- Default: Controls on the right -->
+  <v-number-input v-model="number" />
+  
+  <!-- Stacked: Controls stacked vertically -->
+  <v-number-input
+    v-model="number"
+    control-variant="stacked"
+  />
+  
+  <!-- Split: Controls on both sides -->
+  <v-number-input
+    v-model="number"
+    control-variant="split"
+  />
+  
+  <!-- Hidden: No controls visible -->
+  <v-number-input
+    v-model="number"
+    control-variant="hidden"
+  />
+</template>
+```
+
+## Precision
+
+Control decimal places:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    :precision="2"
+  />
+</template>
+```
+
+## Hide Input
+
+Show only the controls:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    hide-input
+  />
+</template>
+```
+
+## Inset Controls
+
+Place controls inside the input field:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    inset
+  />
+</template>
+```
+
+## Reverse Controls
+
+Position controls on the left:
+
+```vue
+<template>
+  <v-number-input
+    v-model="number"
+    reverse
+  />
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="number" default="null">
+  The v-model value of the component
+</ParamField>
+
+<ParamField path="min" type="number" default="Number.MIN_SAFE_INTEGER">
+  The minimum allowed value
+</ParamField>
+
+<ParamField path="max" type="number" default="Number.MAX_SAFE_INTEGER">
+  The maximum allowed value
+</ParamField>
+
+<ParamField path="step" type="number" default="1">
+  The increment/decrement step value
+</ParamField>
+
+<ParamField path="precision" type="number" default="0">
+  Number of decimal places to display and allow
+</ParamField>
+
+<ParamField path="minFractionDigits" type="number">
+  Minimum number of fraction digits to display
+</ParamField>
+
+<ParamField path="decimalSeparator" type="string">
+  Custom decimal separator character. Defaults to locale-specific separator
+</ParamField>
+
+<ParamField path="controlVariant" type="'default' | 'stacked' | 'split' | 'hidden'" default="default">
+  The layout style for increment/decrement controls
+</ParamField>
+
+<ParamField path="inset" type="boolean" default="false">
+  Positions the controls inside the input field
+</ParamField>
+
+<ParamField path="hideInput" type="boolean" default="false">
+  Hides the input field, showing only the controls
+</ParamField>
+
+<ParamField path="reverse" type="boolean" default="false">
+  Positions the controls on the left side of the input
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disables the input and controls
+</ParamField>
+
+<ParamField path="readonly" type="boolean">
+  Makes the input read-only
+</ParamField>
+
+<ParamField path="error" type="boolean">
+  Puts the input in an error state
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text for the input
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Hint text to display below the input
+</ParamField>
+
+<ParamField path="persistentHint" type="boolean">
+  Forces hint to always be visible
+</ParamField>
+
+<ParamField path="variant" type="'outlined' | 'filled' | 'solo' | 'plain' | 'underlined'">
+  Visual variant of the input
+</ParamField>
+
+<ParamField path="density" type="'default' | 'comfortable' | 'compact'">
+  Adjusts the vertical spacing
+</ParamField>
+
+<ParamField path="color" type="string">
+  Applies specified color to the control
+</ParamField>
+
+## Slots
+
+<ParamField path="increment" type="slot">
+  Slot to customize the increment button
+</ParamField>
+
+<ParamField path="decrement" type="slot">
+  Slot to customize the decrement button
+</ParamField>
+
+<ParamField path="prepend" type="slot">
+  Slot for content before the input
+</ParamField>
+
+<ParamField path="append" type="slot">
+  Slot for content after the input
+</ParamField>
+
+<ParamField path="prepend-inner" type="slot">
+  Slot for content inside the input, before the value
+</ParamField>
+
+<ParamField path="append-inner" type="slot">
+  Slot for content inside the input, after the value
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the value changes
+</ParamField>
+
+<ParamField path="update:focused" type="event">
+  Emitted when focus state changes
+</ParamField>
+
+<Note>
+  The component automatically validates input and prevents values outside the min/max range. Values are clamped to the valid range on blur.
+</Note>
+
+<Note>
+  Keyboard support includes arrow keys (up/down) to increment/decrement values while the input is focused.
+</Note>
+
+<Note>
+  The increment and decrement buttons support long-press for continuous value changes.
+</Note>

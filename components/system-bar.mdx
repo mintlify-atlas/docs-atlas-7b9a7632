@@ -1,0 +1,149 @@
+---
+title: System Bar
+description: The VSystemBar component displays a bar at the top of the application mimicking a system status bar.
+---
+
+## Usage
+
+The `VSystemBar` component creates a bar that sits at the very top of your application, typically used to show system-level information.
+
+```vue
+<template>
+  <v-app>
+    <v-system-bar>
+      <v-icon>mdi-wifi</v-icon>
+      <v-icon>mdi-signal-cellular-3</v-icon>
+      <v-icon>mdi-battery</v-icon>
+      <span>12:30 PM</span>
+    </v-system-bar>
+    
+    <v-app-bar></v-app-bar>
+    <v-main></v-main>
+  </v-app>
+</template>
+```
+
+## Window Mode
+
+Increase the height for desktop applications:
+
+```vue
+<template>
+  <v-system-bar window>
+    <v-icon>mdi-window-minimize</v-icon>
+    <v-icon>mdi-window-maximize</v-icon>
+    <v-icon>mdi-window-close</v-icon>
+  </v-system-bar>
+</template>
+```
+
+## Custom Color
+
+Apply a background color:
+
+```vue
+<template>
+  <v-system-bar color="primary">
+    <v-icon>mdi-wifi</v-icon>
+    <span>Connected</span>
+  </v-system-bar>
+</template>
+```
+
+## Custom Height
+
+Set a specific height:
+
+```vue
+<template>
+  <v-system-bar height="48">
+    Custom height system bar
+  </v-system-bar>
+</template>
+```
+
+## With Elevation
+
+Add elevation shadow:
+
+```vue
+<template>
+  <v-system-bar
+    color="surface"
+    elevation="4"
+  >
+    Elevated system bar
+  </v-system-bar>
+</template>
+```
+
+## Absolute Positioning
+
+Position absolutely within the layout:
+
+```vue
+<template>
+  <v-system-bar
+    absolute
+    color="primary"
+  >
+    Absolute positioned
+  </v-system-bar>
+</template>
+```
+
+## Props
+
+<ParamField path="color" type="string">
+  Applies specified color to the background
+</ParamField>
+
+<ParamField path="height" type="string | number">
+  Sets the height of the system bar. Defaults to 24px normally, 32px in window mode
+</ParamField>
+
+<ParamField path="window" type="boolean" default="false">
+  Increases the default height to 32px for desktop window appearance
+</ParamField>
+
+<ParamField path="elevation" type="string | number">
+  Designates an elevation applied to the component (0-24)
+</ParamField>
+
+<ParamField path="rounded" type="string | number | boolean">
+  Designates the border-radius applied to the component
+</ParamField>
+
+<ParamField path="absolute" type="boolean" default="false">
+  Applies position absolute to the component
+</ParamField>
+
+<ParamField path="name" type="string">
+  Assigns a unique name for layout registration
+</ParamField>
+
+<ParamField path="order" type="string | number" default="0">
+  Adjusts the order of the component in the layout system
+</ParamField>
+
+<ParamField path="theme" type="string">
+  Specify a theme for this component and all of its children
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default Vue slot for content
+</ParamField>
+
+<Note>
+  VSystemBar should be used as a child of VApp and appears above the VAppBar. It integrates with Vuetify's layout system to properly position other layout components.
+</Note>
+
+<Note>
+  The system bar is typically used for displaying status information like connection status, battery level, time, or window controls in desktop applications.
+</Note>

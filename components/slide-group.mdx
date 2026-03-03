@@ -1,0 +1,210 @@
+---
+title: Slide Group
+description: The VSlideGroup component provides a scrollable container for grouping items with overflow navigation.
+---
+
+## Usage
+
+The `VSlideGroup` component creates a horizontally or vertically scrollable container with optional navigation arrows.
+
+```vue
+<template>
+  <v-slide-group v-model="model">
+    <v-slide-group-item
+      v-for="n in 15"
+      :key="n"
+      :value="n"
+    >
+      <v-btn>Item {{ n }}</v-btn>
+    </v-slide-group-item>
+  </v-slide-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const model = ref(null)
+</script>
+```
+
+## Show Arrows
+
+Display navigation arrows:
+
+```vue
+<template>
+  <v-slide-group show-arrows>
+    <v-slide-group-item
+      v-for="n in 15"
+      :key="n"
+    >
+      <v-chip class="ma-2">Item {{ n }}</v-chip>
+    </v-slide-group-item>
+  </v-slide-group>
+</template>
+```
+
+## Center Active
+
+Center the active item:
+
+```vue
+<template>
+  <v-slide-group
+    v-model="model"
+    center-active
+    show-arrows
+  >
+    <v-slide-group-item
+      v-for="n in 15"
+      :key="n"
+      :value="n"
+    >
+      <v-btn>Item {{ n }}</v-btn>
+    </v-slide-group-item>
+  </v-slide-group>
+</template>
+```
+
+## Multiple Selection
+
+Allow multiple items to be selected:
+
+```vue
+<template>
+  <v-slide-group
+    v-model="model"
+    multiple
+    show-arrows
+  >
+    <v-slide-group-item
+      v-for="n in 15"
+      :key="n"
+      :value="n"
+      v-slot="{ isSelected, toggle }"
+    >
+      <v-btn
+        :color="isSelected ? 'primary' : undefined"
+        @click="toggle"
+      >
+        Item {{ n }}
+      </v-btn>
+    </v-slide-group-item>
+  </v-slide-group>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+const model = ref([])
+</script>
+```
+
+## Vertical Direction
+
+Create a vertical slide group:
+
+```vue
+<template>
+  <v-slide-group
+    direction="vertical"
+    show-arrows
+    style="height: 400px"
+  >
+    <v-slide-group-item
+      v-for="n in 15"
+      :key="n"
+    >
+      <v-btn>Item {{ n }}</v-btn>
+    </v-slide-group-item>
+  </v-slide-group>
+</template>
+```
+
+## Props
+
+<ParamField path="modelValue" type="any">
+  The v-model value of the selected item(s)
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  The direction of the slide group
+</ParamField>
+
+<ParamField path="showArrows" type="boolean | string">
+  When to show navigation arrows. Values: true, false, 'always', 'desktop', 'mobile', 'never'
+</ParamField>
+
+<ParamField path="centerActive" type="boolean" default="false">
+  Centers the active item in the viewport when selected
+</ParamField>
+
+<ParamField path="scrollToActive" type="boolean" default="true">
+  Automatically scrolls to the active item when it changes
+</ParamField>
+
+<ParamField path="nextIcon" type="IconValue" default="$next">
+  Icon used for the next arrow
+</ParamField>
+
+<ParamField path="prevIcon" type="IconValue" default="$prev">
+  Icon used for the previous arrow
+</ParamField>
+
+<ParamField path="contentClass" type="string">
+  CSS class to apply to the content wrapper
+</ParamField>
+
+<ParamField path="selectedClass" type="string" default="v-slide-group-item--active">
+  CSS class applied to selected items
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Allows multiple selections
+</ParamField>
+
+<ParamField path="mandatory" type="boolean | 'force'" default="false">
+  Forces at least one item to always be selected
+</ParamField>
+
+<ParamField path="max" type="number">
+  Maximum number of selections allowed (when multiple is enabled)
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables all items in the group
+</ParamField>
+
+<ParamField path="mobile" type="boolean">
+  Manually set mobile mode for responsive arrow behavior
+</ParamField>
+
+<ParamField path="tag" type="string" default="div">
+  Specify a custom tag used on the root element
+</ParamField>
+
+## Slots
+
+<ParamField path="default" type="slot">
+  The default slot for slide group items
+</ParamField>
+
+<ParamField path="prev" type="slot">
+  Slot to customize the previous arrow button
+</ParamField>
+
+<ParamField path="next" type="slot">
+  Slot to customize the next arrow button
+</ParamField>
+
+## Events
+
+<ParamField path="update:modelValue" type="event">
+  Emitted when the selected value changes
+</ParamField>
+
+<Note>
+  VSlideGroup is the foundation for components like VTabs and VChipGroup. It provides the scrolling and selection logic for horizontally or vertically scrollable content.
+</Note>
+
+<Note>
+  The component supports keyboard navigation. Use arrow keys to navigate between items when focused.
+</Note>
